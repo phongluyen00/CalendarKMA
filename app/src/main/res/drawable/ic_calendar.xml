@@ -1,0 +1,14 @@
+<vector android:height="40dp" android:viewportHeight="508"
+    android:viewportWidth="508" android:width="40dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#FF000000" android:pathData="M122.9,163.9v73.7h73.7v-73.7H122.9zM180.3,221.3h-41v-41h41V221.3z"/>
+    <path android:fillColor="#FF000000" android:pathData="M213,163.9v73.7h73.7v-73.7H213zM270.4,221.3h-41v-41h41V221.3z"/>
+    <path android:fillColor="#FF000000" android:pathData="M303.2,163.9v73.7h73.7v-73.7H303.2zM360.5,221.2h-41v-41h41V221.2z"/>
+    <path android:fillColor="#FF000000" android:pathData="M32.8,254v73.7h73.7V254H32.8zM90.2,311.4h-41v-41h41V311.4z"/>
+    <path android:fillColor="#FF000000" android:pathData="M122.9,254v73.7h73.7V254H122.9zM180.3,311.4h-41v-41h41V311.4z"/>
+    <path android:fillColor="#FF000000" android:pathData="M213,254v73.7h73.7V254H213zM270.4,311.4h-41v-41h41V311.4z"/>
+    <path android:fillColor="#FF000000" android:pathData="M163.9,81.9h16.4v16.4h-16.4z"/>
+    <path android:fillColor="#FF000000" android:pathData="M196.6,81.9h16.4v16.4h-16.4z"/>
+    <path android:fillColor="#FF000000" android:pathData="M229.4,81.9h16.4v16.4h-16.4z"/>
+    <path android:fillColor="#FF000000" android:pathData="M409.7,279.9V41h-65.5V28.7c0,-15.8 -12.9,-28.7 -28.7,-28.7c-15.8,0 -28.7,12.9 -28.7,28.7V41H122.9V28.7C122.9,12.9 110,0 94.2,0S65.5,12.9 65.5,28.7V41H0v327.7h281.3c-1.7,7.9 -2.7,16.1 -2.7,24.6c0,63.3 51.5,114.7 114.7,114.7S508,456.5 508,393.3C508,335.6 465.2,287.9 409.7,279.9zM303.2,41V28.7c0,-6.8 5.5,-12.3 12.3,-12.3s12.3,5.5 12.3,12.3V41v41h-24.6V41zM81.9,41V28.7c0,-6.8 5.5,-12.3 12.3,-12.3s12.3,5.5 12.3,12.3V41v41H81.9V41zM16.4,57.4h49.1v41h57.4v-41h163.9v41h57.4v-41h49.2V123h-377V57.4zM16.4,352.3v-213h376.9v139.3c-48.8,0 -90.5,30.7 -107,73.7H16.4zM393.3,491.6c-54.2,0 -98.3,-44.1 -98.3,-98.3s44.1,-98.3 98.3,-98.3c54.2,0 98.3,44.1 98.3,98.3C491.6,447.5 447.5,491.6 393.3,491.6z"/>
+    <path android:fillColor="#FF000000" android:pathData="M401.5,393.3l0,-65.6l-16.4,0l0,82l57.4,0l0,-16.4z"/>
+</vector>

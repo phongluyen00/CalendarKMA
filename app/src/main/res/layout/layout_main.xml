@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="listener"
-            type="com.example.retrofitrxjava.MainListener" />
+            type="com.example.retrofitrxjava.main.MainListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,13 +22,29 @@
             android:layout_marginStart="0dp"
             android:layout_marginEnd="0dp"
             android:background="?android:attr/windowBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:itemIconTint="#E9C35CE9"
-            app:itemTextColor="@android:color/secondary_text_light"
             android:foreground="?attr/selectableItemBackground"
+            app:itemIconTint="#FF5722"
+            app:itemTextColor="@android:color/secondary_text_light"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/menu_nav"/>
+            app:menu="@menu/menu_nav" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick='@{(v)->listener.onClick()}'
+            android:visibility="visible"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:visibility="visible"
+            android:id="@+id/lv_score"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="55dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_score" />
 
         <FrameLayout
             android:id="@+id/frame_container"
