@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.model.Advertisement;
+import com.example.retrofitrxjava.loginV3.model.LoginResponse;
+import com.example.retrofitrxjava.model.AccountModel;
+import com.example.retrofitrxjava.home.model.Advertisement;
 import com.example.retrofitrxjava.persional.PersonalFragment;
 import com.example.retrofitrxjava.retrofit.MyAPI;
 import com.example.retrofitrxjava.retrofit.RetrofitClient;
@@ -24,12 +26,14 @@ import retrofit2.Retrofit;
 
 public class MainActivity extends BActivity<LayoutMainBinding> implements MainListener, MainContract.View {
 
-    MainPresenter presenter;
+    private MainPresenter presenter;
+    private LoginResponse.Data data;
 
     @Override
     protected void initLayout() {
         presenter = new MainPresenter(this);
         binding.setListener(this);
+        data = getIntent().getParcelableExtra("obj");
         Retrofit retrofit = RetrofitClient.getInstance();
         myAPI = retrofit.create(MyAPI.class);
         presenter.retrieveDataHome("");
@@ -40,20 +44,17 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
                 Fragment fragment;
                 switch (item.getItemId()) {
                     case R.id.nav_home:
-                        fragment = new HomeFrg();
-                        AppUtils.loadView(MainActivity.this, fragment);
+                        presenter.retrieveDataHome("");
                         return true;
                     case R.id.manager:
                         fragment = new ScheduleFragment();
                         AppUtils.loadView(MainActivity.this, fragment);
                         return true;
                     case R.id.personal:
-                        fragment = new PersonalFragment();
-                        AppUtils.loadView(MainActivity.this, fragment);
+                        presenter.retrieveScore(compositeDisposable, myAPI, AccountModel.userName, AccountModel.password);
                         return true;
                     case R.id.menu:
-                        fragment = new HomeFrg();
-                        AppUtils.loadView(MainActivity.this, fragment);
+//                        presenter.retrieveDataHome("");
                         return true;
                 }
                 return false;
@@ -75,18 +76,19 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
 
     @Override
     public void onClick() {
-        presenter.retrieveScore(compositeDisposable,myAPI,"CT010233","");
     }
 
     @Override
     public void retrieveScoreSuccess(ArrayList<ScoreMediumResponse.Datum> data) {
-
+        PersonalFragment personalFragment = new PersonalFragment();
+        personalFragment.setData(data);
+        AppUtils.loadView(MainActivity.this, personalFragment);
     }
 
     @Override
-    public void retrieveDataHomeSuccess(ArrayList<Advertisement> data) {
+    public void retrieveDataHomeSuccess(ArrayList<Advertisement> advertisements) {
         HomeFrg fragment = new HomeFrg();
-        fragment.setDataHome(data);
+        fragment.setDataHome(advertisements,data);
         AppUtils.loadView(this, fragment);
     }
 

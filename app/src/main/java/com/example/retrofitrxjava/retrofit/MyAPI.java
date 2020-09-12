@@ -1,6 +1,8 @@
 package com.example.retrofitrxjava.retrofit;
 
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
+import com.example.retrofitrxjava.loginV3.model.Synchronization;
+import com.example.retrofitrxjava.model.ModelResponse;
 import com.example.retrofitrxjava.model.ResponseAPI;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 
@@ -13,11 +15,15 @@ public interface MyAPI {
     @GET("weather")
     Observable<ResponseAPI> getWeather(@Query("id") String id, @Query("appid") String appId);
 
-    @GET("GetDiemTB")
+    @GET("getScoreMedium")
     Observable<ScoreMediumResponse> getScoreMedium(@Query("mssv") String id);
 
-    @GET("Login")
+    @GET("loginStatus")
     Observable<LoginResponse> loginStatus(@Query("userName") String userName,
                                           @Query("passWord") String passWord);
+
+    @GET("synchronizationMarkAvg")
+    Observable<Synchronization> synchronization(@Query("userName") String userName,
+                                                @Query("passWord") String passWord);
 
 }

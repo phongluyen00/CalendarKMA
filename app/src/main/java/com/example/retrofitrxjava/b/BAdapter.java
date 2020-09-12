@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 
 import androidx.annotation.LayoutRes;
-import androidx.databinding.BaseObservable;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
@@ -61,7 +60,7 @@ public class BAdapter<T extends ModelResponse>
     @Override
     public void onBindViewHolder(@NonNull BAdapter.ViewHolder viewHolder, int i) {
         T t = data.get(i);
-//        viewHolder.binding.setVariable(BR.item, t);
+        viewHolder.binding.setVariable(BR.item, t);
         viewHolder.binding.setVariable(BR.listener, listener);
         viewHolder.binding.executePendingBindings();
     }

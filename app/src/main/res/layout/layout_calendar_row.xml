@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_parrent"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:background="?android:attr/selectableItemBackground"
+        android:id="@+id/ll_sub_parrent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/tv_event_simbol"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_month_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="01"
+            android:textColor="#00f"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_week_date"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:text="01"
+            android:textColor="#00f"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

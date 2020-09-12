@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RetrofitRxJava</string>
+    <string name="error_default">Hệ thống đang bận ! Vui lòng thử lại sau !</string>
+    <string name="synchronization_success">Đồng bộ dữ liệu thành công !</string>
+    <string name="sync">Đăng nhập thành công ! Dữ liệu đang được đồng bộ .</string>
+    <string name="sync_success">Đồng bộ dữ liệu thành công !</string>
 </resources>

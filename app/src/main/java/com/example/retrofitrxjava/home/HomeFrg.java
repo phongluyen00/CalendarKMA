@@ -1,13 +1,13 @@
 package com.example.retrofitrxjava.home;
 
 import android.os.Handler;
-import android.util.Log;
 
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BFragment;
-import com.example.retrofitrxjava.b.BannerAdapter;
+import com.example.retrofitrxjava.home.adapter.BannerAdapter;
 import com.example.retrofitrxjava.databinding.LayoutHomeBindingImpl;
-import com.example.retrofitrxjava.model.Advertisement;
+import com.example.retrofitrxjava.loginV3.model.LoginResponse;
+import com.example.retrofitrxjava.home.model.Advertisement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,30 +18,17 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
     private android.os.Handler handler;
     private HomePresenter presenter;
     private ArrayList<Advertisement> advertisements = new ArrayList<>();
+    private LoginResponse.Data data;
 
     @Override
     protected void initLayout() {
         presenter = new HomePresenter(this);
         presenter.retrieveDataHome("");
-        Log.d("AAAAA", "HOME");
-//        runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                curentItem = binding.viewpager.getCurrentItem();
-//                curentItem++;
-//                if (curentItem >= binding.viewpager.getAdapter().getCount()) {
-//                    curentItem = 0;
-//                }
-//                binding.viewpager.setCurrentItem(curentItem, true);
-//                handler.postDelayed(runnable, 4500);
-//
-//            }
-//        };
-//        handler.postDelayed(runnable, 4500);
     }
 
-    public void setDataHome(ArrayList<Advertisement> advertisements) {
+    public void setDataHome(ArrayList<Advertisement> advertisements, LoginResponse.Data data) {
         this.advertisements = advertisements;
+        this.data = data;
     }
 
     @Override
@@ -56,7 +43,7 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
 
     @Override
     public void retrieveDataSuccess(List<Advertisement> data) {
-        adapter1 = new BannerAdapter(getActivity(), (ArrayList<Advertisement>) data);
+        adapter1 = new BannerAdapter(getContext(), (ArrayList<Advertisement>) data, R.layout.item_banner);
         binding.viewpager.setAdapter(adapter1);
         binding.circleIndicator.setViewPager(binding.viewpager);
         handler = new Handler();

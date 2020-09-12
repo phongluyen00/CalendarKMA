@@ -1,8 +1,10 @@
 package com.example.retrofitrxjava.main;
 
-import android.util.Log;
+import android.content.Context;
+import android.widget.Toast;
 
-import com.example.retrofitrxjava.model.Advertisement;
+import com.example.retrofitrxjava.R;
+import com.example.retrofitrxjava.home.model.Advertisement;
 import com.example.retrofitrxjava.retrofit.MyAPI;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 
@@ -26,34 +28,35 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void retrieveScore(CompositeDisposable compositeDisposable, MyAPI myAPI, String user, String password) {
-        myAPI.getScoreMedium("CT010215").subscribeOn(Schedulers.io())
+        myAPI.getScoreMedium(user).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ScoreMediumResponse>() {
-                               @Override
-                               public void onSubscribe(Disposable d) {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-                               }
+                    }
 
-                               @Override
-                               public void onNext(ScoreMediumResponse scoreMediumResponse) {
-                                   ArrayList<ScoreMediumResponse.Datum> datumArrayList = new ArrayList<>();
-                                   for (int i = 1; i < scoreMediumResponse.getData().size(); i++) {
-                                       datumArrayList.add(scoreMediumResponse.getData().get(i));
-                                   }
-                                   responses.clear();
-                                   responses.addAll(datumArrayList);
-                               }
+                    @Override
+                    public void onNext(ScoreMediumResponse scoreMediumResponse) {
+                        ArrayList<ScoreMediumResponse.Datum> datumArrayList = new ArrayList<>();
+                        for (int i = 1; i < scoreMediumResponse.getData().size(); i++) {
+                            datumArrayList.add(scoreMediumResponse.getData().get(i));
+                        }
+                        responses.clear();
+                        responses.addAll(datumArrayList);
+                    }
 
-                               @Override
-                               public void onError(Throwable e) {
-                                   Log.d("AAAA", "rêr");
-                               }
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText((Context) view, R.string.error_default
+                                , Toast.LENGTH_SHORT).show();
+                    }
 
-                               @Override
-                               public void onComplete() {
-                                   view.retrieveScoreSuccess((ArrayList<ScoreMediumResponse.Datum>) responses);
-                               }
-                           });
+                    @Override
+                    public void onComplete() {
+                        view.retrieveScoreSuccess((ArrayList<ScoreMediumResponse.Datum>) responses);
+                    }
+                });
 
     }
 

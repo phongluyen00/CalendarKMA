@@ -1,6 +1,6 @@
 package com.example.retrofitrxjava.main;
 
-import com.example.retrofitrxjava.model.Advertisement;
+import com.example.retrofitrxjava.home.model.Advertisement;
 import com.example.retrofitrxjava.retrofit.MyAPI;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 

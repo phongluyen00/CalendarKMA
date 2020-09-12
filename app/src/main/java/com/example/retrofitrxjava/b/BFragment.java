@@ -11,8 +11,11 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
+import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
+
 public abstract class BFragment<BD extends ViewDataBinding> extends Fragment {
     protected BD binding;
+    protected BAdapter<ScoreMediumResponse.Datum> adapter;
 
     @Nullable
     @Override

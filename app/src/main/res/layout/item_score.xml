@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
-<!--        <variable-->
-<!--            name="item"-->
-<!--            type="com.example.retrofitrxjava.main.model.ScoreMediumResponse" />-->
+
+        <variable
+            name="item"
+            type="com.example.retrofitrxjava.main.model.ScoreMediumResponse.Datum" />
 
         <variable
             name="listener"
@@ -25,10 +27,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="#7E00F7FF"
+            android:background="#FF5722"
             android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="@{`Năm ` + item.namHoc}"
             android:textColor="@android:color/white"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -49,17 +53,10 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Năm học :"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text='TBC Hệ 10 N1 :'
+                    android:maxLines="1"
+                    android:padding="5dp"
+                    android:text='Hệ 10 N1 :'
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />
 
@@ -67,8 +64,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text='TBC Hệ 4 N1 :'
+                    android:padding="5dp"
+                    android:text="Số TC :"
                     android:textColor="@android:color/black"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -76,10 +75,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    android:text="Số TC :"
+                    android:maxLines="1"
+                    android:padding="5dp"
+                    android:text='Hệ 4 N1 :'
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
+
 
             </LinearLayout>
 
@@ -92,28 +94,30 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:padding="5dp"
+                    android:text='@{item.tbcH10N1}'
                     android:textColor="@android:color/holo_red_dark" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:padding="5dp"
+                    android:text='@{item.countTC}'
                     android:textColor="@android:color/holo_red_dark" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="11dp"
                     android:layout_marginBottom="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@android:color/holo_red_dark" />
+                    android:background="@drawable/oval_textview"
+                    android:padding="5dp"
+                    android:textStyle="bold"
+                    android:text='@{item.tbcH4N1}'
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </LinearLayout>

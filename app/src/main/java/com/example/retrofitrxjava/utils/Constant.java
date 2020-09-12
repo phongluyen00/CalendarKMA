@@ -6,5 +6,6 @@ public class Constant {
     public static final String YEAR_3 = "2018_2019";
     public static final String YEAR_4 = "2019_2020";
 
-    public static final int SUCCESS = 1;
+    public static final String SUCCESS = "1";
+    public static final String ACCOUNT_NO_EXITS = "2";
 }

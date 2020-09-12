@@ -62,5 +62,7 @@ dependencies {
     // dau cham cham trong viewpager
     implementation 'me.relex:circleindicator:1.3.2'
 
+    implementation 'com.github.vatsaldesai92:MyDynamicCalendarLibrary:1.0.1'
+
 
 }
