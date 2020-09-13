@@ -1,7 +1,6 @@
 package com.example.retrofitrxjava.retrofit;
 
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
-import com.example.retrofitrxjava.loginV3.model.Synchronization;
 import com.example.retrofitrxjava.model.ModelResponse;
 import com.example.retrofitrxjava.model.ResponseAPI;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
@@ -23,7 +22,7 @@ public interface MyAPI {
                                           @Query("passWord") String passWord);
 
     @GET("synchronizationMarkAvg")
-    Observable<Synchronization> synchronization(@Query("userName") String userName,
-                                                @Query("passWord") String passWord);
+    Observable<ModelResponse> synchronization(@Query("userName") String userName,
+                                              @Query("passWord") String passWord);
 
 }

@@ -3,7 +3,6 @@ package com.example.retrofitrxjava.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -17,4 +16,5 @@ public class AccountModel {
     public static String status;
     public static String userName;
     public static String password;
+    public static String mediumScore;
 }

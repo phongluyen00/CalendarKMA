@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <data>
-
-        <variable
-            name="item"
-            type="com.example.retrofitrxjava.model.AccountModel" />
-    </data>
-
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/rl_toolbar"
         android:layout_width="match_parent"
@@ -15,11 +8,11 @@
         android:background="#FF5722">
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_toolbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:text="@{item.status}"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 

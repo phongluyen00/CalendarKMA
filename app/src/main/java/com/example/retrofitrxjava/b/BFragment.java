@@ -1,6 +1,7 @@
 package com.example.retrofitrxjava.b;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,28 @@ public abstract class BFragment<BD extends ViewDataBinding> extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initLayout();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getView() == null) {
+            return;
+        }
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    onBackPressed();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    protected abstract void onBackPressed();
 
     protected abstract void initLayout();
 

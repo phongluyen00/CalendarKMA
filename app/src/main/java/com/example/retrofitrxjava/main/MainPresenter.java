@@ -1,10 +1,12 @@
 package com.example.retrofitrxjava.main;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.home.model.Advertisement;
+import com.example.retrofitrxjava.model.AccountModel;
 import com.example.retrofitrxjava.retrofit.MyAPI;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 
@@ -44,6 +46,8 @@ public class MainPresenter implements MainContract.Presenter {
                         }
                         responses.clear();
                         responses.addAll(datumArrayList);
+                        AccountModel.mediumScore = responses.get(responses.size()-1).getTbcH4N1();
+                        Log.d("AAA", responses.get(responses.size()-1).getTbcH4N1());
                     }
 
                     @Override

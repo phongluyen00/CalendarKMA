@@ -5,9 +5,15 @@ import com.example.retrofitrxjava.b.BFragment;
 import com.example.retrofitrxjava.databinding.LayoutScheduleBinding;
 
 public class ScheduleFragment extends BFragment<LayoutScheduleBinding> {
+
+    @Override
+    protected void onBackPressed() {
+
+    }
+
     @Override
     protected void initLayout() {
-
+        binding.myCalendar.showMonthViewWithBelowEvents();
     }
 
     @Override

@@ -46,6 +46,7 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
         AccountModel.name = data.getName();
         AccountModel.classRoom = data.getClassRoom();
         AccountModel.status = data.getStatus();
+        AccountModel.faculty = data.getKhoa();
         binding.progressbar.setVisibility(View.GONE);
         Intent intent = new Intent(this,MainActivity.class);
         intent.putExtra("obj",data);

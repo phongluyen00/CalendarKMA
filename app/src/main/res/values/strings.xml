@@ -1,7 +1,14 @@
 <resources>
-    <string name="app_name">RetrofitRxJava</string>
+    <string name="app_name">KMA</string>
     <string name="error_default">Hệ thống đang bận ! Vui lòng thử lại sau !</string>
     <string name="synchronization_success">Đồng bộ dữ liệu thành công !</string>
     <string name="sync">Đăng nhập thành công ! Dữ liệu đang được đồng bộ .</string>
     <string name="sync_success">Đồng bộ dữ liệu thành công !</string>
+    <string name="info_sv">Thông tin cá nhân (SV)</string>
+    <string name="gioi">Giỏi</string>
+    <string name="kha">Khá</string>
+    <string name="trung_binh">Trung bình</string>
+    <string name="chua_co">Chưa có</string>
+    <string name="info_account">Thông tin tài khoản</string>
+    <string name="thong_tin_tai_khoan">Thông tin tài khoản</string>
 </resources>

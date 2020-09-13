@@ -1,5 +1,7 @@
 package com.example.retrofitrxjava.persional;
 
+import android.util.Log;
+
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BAdapter;
 import com.example.retrofitrxjava.b.BFragment;
@@ -18,9 +20,15 @@ public class PersonalFragment extends BFragment<LayoutPersonalBinding> implement
     }
 
     @Override
+    protected void onBackPressed() {
+
+    }
+
+    @Override
     protected void initLayout() {
         presenter = new PersonalPresenter(this);
         retrieveScoreSuccess(data);
+        Log.d("AAAAAAAAAAAAABBBB", data.get(data.size()-1).getTbcH4N1());
     }
 
     @Override

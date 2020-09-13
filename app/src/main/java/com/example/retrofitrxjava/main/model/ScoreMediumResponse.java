@@ -15,13 +15,10 @@ public class ScoreMediumResponse extends ModelResponse {
     @SerializedName("data")
     @Expose
     private ArrayList<Datum> data = null;
-    @SerializedName("errorCode")
-    @Expose
-    private String errorCode;
 
     @Getter
     @NoArgsConstructor
-    public class Datum extends  ModelResponse {
+    public class Datum extends ModelResponse {
 
         @SerializedName("Id")
         @Expose
@@ -53,19 +50,5 @@ public class ScoreMediumResponse extends ModelResponse {
         @SerializedName("value_11")
         @Expose
         private String countTC;
-
-        public String getTbcH4N1() {
-            if (tbcH4N1 == "" || tbcH4N1 == null) {
-                tbcH4N1 = "Chưa có";
-            }
-            return tbcH4N1;
-        }
-
-        public String getTbcH10N1() {
-            if (tbcH10N1 == "" || tbcH10N1 == null) {
-                tbcH10N1 = "Chưa có";
-            }
-            return tbcH10N1;
-        }
     }
 }

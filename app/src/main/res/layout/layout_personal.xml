@@ -7,10 +7,20 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:background="#FF5722"
             android:id="@+id/rl_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="48dp">
+            android:layout_height="48dp"
+            android:background="#FF5722">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="16dp"
+                android:text="Bảng điểm trung bình"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </RelativeLayout>
 

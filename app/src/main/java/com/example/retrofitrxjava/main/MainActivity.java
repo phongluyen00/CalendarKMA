@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
+import com.example.retrofitrxjava.menu.MenuFragment;
 import com.example.retrofitrxjava.model.AccountModel;
 import com.example.retrofitrxjava.home.model.Advertisement;
 import com.example.retrofitrxjava.persional.PersonalFragment;
@@ -28,6 +29,11 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
 
     private MainPresenter presenter;
     private LoginResponse.Data data;
+    private ArrayList<ScoreMediumResponse.Datum> datumArrayList = new ArrayList<>();
+    private ScheduleFragment scheduleFragment = new ScheduleFragment();
+    private MenuFragment menuFragment = new MenuFragment();
+    private PersonalFragment personalFragment = new PersonalFragment();
+    private HomeFrg homeFrg = new HomeFrg();
 
     @Override
     protected void initLayout() {
@@ -36,25 +42,25 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
         data = getIntent().getParcelableExtra("obj");
         Retrofit retrofit = RetrofitClient.getInstance();
         myAPI = retrofit.create(MyAPI.class);
-        presenter.retrieveDataHome("");
+        presenter.retrieveScore(compositeDisposable, myAPI, AccountModel.userName, "");
 
         binding.navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment;
                 switch (item.getItemId()) {
                     case R.id.nav_home:
                         presenter.retrieveDataHome("");
                         return true;
                     case R.id.manager:
-                        fragment = new ScheduleFragment();
-                        AppUtils.loadView(MainActivity.this, fragment);
+                        AppUtils.loadView(MainActivity.this, scheduleFragment);
                         return true;
                     case R.id.personal:
-                        presenter.retrieveScore(compositeDisposable, myAPI, AccountModel.userName, AccountModel.password);
+
+                        personalFragment.setData(datumArrayList);
+                        AppUtils.loadView(MainActivity.this, personalFragment);
                         return true;
                     case R.id.menu:
-//                        presenter.retrieveDataHome("");
+                        AppUtils.loadView(MainActivity.this, menuFragment);
                         return true;
                 }
                 return false;
@@ -73,23 +79,31 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
         super.onStop();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     @Override
     public void onClick() {
     }
 
     @Override
-    public void retrieveScoreSuccess(ArrayList<ScoreMediumResponse.Datum> data) {
-        PersonalFragment personalFragment = new PersonalFragment();
-        personalFragment.setData(data);
-        AppUtils.loadView(MainActivity.this, personalFragment);
+    public void retrieveScoreSuccess(ArrayList<ScoreMediumResponse.Datum> datumArrayList) {
+        this.datumArrayList = datumArrayList;
+        homeFrg.setDataHome(data, datumArrayList);
+        AppUtils.loadView(this, homeFrg);
     }
 
     @Override
     public void retrieveDataHomeSuccess(ArrayList<Advertisement> advertisements) {
-        HomeFrg fragment = new HomeFrg();
-        fragment.setDataHome(advertisements,data);
-        AppUtils.loadView(this, fragment);
+        if (datumArrayList.size() > 0) {
+            HomeFrg homeFrg = new HomeFrg();
+            homeFrg.setDataHome(data, datumArrayList);
+            AppUtils.loadView(this, homeFrg);
+        } else {
+            presenter.retrieveScore(compositeDisposable, myAPI, "CT010233", "");
+        }
     }
 
 

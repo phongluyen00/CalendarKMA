@@ -1,6 +1,7 @@
 package com.example.retrofitrxjava.home;
 
 import android.os.Handler;
+import android.util.Log;
 
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BFragment;
@@ -8,6 +9,7 @@ import com.example.retrofitrxjava.home.adapter.BannerAdapter;
 import com.example.retrofitrxjava.databinding.LayoutHomeBindingImpl;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.home.model.Advertisement;
+import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +19,14 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
     private BannerAdapter adapter1;
     private android.os.Handler handler;
     private HomePresenter presenter;
-    private ArrayList<Advertisement> advertisements = new ArrayList<>();
     private LoginResponse.Data data;
+    private int currentItem;
+    private Runnable runnable;
+    private ArrayList<ScoreMediumResponse.Datum> datum = new ArrayList<>();
+
+    @Override
+    protected void onBackPressed() {
+    }
 
     @Override
     protected void initLayout() {
@@ -26,9 +34,9 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
         presenter.retrieveDataHome("");
     }
 
-    public void setDataHome(ArrayList<Advertisement> advertisements, LoginResponse.Data data) {
-        this.advertisements = advertisements;
+    public void setDataHome(LoginResponse.Data data, ArrayList<ScoreMediumResponse.Datum> datumArrayList) {
         this.data = data;
+        this.datum = datumArrayList;
     }
 
     @Override
@@ -47,19 +55,19 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
         binding.viewpager.setAdapter(adapter1);
         binding.circleIndicator.setViewPager(binding.viewpager);
         handler = new Handler();
-//        runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                curentItem = binding.viewpager.getCurrentItem();
-//                curentItem++;
-//                if (curentItem >= binding.viewpager.getAdapter().getCount()) {
-//                    curentItem = 0;
-//                }
-//                binding.viewpager.setCurrentItem(curentItem, true);
-//                handler.postDelayed(runnable, 4500);
-//
-//            }
-//        };
-//        handler.postDelayed(runnable, 4500);
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                currentItem = binding.viewpager.getCurrentItem();
+                currentItem++;
+                if (currentItem >= binding.viewpager.getAdapter().getCount()) {
+                    currentItem = 0;
+                }
+                binding.viewpager.setCurrentItem(currentItem, true);
+                handler.postDelayed(runnable, 4500);
+
+            }
+        };
+        handler.postDelayed(runnable, 4500);
     }
 }
