@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
@@ -56,5 +57,9 @@ public abstract class BFragment<BD extends ViewDataBinding> extends Fragment {
     protected abstract void initLayout();
 
     protected abstract int getLayoutId();
+
+    public abstract @StringRes
+    int getTitle();
+
 
 }

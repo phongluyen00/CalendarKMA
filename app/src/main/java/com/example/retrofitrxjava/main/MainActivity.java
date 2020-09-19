@@ -55,7 +55,6 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
                         AppUtils.loadView(MainActivity.this, scheduleFragment);
                         return true;
                     case R.id.personal:
-
                         personalFragment.setData(datumArrayList);
                         AppUtils.loadView(MainActivity.this, personalFragment);
                         return true;

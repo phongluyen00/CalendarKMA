@@ -6,6 +6,10 @@
         <variable
             name="item"
             type="com.example.retrofitrxjava.model.AccountModel" />
+
+        <variable
+            name="listener"
+            type="com.example.retrofitrxjava.menu.MenuListener" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -59,6 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Số điểm"
+                    android:textColor="@android:color/black"
                     android:textSize="14sp" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -67,7 +72,8 @@
                     android:layout_marginTop="15dp"
                     android:text="@{item.mediumScore}"
                     android:textColor="#FD05B0F4"
-                    android:textSize="18sp" />
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -102,6 +108,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        imgType="@{item.mediumScore}"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
                         android:layout_gravity="center_vertical"
@@ -122,5 +129,98 @@
 
         </RelativeLayout>
 
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#9F7E5050" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->listener.onClickOne()}"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/education_cost" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="Xem lệ phí, Học phí"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#9F7E5050" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->listener.onClickTwo()}"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="20dp">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_grade" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:text="Tra cứu điểm "
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#9F7E5050" />
+
+        <LinearLayout
+            android:onClick="@{()->listener.onClickThree()}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="20dp">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_learning" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_marginLeft="16dp"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:text="Tra cứu điểm rèn luyện và xử lí học vụ "
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#9F7E5050" />
     </LinearLayout>
 </layout>

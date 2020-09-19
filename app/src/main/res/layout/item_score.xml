@@ -15,7 +15,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
@@ -25,9 +25,10 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_year"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -42,9 +43,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginRight="16dp"
+                android:layout_below="@id/tv_year"
                 android:orientation="horizontal"
                 android:padding="5dp">
 
@@ -59,20 +58,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:maxLines="1"
-                        android:padding="5dp"
+                        android:padding="8dp"
                         android:text='Hệ 10 N1 :'
-                        android:textColor="@android:color/black"
-                        android:textStyle="bold" />
+                        android:textColor="@android:color/black" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:padding="5dp"
+                        android:padding="8dp"
                         android:text="Số TC :"
                         android:textColor="@android:color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textSize="14sp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
@@ -80,11 +77,10 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
                         android:maxLines="1"
-                        android:padding="5dp"
+                        android:padding="8dp"
                         android:text='Hệ 4 N1 :'
                         android:textColor="@android:color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>
@@ -99,7 +95,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:padding="5dp"
+                        android:textStyle="bold"
+                        android:padding="8dp"
+                        android:textSize="14sp"
                         android:text='@{item.tbcH10N1}'
                         android:textColor="@android:color/holo_red_dark" />
 
@@ -107,34 +105,43 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:padding="5dp"
+                        android:padding="8dp"
+                        android:textSize="14sp"
                         android:text='@{item.countTC}'
                         android:textColor="@android:color/holo_red_dark" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        score="@{item.tbcH4N1}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="11dp"
-                        android:layout_marginBottom="8dp"
-                        android:padding="8dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                   <LinearLayout
+                       android:orientation="horizontal"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content">
+                       <androidx.appcompat.widget.AppCompatTextView
+                           score="@{item.tbcH4N1}"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_marginTop="11dp"
+                           android:layout_marginBottom="8dp"
+                           android:padding="8dp"
+                           android:text="aaaaaa"
+                           android:textColor="@android:color/white"
+                           android:textSize="14sp"
+                           android:textStyle="bold" />
+
+                       <ImageView
+                           hide="@{item.tbcH4N1}"
+                           android:layout_marginLeft="16dp"
+                           android:layout_gravity="bottom"
+                           android:layout_marginBottom="8dp"
+                           android:layout_width="33dp"
+                           android:layout_height="33dp"
+                           android:layout_marginRight="16dp"
+                           android:src="@drawable/ic_ranking" />
+                   </LinearLayout>
                 </LinearLayout>
 
 
             </LinearLayout>
 
-            <ImageView
-                hide="@{item.tbcH4N1}"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:src="@drawable/ic_ranking" />
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

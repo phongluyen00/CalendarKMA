@@ -9,7 +9,7 @@ import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface MyAPI {
+public interface MyAPI{
 
     @GET("weather")
     Observable<ResponseAPI> getWeather(@Query("id") String id, @Query("appid") String appId);

@@ -66,4 +66,9 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
         binding.progressbar.setVisibility(View.GONE);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void verifyAccountFailed() {
+        binding.progressbar.setVisibility(View.GONE);
+    }
 }

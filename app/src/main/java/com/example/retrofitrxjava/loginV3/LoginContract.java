@@ -12,6 +12,7 @@ public interface LoginContract {
         void pushView(LoginResponse.Data data);
         void synchronizationSuccess(String message);
         void synchronizationFailed(String message);
+        void verifyAccountFailed();
     }
 
     interface Presenter {

@@ -42,8 +42,10 @@ public class LoginPresenter implements LoginContract.Presenter {
                         AccountModel.password = password;
                         String errorCode = loginResponse.getErrorCode();
                         if (errorCode.equals("-1")) {
+                            view.verifyAccountFailed();
                             Toast.makeText((Context) view, "Tài khoản hoặc mật khẩu sai !", Toast.LENGTH_SHORT).show();
                         } else if (errorCode.equals("0")) {
+                            view.verifyAccountFailed();
                             Toast.makeText((Context) view, "Sai mật khẩu !", Toast.LENGTH_SHORT).show();
                         } else if (errorCode.equals(SUCCESS)) {
                             view.pushView(loginResponse.getData());
@@ -57,7 +59,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d("AAA", e + "");
+                        view.verifyAccountFailed();
                     }
 
 

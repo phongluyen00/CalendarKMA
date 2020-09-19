@@ -20,4 +20,9 @@ public class ScheduleFragment extends BFragment<LayoutScheduleBinding> {
     protected int getLayoutId() {
         return R.layout.layout_schedule;
     }
+
+    @Override
+    public int getTitle() {
+        return R.string.schedule;
+    }
 }

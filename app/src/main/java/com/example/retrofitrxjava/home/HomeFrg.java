@@ -45,6 +45,11 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
     }
 
     @Override
+    public int getTitle() {
+        return R.string.home;
+    }
+
+    @Override
     public void onClick() {
 
     }

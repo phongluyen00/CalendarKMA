@@ -20,6 +20,18 @@ public class AppBinding {
                 .into(im);
     }
 
+    @BindingAdapter("imgType")
+    public static void setImage(ImageView img, String score) {
+        float scoreAccount = Float.parseFloat(score);
+        if (scoreAccount >= 2.5 && scoreAccount < 3.2) {
+            img.setImageResource(R.drawable.custom_botron_kha);
+        } else if (scoreAccount >= 3.2) {
+            img.setImageResource(R.drawable.custom_botron_gioi);
+        } else {
+            img.setImageResource(R.drawable.custom_botron_tb);
+        }
+    }
+
     @BindingAdapter("score")
     public static void setScore(AppCompatTextView tv, String score) {
         if (!score.equals("")) {
@@ -36,6 +48,7 @@ public class AppBinding {
             tv.setTextColor(Color.parseColor("#FFFFFFFF"));
             tv.setText(score);
         } else {
+            tv.setTextColor(Color.BLACK);
             tv.setText(R.string.chua_co);
         }
     }
@@ -54,7 +67,7 @@ public class AppBinding {
 
     @BindingAdapter("name")
     public static void setName(TextView tv, String name) {
-        String nameAccount = "Xin chào, " +"<b>" + name +"</b>";
+        String nameAccount = "Xin chào, " + "<b>" + name + "</b>";
         tv.setText(Html.fromHtml(nameAccount));
     }
 
@@ -64,9 +77,10 @@ public class AppBinding {
             float scoreAccount = Float.parseFloat(score);
             if (scoreAccount >= 2.5 && scoreAccount < 3.2) {
                 img.setVisibility(View.VISIBLE);
+                img.setImageResource(R.drawable.ic_two);
             } else if (scoreAccount >= 3.2) {
                 img.setVisibility(View.VISIBLE);
-                img.setImageResource(R.drawable.ic_baseline_grade_24);
+                img.setImageResource(R.drawable.ic_one);
             } else {
                 img.setVisibility(View.GONE);
             }
