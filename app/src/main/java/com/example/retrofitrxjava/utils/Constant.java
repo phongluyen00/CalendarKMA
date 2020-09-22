@@ -8,4 +8,6 @@ public class Constant {
 
     public static final String SUCCESS = "1";
     public static final String ACCOUNT_NO_EXITS = "2";
+    public static String KEY_ACCOUNT = "UserModel";
+
 }

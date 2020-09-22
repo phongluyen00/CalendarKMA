@@ -7,6 +7,7 @@ import com.example.retrofitrxjava.databinding.LayoutDoubleBinding;
 public class FeesFragment extends BFragment<LayoutDoubleBinding> {
     @Override
     protected void onBackPressed() {
+        getActivity().finish();
 
     }
 

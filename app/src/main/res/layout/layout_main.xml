@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -6,53 +5,96 @@
     <data>
 
         <variable
+            name="account"
+            type="com.example.retrofitrxjava.loginV3.model.LoginResponse.Data" />
+
+        <variable
             name="listener"
             type="com.example.retrofitrxjava.main.MainListener" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container"
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:openDrawer="start">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            android:background="?android:attr/windowBackground"
-            android:foreground="?attr/selectableItemBackground"
-            app:itemIconTint="#FF5722"
-            app:itemTextColor="@android:color/secondary_text_light"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/menu_nav" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="MissingConstraints">
+
+                <RelativeLayout
+                    android:id="@+id/rl_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="#EE0DB5A7"
+                    tools:ignore="MissingConstraints">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:onClick="@{()->listener.openLeftMenu()}"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:padding="10dp"
+                        app:srcCompat="@drawable/ic_baseline_menu_24" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_title"
+                        name="@{account.name}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+                <FrameLayout
+                    android:id="@+id/frame_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/rl_toolbar"
+                    android:visibility="visible"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+            </RelativeLayout>
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/nav_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
+                android:background="?android:attr/windowBackground"
+                android:foreground="?attr/selectableItemBackground"
+                app:itemIconTint="#EE0DB5A7"
+                app:itemTextColor="@android:color/secondary_text_light"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:menu="@menu/menu_bottom_navigation" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/left_menu"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick='@{(v)->listener.onClick()}'
-            android:visibility="gone"
-            tools:ignore="MissingConstraints" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/lv_score"
-            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="55dp"
-            android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_score" />
-
-        <FrameLayout
-            android:id="@+id/frame_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="55dp"
+            android:layout_gravity="start"
+            android:background="@android:color/white"
             android:visibility="visible"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:headerLayout="@layout/nav_header_main"
+            app:menu="@menu/menu_navigation" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
+
 </layout>

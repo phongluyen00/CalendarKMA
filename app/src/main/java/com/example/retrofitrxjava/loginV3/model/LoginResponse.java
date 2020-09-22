@@ -61,14 +61,22 @@ public class LoginResponse extends ModelResponse implements Parcelable {
         @SerializedName("trangThaiHocTap")
         @Expose
         private String status;
+        private String token;
+        private String password;
+        private String mediumScore;
 
+        public Data() {
+        }
 
-        protected Data(Parcel in) {
+        public Data(Parcel in) {
             id = in.readString();
             name = in.readString();
             khoa = in.readString();
             classRoom = in.readString();
             status = in.readString();
+            token = in.readString();
+            password = in.readString();
+            mediumScore = in.readString();
         }
 
         public static final Creator<Data> CREATOR = new Creator<Data>() {
@@ -95,6 +103,9 @@ public class LoginResponse extends ModelResponse implements Parcelable {
             parcel.writeString(khoa);
             parcel.writeString(classRoom);
             parcel.writeString(status);
+            parcel.writeString(token);
+            parcel.writeString(password);
+            parcel.writeString(mediumScore);
         }
     }
 

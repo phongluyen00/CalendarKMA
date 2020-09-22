@@ -18,7 +18,7 @@ public class TuitionActivity extends BActivity<LayoutTuitionBinding> {
     protected void initLayout() {
         adapter = new PagerAdapter(this);
         binding.pager.setAdapter(adapter);
-
+        binding.setListener(this);
         binding.pager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
 
         new TabLayoutMediator(binding.tabLayout, binding.pager, new TabLayoutMediator.OnConfigureTabCallback() {
@@ -38,4 +38,5 @@ public class TuitionActivity extends BActivity<LayoutTuitionBinding> {
     protected int getLayoutId() {
         return R.layout.layout_tuition;
     }
+
 }

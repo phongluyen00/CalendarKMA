@@ -4,15 +4,13 @@ import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.retrofit.MyAPI;
 
 public interface LoginContract {
-    interface Model {
-    }
 
     interface View {
         void verifyAccountSuccess(String userAccount, String password);
-        void pushView(LoginResponse.Data data);
+        void pushView();
         void synchronizationSuccess(String message);
         void synchronizationFailed(String message);
-        void verifyAccountFailed();
+        void verifyAccountFailed(String message);
     }
 
     interface Presenter {

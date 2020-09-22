@@ -17,4 +17,8 @@
     <string name="menu">Menu</string>
     <string name="personal">Personal</string>
     <string name="schedule">Schedule</string>
+    <string name="login_success">Đăng nhập thành công</string>
+    <string name="User_account_or_password_incorrect">Tài khoản hoặc mật khẩu sai !</string>
+    <string name="wrong_password">Sai mật khẩu !</string>
+    <string name="log_out">Đăng xuất thành công</string>
 </resources>

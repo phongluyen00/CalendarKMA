@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="none">
+        <item
+            android:title="Action 1" />
+        <item
+            android:title="Action 2" />
+
+        <item
+            android:title="Action 3" />
+
+        <item
+            android:icon="@drawable/ic_logout"
+            android:id="@+id/log_out"
+            android:title="Đăng xuất" />
+    </group>
+</menu>

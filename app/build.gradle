@@ -64,5 +64,8 @@ dependencies {
 
     implementation 'com.github.vatsaldesai92:MyDynamicCalendarLibrary:1.0.1'
 
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
+
+
 
 }

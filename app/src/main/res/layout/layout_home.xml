@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout>
 
     <data>
-
-        <variable
-            name="item"
-            type="com.example.retrofitrxjava.model.AccountModel" />
-
         <import type="android.text.Html" />
     </data>
 
@@ -20,35 +14,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:background="@drawable/custom_botron" />
-
-            <LinearLayout
-                android:id="@+id/rl_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:background="#FF5722">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvName"
-                    name="@{item.name}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="16dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
 
             <RelativeLayout
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rl_toolbar"
                 android:padding="10dp">
 
                 <androidx.viewpager.widget.ViewPager

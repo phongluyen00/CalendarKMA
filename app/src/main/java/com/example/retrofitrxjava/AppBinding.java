@@ -2,6 +2,7 @@ package com.example.retrofitrxjava;
 
 import android.graphics.Color;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,13 +23,15 @@ public class AppBinding {
 
     @BindingAdapter("imgType")
     public static void setImage(ImageView img, String score) {
-        float scoreAccount = Float.parseFloat(score);
-        if (scoreAccount >= 2.5 && scoreAccount < 3.2) {
-            img.setImageResource(R.drawable.custom_botron_kha);
-        } else if (scoreAccount >= 3.2) {
-            img.setImageResource(R.drawable.custom_botron_gioi);
-        } else {
-            img.setImageResource(R.drawable.custom_botron_tb);
+        if (!TextUtils.isEmpty(score)){
+            float scoreAccount = Float.parseFloat(score);
+            if (scoreAccount >= 2.5 && scoreAccount < 3.2) {
+                img.setImageResource(R.drawable.custom_botron_kha);
+            } else if (scoreAccount >= 3.2) {
+                img.setImageResource(R.drawable.custom_botron_gioi);
+            } else {
+                img.setImageResource(R.drawable.custom_botron_tb);
+            }
         }
     }
 
@@ -48,6 +51,7 @@ public class AppBinding {
             tv.setTextColor(Color.parseColor("#FFFFFFFF"));
             tv.setText(score);
         } else {
+            tv.setBackground(null);
             tv.setTextColor(Color.BLACK);
             tv.setText(R.string.chua_co);
         }
@@ -77,10 +81,8 @@ public class AppBinding {
             float scoreAccount = Float.parseFloat(score);
             if (scoreAccount >= 2.5 && scoreAccount < 3.2) {
                 img.setVisibility(View.VISIBLE);
-                img.setImageResource(R.drawable.ic_two);
             } else if (scoreAccount >= 3.2) {
                 img.setVisibility(View.VISIBLE);
-                img.setImageResource(R.drawable.ic_one);
             } else {
                 img.setVisibility(View.GONE);
             }

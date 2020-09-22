@@ -10,7 +10,7 @@
         android:id="@+id/ll_header_views"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="#FF5722"
+        android:background="@color/colorPrimary"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingTop="5dp"

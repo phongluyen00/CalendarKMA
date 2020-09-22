@@ -18,7 +18,7 @@ public interface MainContract {
 
     interface Presenter {
         void retrieveScore(CompositeDisposable compositeDisposable, MyAPI myAPI,
-                           String user, String password);
+                           String user);
 
         void retrieveDataHome(String userName);
     }

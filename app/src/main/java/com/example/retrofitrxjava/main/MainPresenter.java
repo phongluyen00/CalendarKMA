@@ -6,7 +6,8 @@ import android.widget.Toast;
 
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.home.model.Advertisement;
-import com.example.retrofitrxjava.model.AccountModel;
+import com.example.retrofitrxjava.loginV3.model.LoginResponse;
+import com.example.retrofitrxjava.pre.PrefUtils;
 import com.example.retrofitrxjava.retrofit.MyAPI;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 
@@ -29,7 +30,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void retrieveScore(CompositeDisposable compositeDisposable, MyAPI myAPI, String user, String password) {
+    public void retrieveScore(CompositeDisposable compositeDisposable, MyAPI myAPI, String user) {
         myAPI.getScoreMedium(user).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ScoreMediumResponse>() {
@@ -46,8 +47,9 @@ public class MainPresenter implements MainContract.Presenter {
                         }
                         responses.clear();
                         responses.addAll(datumArrayList);
-                        AccountModel.mediumScore = responses.get(responses.size()-1).getTbcH4N1();
-                        Log.d("AAA", responses.get(responses.size()-1).getTbcH4N1());
+                        LoginResponse.Data data = PrefUtils.loadData((Context) view);
+                        data.setMediumScore(responses.get(responses.size()-1).getTbcH4N1());
+                        PrefUtils.saveData((Context) view,data);
                     }
 
                     @Override

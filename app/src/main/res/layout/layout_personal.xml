@@ -7,38 +7,10 @@
         android:layout_height="match_parent"
         android:background="@android:color/white">
 
-        <RelativeLayout
-            android:id="@+id/rl_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="#FF5722">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="16dp"
-                android:text="Bảng điểm trung bình"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcl_year"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rl_toolbar"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_year" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/lv_score"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/rcl_year"
             app:spanCount="2"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             tools:listitem="@layout/item_score" />

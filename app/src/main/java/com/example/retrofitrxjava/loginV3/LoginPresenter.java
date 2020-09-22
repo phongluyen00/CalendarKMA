@@ -1,13 +1,12 @@
 package com.example.retrofitrxjava.loginV3;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
-import com.example.retrofitrxjava.model.AccountModel;
 import com.example.retrofitrxjava.model.ModelResponse;
+import com.example.retrofitrxjava.pre.PrefUtils;
 import com.example.retrofitrxjava.retrofit.MyAPI;
 
 import io.reactivex.Observer;
@@ -38,28 +37,26 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                     @Override
                     public void onNext(LoginResponse loginResponse) {
-                        AccountModel.userName = userAccount;
-                        AccountModel.password = password;
+                        loginResponse.getData().setToken(userAccount);
+                        loginResponse.getData().setPassword(password);
+                        PrefUtils.saveData((Context) view, loginResponse.getData());
                         String errorCode = loginResponse.getErrorCode();
                         if (errorCode.equals("-1")) {
-                            view.verifyAccountFailed();
-                            Toast.makeText((Context) view, "Tài khoản hoặc mật khẩu sai !", Toast.LENGTH_SHORT).show();
+                            view.verifyAccountFailed(((Context) view).getString(R.string.User_account_or_password_incorrect));
                         } else if (errorCode.equals("0")) {
-                            view.verifyAccountFailed();
-                            Toast.makeText((Context) view, "Sai mật khẩu !", Toast.LENGTH_SHORT).show();
+                            view.verifyAccountFailed(((Context) view).getString(R.string.wrong_password));
                         } else if (errorCode.equals(SUCCESS)) {
-                            view.pushView(loginResponse.getData());
+                            view.pushView();
                         } else if (errorCode.equals(ACCOUNT_NO_EXITS)) {
                             view.verifyAccountSuccess(userAccount, password);
                         } else {
-                            Toast.makeText((Context) view, R.string.error_default
-                                    , Toast.LENGTH_SHORT).show();
+                            view.verifyAccountFailed(((Context) view).getString(R.string.error_default));
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        view.verifyAccountFailed();
+                        view.verifyAccountFailed(((Context) view).getString(R.string.error_default));
                     }
 
 

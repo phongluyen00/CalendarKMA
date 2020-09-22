@@ -1,7 +1,6 @@
 package com.example.retrofitrxjava.home;
 
 import android.os.Handler;
-import android.util.Log;
 
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BFragment;
@@ -10,6 +9,7 @@ import com.example.retrofitrxjava.databinding.LayoutHomeBindingImpl;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.home.model.Advertisement;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
+import com.example.retrofitrxjava.pre.PrefUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +30,12 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
 
     @Override
     protected void initLayout() {
+        data = PrefUtils.loadData(getActivity());
         presenter = new HomePresenter(this);
-        presenter.retrieveDataHome("");
+        presenter.retrieveDataHome(data.getToken());
     }
 
-    public void setDataHome(LoginResponse.Data data, ArrayList<ScoreMediumResponse.Datum> datumArrayList) {
-        this.data = data;
+    public void setDataHome(ArrayList<ScoreMediumResponse.Datum> datumArrayList) {
         this.datum = datumArrayList;
     }
 
