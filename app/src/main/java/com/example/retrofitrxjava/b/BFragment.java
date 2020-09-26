@@ -14,10 +14,17 @@ import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
+import com.example.retrofitrxjava.model.ModelResponse;
+import com.example.retrofitrxjava.retrofit.MyAPI;
+import com.example.retrofitrxjava.retrofit.RetrofitClient;
+
+import io.reactivex.disposables.CompositeDisposable;
+import retrofit2.Retrofit;
 
 public abstract class BFragment<BD extends ViewDataBinding> extends Fragment {
     protected BD binding;
-    protected BAdapter<ScoreMediumResponse.Datum> adapter;
+    protected MyAPI myAPI;
+    protected CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Nullable
     @Override
@@ -29,6 +36,8 @@ public abstract class BFragment<BD extends ViewDataBinding> extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Retrofit retrofit = RetrofitClient.getInstance();
+        myAPI = retrofit.create(MyAPI.class);
         initLayout();
     }
 
@@ -60,6 +69,5 @@ public abstract class BFragment<BD extends ViewDataBinding> extends Fragment {
 
     public abstract @StringRes
     int getTitle();
-
 
 }

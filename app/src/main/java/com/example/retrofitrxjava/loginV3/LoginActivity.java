@@ -1,6 +1,8 @@
 package com.example.retrofitrxjava.loginV3;
 
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
@@ -8,6 +10,7 @@ import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BActivity;
 import com.example.retrofitrxjava.databinding.LayoutLoginBinding;
 import com.example.retrofitrxjava.main.MainActivity;
+import com.example.retrofitrxjava.utils.AppUtils;
 
 public class LoginActivity extends BActivity<LayoutLoginBinding> implements LoginListener, LoginContract.View {
 
@@ -17,6 +20,32 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
     protected void initLayout() {
         binding.setListener(this);
         presenter = new LoginPresenter(this);
+        binding.ivClearUsername.setOnClickListener(view -> binding.edtUser.setText(""));
+        binding.ivClearPassword.setOnClickListener(view -> binding.edtPassword.setText(""));
+        binding.edtUser.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (binding.edtUser.getText().length() > 0)
+                    binding.ivClearUsername.setVisibility(View.VISIBLE);
+                else binding.ivClearUsername.setVisibility(View.GONE);
+            }
+            @Override
+            public void afterTextChanged(Editable editable) { }
+        });
+
+        binding.edtPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (binding.edtUser.getText().length() > 0)
+                    binding.ivClearPassword.setVisibility(View.VISIBLE);
+                else binding.ivClearPassword.setVisibility(View.GONE); }
+            @Override
+            public void afterTextChanged(Editable editable) { }
+        });
     }
 
     @Override
@@ -30,6 +59,7 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
         String password = binding.edtPassword.getText().toString();
         binding.progressbar.setVisibility(View.VISIBLE);
         presenter.verifyAccount(myAPI, userName, password);
+        AppUtils.hideKeyboard(this);
     }
 
     @Override
@@ -56,8 +86,8 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
         startActivity();
     }
 
-    public void startActivity(){
-        Intent intent = new Intent(this,MainActivity.class);
+    public void startActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }

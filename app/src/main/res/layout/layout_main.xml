@@ -24,6 +24,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ProgressBar
+                android:id="@+id/progress_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,11 +46,11 @@
                     tools:ignore="MissingConstraints">
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:onClick="@{()->listener.openLeftMenu()}"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
+                        android:onClick="@{()->listener.openLeftMenu()}"
                         android:padding="10dp"
                         app:srcCompat="@drawable/ic_baseline_menu_24" />
 
@@ -53,34 +62,71 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:textColor="@android:color/white"
-                        android:textSize="16sp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="3dp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/iv_notification"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:padding="10dp"
+                            app:srcCompat="@drawable/ic_baseline_notifications_24" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="wrap_content"
+                            android:padding="3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/custom_botron_tb"
+                            android:textColor="@android:color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/iv_notification" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </RelativeLayout>
 
-                <FrameLayout
-                    android:id="@+id/frame_container"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/rl_toolbar"
-                    android:visibility="visible"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                    android:orientation="vertical">
 
+                    <FrameLayout
+                        android:id="@+id/frame_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:visibility="visible"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                    <com.google.android.material.bottomnavigation.BottomNavigationView
+                        android:id="@+id/nav_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginEnd="0dp"
+                        android:layout_weight="0.1"
+                        android:background="?android:attr/windowBackground"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:itemIconTint="#EE0DB5A7"
+                        app:itemTextColor="@android:color/secondary_text_light"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/frame_container"
+                        app:menu="@menu/menu_bottom_navigation" />
+                </LinearLayout>
             </RelativeLayout>
-
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/nav_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
-                android:layout_marginEnd="0dp"
-                android:background="?android:attr/windowBackground"
-                android:foreground="?attr/selectableItemBackground"
-                app:itemIconTint="#EE0DB5A7"
-                app:itemTextColor="@android:color/secondary_text_light"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:menu="@menu/menu_bottom_navigation" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

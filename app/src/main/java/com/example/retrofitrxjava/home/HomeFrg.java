@@ -1,5 +1,6 @@
 package com.example.retrofitrxjava.home;
 
+import android.content.Intent;
 import android.os.Handler;
 
 import com.example.retrofitrxjava.R;
@@ -10,6 +11,7 @@ import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.home.model.Advertisement;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 import com.example.retrofitrxjava.pre.PrefUtils;
+import com.example.retrofitrxjava.Test123;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,7 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
         data = PrefUtils.loadData(getActivity());
         presenter = new HomePresenter(this);
         presenter.retrieveDataHome(data.getToken());
+        binding.setListener(this);
     }
 
     public void setDataHome(ArrayList<ScoreMediumResponse.Datum> datumArrayList) {
@@ -51,7 +54,7 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
 
     @Override
     public void onClick() {
-
+        startActivity(new Intent(getActivity(), Test123.class));
     }
 
     @Override
@@ -60,18 +63,15 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
         binding.viewpager.setAdapter(adapter1);
         binding.circleIndicator.setViewPager(binding.viewpager);
         handler = new Handler();
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                currentItem = binding.viewpager.getCurrentItem();
-                currentItem++;
-                if (currentItem >= binding.viewpager.getAdapter().getCount()) {
-                    currentItem = 0;
-                }
-                binding.viewpager.setCurrentItem(currentItem, true);
-                handler.postDelayed(runnable, 4500);
-
+        runnable = () -> {
+            currentItem = binding.viewpager.getCurrentItem();
+            currentItem++;
+            if (currentItem >= binding.viewpager.getAdapter().getCount()) {
+                currentItem = 0;
             }
+            binding.viewpager.setCurrentItem(currentItem, true);
+            handler.postDelayed(runnable, 4500);
+
         };
         handler.postDelayed(runnable, 4500);
     }

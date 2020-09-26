@@ -11,15 +11,10 @@ import io.reactivex.disposables.CompositeDisposable;
 public interface MainContract {
 
     interface View {
-        void retrieveScoreSuccess(ArrayList<ScoreMediumResponse.Datum> data);
-
-        void retrieveDataHomeSuccess(ArrayList<Advertisement> data);
+        void retrieveSuccess();
     }
 
     interface Presenter {
-        void retrieveScore(CompositeDisposable compositeDisposable, MyAPI myAPI,
-                           String user);
-
-        void retrieveDataHome(String userName);
+        void retrieveScore(MyAPI myAPI);
     }
 }

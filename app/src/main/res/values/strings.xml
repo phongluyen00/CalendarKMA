@@ -21,4 +21,8 @@
     <string name="User_account_or_password_incorrect">Tài khoản hoặc mật khẩu sai !</string>
     <string name="wrong_password">Sai mật khẩu !</string>
     <string name="log_out">Đăng xuất thành công</string>
+    <string name="average_transcript">Bảng điểm trung bình</string>
+    <string name="detail_score">Bảng điểm chi tiết</string>
+    <string name="score_medium">Bảng điểm TB</string>
+    <string name="login_failed">Đăng nhập thất bại</string>
 </resources>

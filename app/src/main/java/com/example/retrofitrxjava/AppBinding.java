@@ -59,13 +59,16 @@ public class AppBinding {
 
     @BindingAdapter("status")
     public static void setStatus(TextView tv, String score) {
-        float scoreAccount = Float.parseFloat(score);
-        if (scoreAccount >= 2.5 && scoreAccount < 3.2) {
-            tv.setText(R.string.kha);
-        } else if (scoreAccount >= 3.2) {
-            tv.setText(R.string.gioi);
-        } else {
-            tv.setText(R.string.trung_binh);
+        if (score != null){
+            float scoreAccount = Float.parseFloat(score);
+            if (scoreAccount >= 2.5 && scoreAccount < 3.2) {
+                tv.setTextColor(Color.parseColor("#FD05B0F4"));
+            } else if (scoreAccount >= 3.2) {
+                tv.setTextColor(Color.parseColor("#FF9800"));
+            } else {
+                tv.setTextColor(Color.parseColor("#BAFA0133"));
+            }
+            tv.setText(score+"");
         }
     }
 

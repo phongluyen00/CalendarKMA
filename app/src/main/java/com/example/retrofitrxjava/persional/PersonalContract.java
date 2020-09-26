@@ -1,18 +1,19 @@
 package com.example.retrofitrxjava.persional;
 
-import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
-
-import java.util.ArrayList;
+import com.example.retrofitrxjava.persional.model.ScheduleModelResponse;
+import com.example.retrofitrxjava.retrofit.MyAPI;
 
 public interface PersonalContract {
-    interface Model {
-    }
 
     interface View {
-        void retrieveScoreSuccess(ArrayList<ScoreMediumResponse.Datum> data);
+        void retrieveSuccess(ScheduleModelResponse response);
+        void updateSuccess(String message);
     }
 
     interface Presenter {
-        void retrieveScore(String id);
+        void retrieveSchedule(String token, MyAPI myAPI);
+        void updateSchedule(String token, String password, MyAPI myAPI);
+        void updateScore(String token, String password, MyAPI myAPI);
+        void updateMoney(String token, String password, MyAPI myAPI);
     }
 }
