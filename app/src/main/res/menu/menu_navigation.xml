@@ -5,15 +5,17 @@
 
     <group android:checkableBehavior="none">
         <item
-            android:title="Action 1" />
+            android:icon="@drawable/ic_baseline_card_travel_24"
+            android:id="@+id/it"
+            android:title="Tuyển dụng" />
         <item
-            android:title="Action 2" />
+            android:title="Học lập trình" />
 
         <item
             android:title="Action 3" />
 
         <item
-            android:icon="@drawable/ic_logout"
+            android:icon="@drawable/ic_baseline_exit_to_app_24"
             android:id="@+id/log_out"
             android:title="Đăng xuất" />
     </group>

@@ -220,6 +220,7 @@
                                             android:gravity="center">
 
                                             <ImageView
+                                                android:src="@drawable/custom_botron"
                                                 android:layout_width="15dp"
                                                 android:layout_height="15dp"
                                                 android:layout_gravity="center_vertical" />
@@ -242,6 +243,7 @@
                                             android:gravity="center">
 
                                             <ImageView
+                                                android:src="@drawable/event_view"
                                                 android:layout_width="15dp"
                                                 android:layout_height="15dp"
                                                 android:layout_gravity="center_vertical" />

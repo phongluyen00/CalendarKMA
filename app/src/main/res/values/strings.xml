@@ -21,8 +21,13 @@
     <string name="User_account_or_password_incorrect">Tài khoản hoặc mật khẩu sai !</string>
     <string name="wrong_password">Sai mật khẩu !</string>
     <string name="log_out">Đăng xuất thành công</string>
-    <string name="average_transcript">Bảng điểm trung bình</string>
+    <string name="average_transcript">Bảng điểm </string>
     <string name="detail_score">Bảng điểm chi tiết</string>
     <string name="score_medium">Bảng điểm TB</string>
     <string name="login_failed">Đăng nhập thất bại</string>
+    <string name="update_success">Cập nhật dữ liệu thành công</string>
+    <string name="link_recruitment">https://careerbuilder.vn/viec-lam/cntt-phan-mem-c1e1-vi.html</string>
+    <string name="link_actvn">http://actvn.edu.vn/Articles/thong-tin-tuyen-dung-cho-sinh-vien-52.html#page-1</string>
+    <string name="log_out_success">Đăng xuất thành công !</string>
+    <string name="recruitment">Tuyển dụng thực tập</string>
 </resources>

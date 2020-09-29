@@ -1,4 +1,4 @@
-package com.example.retrofitrxjava.persional.average;
+package com.example.retrofitrxjava.common.average;
 
 import android.view.View;
 
@@ -24,6 +24,7 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
 
     @Override
     protected void initLayout() {
+        binding.progressLoadData.setVisibility(View.VISIBLE);
         presenter = new AveragePresenter(this);
         if (isAverage) {
             presenter.retrieveScore(compositeDisposable, myAPI, PrefUtils.loadData(getActivity()).getToken());
@@ -48,6 +49,7 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
 
     @Override
     public void retrieveScoreSuccess(ArrayList<ScoreMediumResponse.Datum> responses) {
+        binding.progressLoadData.setVisibility(View.GONE);
         LoginResponse.Data data = PrefUtils.loadData(getActivity());
         data.setMediumScore(responses.get(responses.size() - 1).getTbcH4N1());
         PrefUtils.saveData(getActivity(), data);
@@ -57,10 +59,24 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
         binding.lvScore.setAdapter(adapter);
         binding.rlHeader.setVisibility(View.GONE);
         adapter.setData(responses);
+        if (responses != null && responses.size() > 0){
+            binding.groupNoData.setVisibility(View.GONE);
+        }else {
+            binding.groupNoData.setVisibility(View.VISIBLE);
+            binding.rlHeader.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void retrieveScoreFailed() {
+        binding.progressLoadData.setVisibility(View.GONE);
+        binding.groupNoData.setVisibility(View.VISIBLE);
+        binding.rlHeader.setVisibility(View.GONE);
     }
 
     @Override
     public void retrieveDetailScoreSuccess(DetailScoreModel detailScoreModel) {
+        binding.progressLoadData.setVisibility(View.GONE);
         ArrayList<DetailScoreModel.Data> data = (ArrayList<DetailScoreModel.Data>) detailScoreModel.getData();
         dataBAdapter = new BAdapter<>(getContext(), R.layout.item_detail_score);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -69,11 +85,16 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
         binding.rlHeader.setVisibility(View.VISIBLE);
         binding.lvScore.setAdapter(dataBAdapter);
         dataBAdapter.setData(data);
+        if (data != null && data.size() > 0){
+            binding.groupNoData.setVisibility(View.GONE);
+        }else {
+            binding.groupNoData.setVisibility(View.VISIBLE);
+            binding.rlHeader.setVisibility(View.GONE);
+        }
     }
 
     @Override
     protected void onBackPressed() {
-
     }
 
 }

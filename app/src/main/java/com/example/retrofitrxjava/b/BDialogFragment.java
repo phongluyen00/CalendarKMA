@@ -1,4 +1,4 @@
-package com.example.retrofitrxjava.persional.dialog;
+package com.example.retrofitrxjava.b;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -12,32 +12,30 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.databinding.DialogLogoutBinding;
-import com.example.retrofitrxjava.databinding.DialogSyncBinding;
-import com.example.retrofitrxjava.main.dialog.DialogListener;
+import com.example.retrofitrxjava.retrofit.MyAPI;
+import com.example.retrofitrxjava.retrofit.RetrofitClient;
 
 import io.reactivex.annotations.NonNull;
+import retrofit2.Retrofit;
 
-public class DialogSync extends DialogFragment {
+public abstract class BDialogFragment<BD extends ViewDataBinding> extends DialogFragment {
 
-    private DialogSyncBinding binding;
-    private itemOnClick listener;
-
-    public DialogSync(itemOnClick listener) {
-        this.listener = listener;
-    }
+    protected BD binding;
+    protected MyAPI myAPI;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()),
-                R.layout.dialog_sync, null, false);
+                getLayoutId(), null, false);
         setCancelable(false);
         return binding.getRoot();
     }
+
+    protected abstract int getLayoutId();
 
     @NonNull
     @Override
@@ -57,15 +55,10 @@ public class DialogSync extends DialogFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        binding.syncMoney.setOnClickListener(view -> {  listener.onClickSynScore(); });
-        binding.tvSyncSchedule.setOnClickListener(view -> { listener.onClickSynSchedule(); });
-        binding.syncMoney.setOnClickListener(view -> {  listener.onClickSyncMoney(); });
+        Retrofit retrofit = RetrofitClient.getInstance();
+        myAPI = retrofit.create(MyAPI.class);
+        initLayout();
     }
 
-    public interface itemOnClick{
-        void onClickSynScore();
-        void onClickSynSchedule();
-        void onClickSyncMoney();
-    }
-
+    protected abstract void initLayout();
 }

@@ -17,12 +17,6 @@ public class HandleLearning extends ModelResponse {
     @Getter
     public class Data {
 
-        @SerializedName("Id")
-        @Expose
-        private Integer id;
-        @SerializedName("mssv")
-        @Expose
-        private String mssv;
         @SerializedName("stt")
         @Expose
         private String stt;

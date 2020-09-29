@@ -1,4 +1,4 @@
-package com.example.retrofitrxjava.persional.average;
+package com.example.retrofitrxjava.common.average;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -31,13 +31,16 @@ public class AveragePresenter implements AverageContract.Presenter {
         myAPI.getScoreMedium(token).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(scoreMediumResponse -> {
-                    ArrayList<ScoreMediumResponse.Datum> datumArrayList = new ArrayList<>();
-                    for (int i = 1; i < scoreMediumResponse.getData().size(); i++) {
-                        datumArrayList.add(scoreMediumResponse.getData().get(i));
+                    if (scoreMediumResponse.getData() != null) {
+                        ArrayList<ScoreMediumResponse.Datum> datumArrayList = new ArrayList<>();
+                        for (int i = 1; i < scoreMediumResponse.getData().size(); i++) {
+                            datumArrayList.add(scoreMediumResponse.getData().get(i));
+                        }
+                        responses.clear();
+                        responses.addAll(datumArrayList);
                     }
-                    responses.clear();
-                    responses.addAll(datumArrayList);
                 }, throwable -> {
+                    view.retrieveScoreFailed();
                     Toast.makeText((Context) view, R.string.error_default
                             , Toast.LENGTH_SHORT).show();
                 }, () -> view.retrieveScoreSuccess((ArrayList<ScoreMediumResponse.Datum>) responses));
@@ -50,13 +53,9 @@ public class AveragePresenter implements AverageContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(detailScoreModel -> detailScoreModel.getErrorCode().equals(SUCCESS))
                 .subscribe(detailScoreModel -> {
-                            if (detailScoreModel.getErrorCode().equals(SUCCESS)) {
+                            if (detailScoreModel.getErrorCode().equals(SUCCESS))
                                 view.retrieveDetailScoreSuccess(detailScoreModel);
-                            }
                         },
-                        throwable -> {
-                        },
-                        () -> {
-                        });
+                        throwable -> view.retrieveScoreFailed());
     }
 }

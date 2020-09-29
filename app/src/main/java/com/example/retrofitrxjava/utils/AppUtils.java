@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.retrofitrxjava.R;
+import com.example.retrofitrxjava.custom.MyDynamicCalendar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,5 +43,35 @@ public class AppUtils {
             e.printStackTrace();
         }
         return input;
+    }
+
+    // HOURS 1:
+    public static final String HOURS1 = "1,2,3";
+    public static final String START_HOURS1 = "7:00";
+    public static final String END_HOURS1 = "9:35";
+    // HOURS 2:
+    public static final String HOURS2 = "4,5,6";
+    public static final String START_HOURS2 = "9:35";
+    public static final String END_HOURS2 = "11:30";
+    // HOURS 3:
+    public static final String HOURS3 = "7,8,9";
+    public static final String START_HOURS3 = "12:00";
+    public static final String END_HOURS3 = "14:55";
+    // HOURS 4:
+    public static final String HOURS4 = "10,11,12";
+    public static final String START_HOURS4 = "15:00";
+    public static final String END_HOURS4 = "17:00";
+    // HOURS 5:
+    public static final String HOURS5= "13,14,15,16";
+    public static final String START_HOURS5 = "18:00";
+    public static final String END_HOURS5 = "20:30";
+
+    public static void putData(MyDynamicCalendar myCalendar, String date, String startTime, String endTime, String name) {
+        myCalendar.setWeekDayLayoutTextColor(R.color.red);
+        myCalendar.setCurrentDateBackgroundColor(R.color.black);
+        myCalendar.addEvent(date, startTime, endTime, name);
+        myCalendar.isSaturdayOff(true, "#ffffff", "#ff0000");
+        myCalendar.isSundayOff(true, "#ffffff", "#ff0000");
+        myCalendar.showMonthViewWithBelowEvents();
     }
 }

@@ -19,12 +19,6 @@ public class EventListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Context context;
     private String strViewFlag;
     private ArrayList<EventModel> eventModelList;
-    private itemOnClick listener;
-
-    public void setListener(itemOnClick listener) {
-        this.listener = listener;
-    }
-
 
     public EventListAdapter(Context context, ArrayList<EventModel> eventModelList, String strViewFlag) {
         this.context = context;
@@ -88,8 +82,6 @@ public class EventListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     v_divider.setBackgroundColor(Color.parseColor(AppConstants.strBelowMonthEventDividerColor));
                 }
             }
-
-
         }
     }
 
@@ -107,15 +99,10 @@ public class EventListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         EventViewHolder showEventsViewHolder = (EventViewHolder) holder;
         showEventsViewHolder.setEvent(eventModel);
-
     }
 
     @Override
     public int getItemCount() {
         return eventModelList.size();
-    }
-
-    public interface itemOnClick{
-        void onClick(EventModel eventModel);
     }
 }

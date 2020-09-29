@@ -22,7 +22,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/label_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Cập nhật dữ liệu"
@@ -33,11 +33,22 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:id="@+id/close_dialog"
+                    android:layout_width="50dp"
+                    android:layout_height="30dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="5dp"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/label_title" />
+
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/sync_score"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="Cập nhật bảng điểm chi tiết "
@@ -58,6 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="Cập nhât xử lý học vụ"
@@ -75,10 +87,33 @@
                     app:layout_constraintBottom_toBottomOf="@id/tv_sync_waring" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_update_cc"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cập nhật chứng chỉ"
+                    android:textColor="@android:color/black"
+                    android:padding="10dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@+id/tv_sync_waring"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_sync_waring" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="1dp"
+                    android:background="@android:color/black"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_update_cc" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_sync_schedule"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="Cập nhật lịch học"
@@ -86,7 +121,7 @@
                     android:textSize="14sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_sync_waring" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_update_cc" />
 
                 <View
                     android:layout_width="match_parent"
@@ -100,6 +135,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="Cập nhật lệ phí, học phí"

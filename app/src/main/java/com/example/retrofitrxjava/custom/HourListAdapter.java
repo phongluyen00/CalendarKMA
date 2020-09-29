@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.example.retrofitrxjava.R;
 
 import java.util.ArrayList;

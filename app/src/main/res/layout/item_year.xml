@@ -5,11 +5,11 @@
 
         <variable
             name="item"
-            type="com.example.retrofitrxjava.persional.model.Data" />
+            type="com.example.retrofitrxjava.common.model.Data" />
 
         <variable
             name="listener"
-            type="com.example.retrofitrxjava.b.ScoreListener" />
+            type="com.example.retrofitrxjava.b.ItemOnclickListener" />
     </data>
 
     <androidx.cardview.widget.CardView

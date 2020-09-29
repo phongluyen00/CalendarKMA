@@ -14,7 +14,7 @@ public class PaymentModel extends ModelResponse {
     private List<Data> data = null;
 
     @Getter
-    public class Data    {
+    public class Data extends ModelResponse {
         @SerializedName("hocKy")
         @Expose
         private String hocKy;

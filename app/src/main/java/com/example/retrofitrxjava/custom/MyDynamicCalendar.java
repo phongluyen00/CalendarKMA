@@ -28,8 +28,6 @@ import com.example.retrofitrxjava.R;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 public class MyDynamicCalendar extends LinearLayout {
@@ -651,19 +649,8 @@ public class MyDynamicCalendar extends LinearLayout {
                         eventModelList.add(new EventModel(AppConstants.eventList.get(i).getStrDate(), AppConstants.eventList.get(i).getStrStartTime(), AppConstants.eventList.get(i).getStrEndTime(), AppConstants.eventList.get(i).getStrName()));
                     }
                 }
-                Collections.sort(eventModelList, new Comparator<EventModel>() {
-                    @Override
-                    public int compare(EventModel eventModel, EventModel t1) {
-                        return eventModel.getStrStartTime().compareTo(t1.getStrStartTime());
-                    }
-                });
-                eventListAdapter.notifyDataSetChanged();
-                eventListAdapter.setListener(new EventListAdapter.itemOnClick() {
-                    @Override
-                    public void onClick(EventModel eventModel) {
 
-                    }
-                });
+                eventListAdapter.notifyDataSetChanged();
             }
         });
     }

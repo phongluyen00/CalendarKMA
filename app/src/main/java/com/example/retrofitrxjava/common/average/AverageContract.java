@@ -1,4 +1,4 @@
-package com.example.retrofitrxjava.persional.average;
+package com.example.retrofitrxjava.common.average;
 
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 import com.example.retrofitrxjava.model.DetailScoreModel;
@@ -12,6 +12,7 @@ public interface AverageContract {
 
     interface View {
         void retrieveScoreSuccess(ArrayList<ScoreMediumResponse.Datum> responses);
+        void retrieveScoreFailed();
         void retrieveDetailScoreSuccess(DetailScoreModel detailScoreModel);
     }
 

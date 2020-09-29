@@ -1,4 +1,4 @@
-package com.example.retrofitrxjava.persional.model;
+package com.example.retrofitrxjava.common.model;
 
 import com.example.retrofitrxjava.model.ModelResponse;
 import com.google.gson.annotations.Expose;
