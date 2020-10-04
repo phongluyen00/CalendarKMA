@@ -1,22 +1,25 @@
 package com.example.retrofitrxjava.home;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 
 import com.example.retrofitrxjava.R;
+import com.example.retrofitrxjava.b.BAdapter;
 import com.example.retrofitrxjava.b.BFragment;
+import com.example.retrofitrxjava.b.ItemOnclickListener;
 import com.example.retrofitrxjava.home.adapter.BannerAdapter;
 import com.example.retrofitrxjava.databinding.LayoutHomeBindingImpl;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.home.model.Advertisement;
-import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
+import com.example.retrofitrxjava.model.Article;
 import com.example.retrofitrxjava.pre.PrefUtils;
 import com.example.retrofitrxjava.Test123;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeListener, HomeContract.View {
+public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeListener, HomeContract.View, ItemOnclickListener<Article> {
 
     private BannerAdapter adapter1;
     private android.os.Handler handler;
@@ -24,7 +27,11 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
     private LoginResponse.Data data;
     private int currentItem;
     private Runnable runnable;
-    private ArrayList<ScoreMediumResponse.Datum> datum = new ArrayList<>();
+    private BAdapter<Article> adapter;
+
+    public static HomeFrg getInstance() {
+        return new HomeFrg();
+    }
 
     @Override
     protected void onBackPressed() {
@@ -35,11 +42,8 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
         data = PrefUtils.loadData(getActivity());
         presenter = new HomePresenter(this);
         presenter.retrieveDataHome(data.getToken());
+        presenter.retrieveDataEnglish();
         binding.setListener(this);
-    }
-
-    public void setDataHome(ArrayList<ScoreMediumResponse.Datum> datumArrayList) {
-        this.datum = datumArrayList;
     }
 
     @Override
@@ -74,5 +78,21 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
 
         };
         handler.postDelayed(runnable, 4500);
+    }
+
+    @Override
+    public void retrieveDataEnglishSuccess(List<Article> articles) {
+        if (articles != null) {
+            adapter = new BAdapter<>(getActivity(), R.layout.item_english);
+            binding.rcEnglish.setAdapter(adapter);
+            adapter.setData((ArrayList<Article>) articles);
+            adapter.setListener(this);
+        }
+    }
+
+    @Override
+    public void onItemMediaClick(Article article) {
+        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(article.getLink()));
+        startActivity(myIntent);
     }
 }

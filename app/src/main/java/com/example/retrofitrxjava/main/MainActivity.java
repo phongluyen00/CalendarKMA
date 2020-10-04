@@ -1,5 +1,7 @@
 package com.example.retrofitrxjava.main;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -21,33 +23,43 @@ import com.example.retrofitrxjava.home.HomeFrg;
 import com.example.retrofitrxjava.utils.AppUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 public class MainActivity extends BActivity<LayoutMainBinding> implements MainListener, MainContract.View, NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     private MainPresenter presenter;
     private CommonFragment personalFragment;
     private HomeFrg homeFrg = new HomeFrg();
-    private LoginResponse.Data data;
+    private LoginResponse.Data userModel;
     private DialogLogout logoutDialog;
-    private String token, password;
+    RxPermissions rxPermissions;
 
+    @SuppressLint("CheckResult")
     @Override
     protected void initLayout() {
-        token = PrefUtils.loadData(MainActivity.this).getToken();
-        password = PrefUtils.loadData(MainActivity.this).getPassword();
+        rxPermissions = new RxPermissions(this);
+        rxPermissions.request(Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.READ_PHONE_STATE).subscribe(granted -> {
+                    if (granted) {
+                    }
+                });
+        userModel = PrefUtils.loadData(this);
         presenter = new MainPresenter(this);
-        binding.progressMain.setVisibility(View.VISIBLE);
-        presenter.retrieveScore(myAPI);
+        if (!(userModel.getScoreMediumResponse() != null)) {
+            binding.progressMain.setVisibility(View.VISIBLE);
+            presenter.retrieveScore(myAPI);
+        }
         binding.setListener(this);
         binding.leftMenu.setItemIconTintList(null);
-        data = PrefUtils.loadData(this);
-        binding.setAccount(data);
-        AppUtils.loadView(this, homeFrg);
+        binding.setAccount(userModel);
+        AppUtils.loadView(this, HomeFrg.getInstance());
         binding.leftMenu.setNavigationItemSelectedListener(this);
         binding.navView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.nav_home:
-                    AppBinding.setName(binding.tvTitle, data.getName());
+                    AppBinding.setName(binding.tvTitle, userModel.getName());
                     binding.rlToolbar.setVisibility(View.VISIBLE);
                     AppUtils.loadView(MainActivity.this, homeFrg);
                     return true;
@@ -137,29 +149,12 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
                 AppUtils.loadView(this, new RecruitmentFrg());
                 return true;
         }
-
         return false;
     }
 
     @Override
     public void retrieveScoreSuccess(ScoreMediumResponse response) {
         binding.progressMain.setVisibility(View.GONE);
-        if (!(response.getData() != null && response.getData().size() > 0))
-            presenter.synchronization(myAPI, token, password);
     }
 
-    @Override
-    public void synScoreDetail() {
-        presenter.synScoreDetail(myAPI, token, password);
-    }
-
-    @Override
-    public void synSchedule() {
-        presenter.synSchedule(myAPI, token, password);
-    }
-
-    @Override
-    public void synchronization() {
-        presenter.synchronization(myAPI, token, password);
-    }
 }

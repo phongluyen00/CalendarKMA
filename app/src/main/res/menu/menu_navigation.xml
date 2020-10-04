@@ -9,10 +9,12 @@
             android:id="@+id/it"
             android:title="Tuyển dụng" />
         <item
+            android:icon="@drawable/ic_baseline_layers_24"
             android:title="Học lập trình" />
 
         <item
-            android:title="Action 3" />
+            android:icon="@drawable/ic_baseline_phone_callback_24"
+            android:title="Liên hệ với chúng tôi" />
 
         <item
             android:icon="@drawable/ic_baseline_exit_to_app_24"

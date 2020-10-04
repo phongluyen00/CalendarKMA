@@ -1,6 +1,7 @@
 package com.example.retrofitrxjava.retrofit;
 
 import com.example.retrofitrxjava.common.model.TuitionResponse;
+import com.example.retrofitrxjava.common.model.Update;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.model.CertificateResponse;
 import com.example.retrofitrxjava.model.DetailScoreModel;
@@ -14,6 +15,10 @@ import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
+/**
+ * Create by Luyenphong
+ * luyenphong00@gmail.com
+ */
 public interface MyAPI {
 
     @GET("getScoreMedium")
@@ -44,8 +49,8 @@ public interface MyAPI {
     // update
 
     @GET("synchronizationMarkAvg")
-    Observable<ModelResponse> synchronization(@Query("userName") String token,
-                                              @Query("passWord") String passWord);
+    Observable<Update> synchronization(@Query("userName") String token,
+                                       @Query("passWord") String passWord);
 
     @GET("dongBoBangDiemChiTiet")
     Observable<ModelResponse> synScoreDetail(@Query("userName") String token,

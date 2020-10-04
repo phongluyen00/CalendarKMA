@@ -11,8 +11,10 @@ import io.reactivex.disposables.CompositeDisposable;
 public interface AverageContract {
 
     interface View {
-        void retrieveScoreSuccess(ArrayList<ScoreMediumResponse.Datum> responses);
+        void retrieveScoreSuccess(ScoreMediumResponse scoreMediumResponse, ArrayList<ScoreMediumResponse.Datum> responses);
+
         void retrieveScoreFailed();
+
         void retrieveDetailScoreSuccess(DetailScoreModel detailScoreModel);
     }
 

@@ -1,10 +1,7 @@
 package com.example.retrofitrxjava.common.average;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.widget.Toast;
 
-import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 import com.example.retrofitrxjava.retrofit.MyAPI;
 
@@ -38,12 +35,9 @@ public class AveragePresenter implements AverageContract.Presenter {
                         }
                         responses.clear();
                         responses.addAll(datumArrayList);
+                        view.retrieveScoreSuccess(scoreMediumResponse, (ArrayList<ScoreMediumResponse.Datum>) responses);
                     }
-                }, throwable -> {
-                    view.retrieveScoreFailed();
-                    Toast.makeText((Context) view, R.string.error_default
-                            , Toast.LENGTH_SHORT).show();
-                }, () -> view.retrieveScoreSuccess((ArrayList<ScoreMediumResponse.Datum>) responses));
+                }, throwable -> view.retrieveScoreFailed());
     }
 
     @SuppressLint("CheckResult")
@@ -55,7 +49,6 @@ public class AveragePresenter implements AverageContract.Presenter {
                 .subscribe(detailScoreModel -> {
                             if (detailScoreModel.getErrorCode().equals(SUCCESS))
                                 view.retrieveDetailScoreSuccess(detailScoreModel);
-                        },
-                        throwable -> view.retrieveScoreFailed());
+                        }, throwable -> view.retrieveScoreFailed());
     }
 }

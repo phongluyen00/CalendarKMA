@@ -10,7 +10,9 @@ import com.example.retrofitrxjava.b.BAdapter;
 import com.example.retrofitrxjava.b.BFragment;
 import com.example.retrofitrxjava.b.ItemOnclickListener;
 import com.example.retrofitrxjava.databinding.LayoutRecruitmentBinding;
+import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.model.Article;
+import com.example.retrofitrxjava.pre.PrefUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,9 +21,12 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> {
+public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implements ItemOnclickListener<Article> {
     private BAdapter<Article> adapter;
+
+    private LoginResponse.Data userModel;
 
     @Override
     protected void initLayout() {
@@ -33,7 +38,12 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> {
     public void onStart() {
         super.onStart();
         binding.progressLoadData.setVisibility(View.VISIBLE);
-        new DownloadTask().execute(getString(R.string.link_recruitment));
+        userModel = PrefUtils.loadData(getActivity());
+        if (userModel.getArticleListTD() != null && userModel.getArticleListTD().size() > 0) {
+            setData(userModel.getArticleListTD());
+        }else {
+            new DownloadTask().execute(getString(R.string.link_recruitment));
+        }
     }
 
     @Override
@@ -46,7 +56,24 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> {
         return R.string.add_widget;
     }
 
-    private class DownloadTask extends AsyncTask<String, Void, ArrayList<Article>> implements ItemOnclickListener<Article> {
+    @Override
+    public void onItemMediaClick(Article article) {
+        try {
+            binding.helpWebview.setWebViewClient(new WebViewClient());
+            binding.helpWebview.getSettings().setSupportZoom(true);
+            binding.helpWebview.getSettings().setAllowContentAccess(true);
+            binding.helpWebview.getSettings().setBuiltInZoomControls(true);
+            binding.helpWebview.getSettings().setLoadWithOverviewMode(true);
+            binding.helpWebview.getSettings().setUseWideViewPort(true);
+            binding.helpWebview.loadUrl(article.getLink());
+            binding.rvRecruitment.setVisibility(View.GONE);
+            binding.helpWebview.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class DownloadTask extends AsyncTask<String, Void, ArrayList<Article>> {
         @Override
         protected ArrayList<Article> doInBackground(String... strings) {
             Document document = null;
@@ -106,29 +133,18 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> {
         protected void onPostExecute(ArrayList<Article> articles) {
             super.onPostExecute(articles);
             //Setup data recyclerView
-            adapter = new BAdapter<>(getActivity(), R.layout.item_recruitment);
-            binding.rvRecruitment.setAdapter(adapter);
-            adapter.setData(articles);
-            binding.progressLoadData.setVisibility(View.GONE);
-            adapter.setListener(this);
+            userModel.setArticleListTD(articles);
+            PrefUtils.saveData(getActivity(), userModel);
+            setData(articles);
         }
+    }
 
-        @Override
-        public void onItemMediaClick(Article article) {
-            try {
-                binding.helpWebview.setWebViewClient(new WebViewClient());
-                binding.helpWebview.getSettings().setSupportZoom(true);
-                binding.helpWebview.getSettings().setAllowContentAccess(true);
-                binding.helpWebview.getSettings().setBuiltInZoomControls(true);
-                binding.helpWebview.getSettings().setLoadWithOverviewMode(true);
-                binding.helpWebview.getSettings().setUseWideViewPort(true);
-                binding.helpWebview.loadUrl(article.getLink());
-                binding.rvRecruitment.setVisibility(View.GONE);
-                binding.helpWebview.setVisibility(View.VISIBLE);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    private void setData(ArrayList<Article> articles) {
+        adapter = new BAdapter<>(getActivity(), R.layout.item_recruitment);
+        binding.rvRecruitment.setAdapter(adapter);
+        adapter.setData(articles);
+        binding.progressLoadData.setVisibility(View.GONE);
+        adapter.setListener(this);
     }
 
     @Override

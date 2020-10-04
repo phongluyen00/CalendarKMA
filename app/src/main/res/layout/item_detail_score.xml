@@ -63,7 +63,7 @@
                 android:maxLines="2"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:text="@{item.danhGia}"
+                study="@{item.danhGia}"
                 android:textColor="#00BCD4" />
         </LinearLayout>
 

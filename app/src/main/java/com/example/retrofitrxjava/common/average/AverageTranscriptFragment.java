@@ -21,15 +21,32 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
     private boolean isAverage;
     private BAdapter<ScoreMediumResponse.Datum> adapter;
     private BAdapter<DetailScoreModel.Data> dataBAdapter;
+    private LoginResponse.Data userModel;
 
     @Override
     protected void initLayout() {
+        userModel = PrefUtils.loadData(getActivity());
+        DetailScoreModel detailScoreModel = userModel.getDetailScoreModel();
+        ScoreMediumResponse scoreResponse = userModel.getScoreMediumResponse();
         binding.progressLoadData.setVisibility(View.VISIBLE);
         presenter = new AveragePresenter(this);
         if (isAverage) {
-            presenter.retrieveScore(compositeDisposable, myAPI, PrefUtils.loadData(getActivity()).getToken());
+            if (scoreResponse != null) {
+                ArrayList<ScoreMediumResponse.Datum> response = new ArrayList<>();
+                for (int i = 1; i < scoreResponse.getData().size(); i++) {
+                    response.add(scoreResponse.getData().get(i));
+                }
+                fillDataScore(response);
+            } else {
+                presenter.retrieveScore(compositeDisposable, myAPI, PrefUtils.loadData(getActivity()).getToken());
+            }
         } else {
-            presenter.retrieveDetailScore(myAPI, PrefUtils.loadData(getActivity()).getToken());
+            if (detailScoreModel != null && detailScoreModel.getData().size() > 0) {
+                ArrayList<DetailScoreModel.Data> data = (ArrayList<DetailScoreModel.Data>) detailScoreModel.getData();
+                fillData(data);
+            } else {
+                presenter.retrieveDetailScore(myAPI, PrefUtils.loadData(getActivity()).getToken());
+            }
         }
     }
 
@@ -48,20 +65,25 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
     }
 
     @Override
-    public void retrieveScoreSuccess(ArrayList<ScoreMediumResponse.Datum> responses) {
+    public void retrieveScoreSuccess(ScoreMediumResponse scoreMediumResponse, ArrayList<ScoreMediumResponse.Datum> responses) {
+        userModel.setScoreMediumResponse(scoreMediumResponse);
+        userModel.setMediumScore(scoreMediumResponse.getData().
+                get(scoreMediumResponse.getData().size() - 1).getH4N1());
+        PrefUtils.saveData(getActivity(), userModel);
+        fillDataScore(responses);
+    }
+
+    private void fillDataScore(ArrayList<ScoreMediumResponse.Datum> data) {
         binding.progressLoadData.setVisibility(View.GONE);
-        LoginResponse.Data data = PrefUtils.loadData(getActivity());
-        data.setMediumScore(responses.get(responses.size() - 1).getTbcH4N1());
-        PrefUtils.saveData(getActivity(), data);
         adapter = new BAdapter<>(getContext(), R.layout.item_score);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         binding.lvScore.setLayoutManager(gridLayoutManager);
         binding.lvScore.setAdapter(adapter);
         binding.rlHeader.setVisibility(View.GONE);
-        adapter.setData(responses);
-        if (responses != null && responses.size() > 0){
+        adapter.setData(data);
+        if (data != null && data.size() > 0) {
             binding.groupNoData.setVisibility(View.GONE);
-        }else {
+        } else {
             binding.groupNoData.setVisibility(View.VISIBLE);
             binding.rlHeader.setVisibility(View.GONE);
         }
@@ -76,18 +98,29 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
 
     @Override
     public void retrieveDetailScoreSuccess(DetailScoreModel detailScoreModel) {
-        binding.progressLoadData.setVisibility(View.GONE);
+
+        if (detailScoreModel != null) {
+            LoginResponse.Data loadData = PrefUtils.loadData(getActivity());
+            loadData.setDetailScoreModel(detailScoreModel);
+            PrefUtils.saveData(getActivity(), loadData);
+        }
+
         ArrayList<DetailScoreModel.Data> data = (ArrayList<DetailScoreModel.Data>) detailScoreModel.getData();
+        fillData(data);
+    }
+
+    private void fillData(ArrayList<DetailScoreModel.Data> data) {
         dataBAdapter = new BAdapter<>(getContext(), R.layout.item_detail_score);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.lvScore.setLayoutManager(layoutManager);
         binding.rlHeader.setVisibility(View.VISIBLE);
         binding.lvScore.setAdapter(dataBAdapter);
+        binding.progressLoadData.setVisibility(View.GONE);
         dataBAdapter.setData(data);
-        if (data != null && data.size() > 0){
+        if (data != null && data.size() > 0) {
             binding.groupNoData.setVisibility(View.GONE);
-        }else {
+        } else {
             binding.groupNoData.setVisibility(View.VISIBLE);
             binding.rlHeader.setVisibility(View.GONE);
         }

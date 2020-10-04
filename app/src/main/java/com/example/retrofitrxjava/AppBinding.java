@@ -1,6 +1,8 @@
 package com.example.retrofitrxjava;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.net.Uri;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,6 +13,10 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
+
+import java.io.File;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AppBinding {
 
@@ -37,6 +43,7 @@ public class AppBinding {
 
     @BindingAdapter("score")
     public static void setScore(AppCompatTextView tv, String score) {
+        score = score.trim();
         if (!score.equals("")) {
             Float scoreAccount = Float.parseFloat(score);
             if (scoreAccount >= 2.5 && scoreAccount <= 3.20) {
@@ -55,6 +62,17 @@ public class AppBinding {
             tv.setTextColor(Color.BLACK);
             tv.setText(R.string.chua_co);
         }
+    }
+
+    @SuppressLint("ResourceAsColor")
+    @BindingAdapter("study")
+    public static void StatusStudy(TextView tv, String status){
+        if (!status.equals("DAT")){
+            tv.setTextColor(Color.parseColor("#ff3300"));
+        }else {
+            tv.setTextColor(Color.parseColor("#1494A5"));
+        }
+        tv.setText(status.trim());
     }
 
     @BindingAdapter("status")
@@ -91,6 +109,15 @@ public class AppBinding {
             }
         } else {
             img.setVisibility(View.GONE);
+        }
+    }
+
+    @BindingAdapter("avatar")
+    public static void setAvatar(CircleImageView img, File file){
+        if (file != null){
+            img.setImageURI(Uri.fromFile(new File(file+"")));
+        }else {
+            img.setImageResource(R.drawable.ebba92202bbad4e48dab);
         }
     }
 
