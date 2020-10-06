@@ -2,7 +2,6 @@ package com.example.retrofitrxjava.loginV3;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.widget.Toast;
 
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.pre.PrefUtils;
@@ -40,16 +39,4 @@ public class LoginPresenter implements LoginContract.Presenter {
                 });
     }
 
-    @SuppressLint("CheckResult")
-    @Override
-    public void synchronization(MyAPI myAPI, String userName, String password) {
-        myAPI.synchronization(userName, password)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter(response -> response.equals(SUCCESS))
-                .subscribe(response -> {
-                    view.synchronizationSuccess(String.valueOf(R.string.synchronization_success));
-                }, throwable -> Toast.makeText((Context) view, R.string.error_default
-                        , Toast.LENGTH_SHORT).show());
-    }
 }

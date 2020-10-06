@@ -64,21 +64,23 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
                     AppUtils.loadView(MainActivity.this, homeFrg);
                     return true;
                 case R.id.manager:
+                    personalFragment = new CommonFragment();
+                    binding.rlToolbar.setVisibility(View.GONE);
+                    personalFragment.setType(false);
+                    AppUtils.loadView(MainActivity.this, personalFragment);
+                    return true;
                 case R.id.personal:
+                    personalFragment = new CommonFragment();
+                    binding.tvTitle.setText(R.string.average_transcript);
+                    binding.rlToolbar.setVisibility(View.VISIBLE);
+                    personalFragment.setType(true);
+                    AppUtils.loadView(MainActivity.this, personalFragment);
+                    return true;
                 case R.id.menu:
                     personalFragment = new CommonFragment();
-                    if (item.getItemId() == R.id.manager) {
-                        binding.rlToolbar.setVisibility(View.GONE);
-                        personalFragment.setType(false);
-                    } else if (item.getItemId() == R.id.personal) {
-                        binding.tvTitle.setText(R.string.average_transcript);
-                        binding.rlToolbar.setVisibility(View.VISIBLE);
-                        personalFragment.setType(true);
-                    } else if (item.getItemId() == R.id.menu) {
-                        binding.rlToolbar.setVisibility(View.VISIBLE);
-                        binding.tvTitle.setText(R.string.info_account);
-                        personalFragment.setMenu(true);
-                    }
+                    binding.rlToolbar.setVisibility(View.VISIBLE);
+                    binding.tvTitle.setText(R.string.info_account);
+                    personalFragment.setMenu(true);
                     AppUtils.loadView(MainActivity.this, personalFragment);
                     return true;
             }
@@ -132,7 +134,7 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
                     @Override
                     public void onClickAccept(View view) {
                         logoutDialog.dismiss();
-                        PrefUtils.saveData(MainActivity.this, new LoginResponse.Data());
+                        PrefUtils.saveData(MainActivity.this, null);
                         Toast.makeText(MainActivity.this, R.string.log_out_success, Toast.LENGTH_SHORT).show();
                         finish();
                     }

@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BActivity;
 import com.example.retrofitrxjava.databinding.LayoutLoginBinding;
-import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.main.MainActivity;
 import com.example.retrofitrxjava.pre.PrefUtils;
 import com.example.retrofitrxjava.utils.AppUtils;
@@ -19,17 +18,12 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
 
     LoginPresenter presenter;
     private boolean isShowPass;
-    private LoginResponse.Data userModel;
-    private LoginResponse loginResponse = new LoginResponse();
 
     @Override
     protected void initLayout() {
-//        if (PrefUtils.loadData(getApplicationContext()) != null && PrefUtils.loadData(this).getToken() != null){
-//            startActivity();
-//            return;
-//        }
         binding.setListener(this);
         presenter = new LoginPresenter(this);
+        checkShowView(binding.edtUser.getText().toString(),binding.edtPassword.getText().toString());
         binding.ivClearUsername.setOnClickListener(view -> binding.edtUser.setText(""));
         binding.ivClearPassword.setOnClickListener(view -> binding.edtPassword.setText(""));
         binding.edtUser.addTextChangedListener(new TextWatcher() {
@@ -39,9 +33,7 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (binding.edtUser.getText().length() > 0)
-                    binding.ivClearUsername.setVisibility(View.VISIBLE);
-                else binding.ivClearUsername.setVisibility(View.GONE);
+                checkShowView(binding.edtUser.getText().toString().trim(),null);
             }
 
             @Override
@@ -56,13 +48,7 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (binding.edtPassword.getText().length() > 0) {
-                    binding.ivClearPassword.setVisibility(View.VISIBLE);
-                    binding.showPass.setVisibility(View.VISIBLE);
-                } else {
-                    binding.ivClearPassword.setVisibility(View.GONE);
-                    binding.showPass.setVisibility(View.GONE);
-                }
+                checkShowView(null,binding.edtPassword.getText().toString().trim());
             }
 
             @Override
@@ -79,6 +65,28 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
             }
 
         });
+
+        if (PrefUtils.loadData(getApplicationContext()) != null && PrefUtils.loadData(this).getToken() != null) {
+            startActivity();
+        }
+    }
+
+    private void checkShowView(String user, String password) {
+        if (user != null) {
+            if (user.length() > 0)
+                binding.ivClearUsername.setVisibility(View.VISIBLE);
+            else binding.ivClearUsername.setVisibility(View.GONE);
+        }
+
+       if (password != null){
+           if (binding.edtPassword.getText().length() > 0) {
+               binding.ivClearPassword.setVisibility(View.VISIBLE);
+               binding.showPass.setVisibility(View.VISIBLE);
+           } else {
+               binding.ivClearPassword.setVisibility(View.GONE);
+               binding.showPass.setVisibility(View.GONE);
+           }
+       }
     }
 
     @Override
@@ -100,22 +108,9 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
     }
 
     @Override
-    public void verifyAccountSuccess(String userAccount, String password) {
-        Toast.makeText(this, R.string.sync, Toast.LENGTH_SHORT).show();
-        presenter.synchronization(myAPI, userAccount, password);
-    }
-
-    @Override
     public void pushView() {
         Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
         binding.progressbar.setVisibility(View.GONE);
-        startActivity();
-    }
-
-    @Override
-    public void synchronizationSuccess(String message) {
-        binding.progressbar.setVisibility(View.GONE);
-        Toast.makeText(this, R.string.sync_success, Toast.LENGTH_LONG).show();
         startActivity();
     }
 
@@ -123,12 +118,6 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
-    }
-
-    @Override
-    public void synchronizationFailed(String message) {
-        binding.progressbar.setVisibility(View.GONE);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
