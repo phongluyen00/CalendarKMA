@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BAdapter;
@@ -26,23 +27,30 @@ import java.util.List;
 public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implements ItemOnclickListener<Article> {
     private BAdapter<Article> adapter;
 
+    private boolean isCheck = false;
+
+    public void setCheck(boolean check) {
+        this.isCheck = check;
+    }
+
+    public static RecruitmentFrg getInstance(){
+        return new RecruitmentFrg();
+    }
+
     private LoginResponse.Data userModel;
 
     @Override
     protected void initLayout() {
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        binding.progressLoadData.setVisibility(View.VISIBLE);
+        Toast.makeText(getActivity(),  isCheck + "", Toast.LENGTH_SHORT).show();
         userModel = PrefUtils.loadData(getActivity());
-        if (userModel.getArticleListTD() != null && userModel.getArticleListTD().size() > 0) {
-            setData(userModel.getArticleListTD());
+        if (isCheck){
+            new DownloadStudy().execute(getString(R.string.link_study));
         }else {
-            new DownloadTask().execute(getString(R.string.link_recruitment));
+            if (userModel.getArticleListTD() != null && userModel.getArticleListTD().size() > 0) {
+                setData(userModel.getArticleListTD());
+            }else {
+                new DownloadTask().execute(getString(R.string.link_recruitment));
+            }
         }
     }
 
@@ -136,6 +144,82 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
             userModel.setArticleListTD(articles);
             PrefUtils.saveData(getActivity(), userModel);
             setData(articles);
+        }
+    }
+
+    private class DownloadStudy extends AsyncTask<String, Void, ArrayList<Article>> implements ItemOnclickListener<Article>{
+
+        @Override
+        protected ArrayList<Article> doInBackground(String... strings) {
+            Document document = null;
+            ArrayList<Article> listArticle = new ArrayList<>();
+            try {
+                document = (Document) Jsoup.connect(strings[0]).get();
+                if (document != null) {
+                    //Lấy  html có thẻ như sau: div#latest-news > div.row > div.col-md-6 hoặc chỉ cần dùng  div.col-md-6
+                    Elements sub = document.select("div.wrap-course-item");
+                    for (Element element : sub) {
+                        Article article = new Article();
+                        Element titleSubject = element.getElementsByTag("h3").first();
+                        Element imgSubject = element.getElementsByTag("img").first();
+                        Element linkSubject = element.getElementsByTag("a").first();
+                        Element descrip = element.getElementsByTag("p").first();
+                        //Parse to model
+                        if (titleSubject != null) {
+                            String title = titleSubject.text();
+                            article.setTitle(title);
+                        }
+                        if (imgSubject != null) {
+                            String src = imgSubject.attr("src");
+                            article.setThumb(src);
+                        }
+                        if (linkSubject != null) {
+                            String link = linkSubject.attr("href");
+                            String title = linkSubject.attr("title");
+                            article.setLink("https://codelearn.io/" +link);
+                            article.setTitle(title);
+                        }
+                        if (descrip != null) {
+                            String des = descrip.text();
+                            article.setDes(des);
+                        }
+                        //Add to list
+                        listArticle.add(article);
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return listArticle;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Article> articles) {
+            super.onPostExecute(articles);
+            //Setup data recyclerView
+            adapter = new BAdapter<>(getActivity(), R.layout.item_study);
+            binding.rvRecruitment.setAdapter(adapter);
+            adapter.setData(articles);
+            binding.progressLoadData.setVisibility(View.GONE);
+            adapter.setListener(this);
+        }
+
+        @Override
+        public void onItemMediaClick(Article article) {
+            try {
+                binding.helpWebview.setWebViewClient(new WebViewClient());
+                binding.helpWebview.getSettings().setSupportZoom(true);
+                binding.helpWebview.getSettings().setAllowContentAccess(true);
+                binding.helpWebview.getSettings().setBuiltInZoomControls(true);
+                binding.helpWebview.getSettings().setLoadWithOverviewMode(true);
+                binding.helpWebview.getSettings().setUseWideViewPort(true);
+                binding.helpWebview.loadUrl(article.getLink());
+                binding.rvRecruitment.setVisibility(View.GONE);
+                binding.helpWebview.setVisibility(View.VISIBLE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

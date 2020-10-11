@@ -22,7 +22,7 @@ public class CertificateResponse extends ModelResponse {
     }
 
     @Getter
-    public class Data {
+    public class Data extends ModelResponse{
 
         @SerializedName("STT")
         @Expose

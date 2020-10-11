@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -33,6 +34,26 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/syn_dtb"
+                    android:padding="10dp"
+                    android:textColor="@android:color/black"
+                    app:layout_constraintTop_toBottomOf="@id/label_title"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:gravity="center"
+                    android:text="Cập nhật bảng điểm trung bình"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <View
+                    android:id="@+id/view_dtb"
+                    android:layout_marginTop="3dp"
+                    app:layout_constraintTop_toBottomOf="@id/syn_dtb"
+                    android:background="@android:color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+
                 <ImageView
                     android:id="@+id/close_dialog"
                     android:layout_width="50dp"
@@ -42,6 +63,18 @@
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/label_title" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/label_waring"
+                    android:layout_marginTop="10dp"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:text="Lưu ý : Chức năng này nên hạn chế dùng ! Xin chân thành cảm ơn. !"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_end" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/sync_score"
@@ -55,7 +88,7 @@
                     android:textColor="@android:color/black"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/label_title" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_dtb" />
 
                 <View
                     android:layout_width="match_parent"
@@ -88,14 +121,14 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_update_cc"
-                    android:gravity="center"
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:padding="10dp"
                     android:text="Cập nhật chứng chỉ"
                     android:textColor="@android:color/black"
-                    android:padding="10dp"
-                    android:background="?android:attr/selectableItemBackground"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="@+id/tv_sync_waring"
                     app:layout_constraintTop_toBottomOf="@+id/tv_sync_waring" />
@@ -146,6 +179,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/tv_sync_schedule" />
 
                 <View
+                    android:id="@+id/view_end"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="1dp"

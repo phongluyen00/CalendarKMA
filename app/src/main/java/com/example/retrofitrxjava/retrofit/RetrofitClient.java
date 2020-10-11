@@ -31,7 +31,7 @@ public class RetrofitClient {
     public static Retrofit getInstance() {
         if (ourInstance == null)
             ourInstance = new Retrofit.Builder()
-                    .client(okHttpClient(20))
+                    .client(okHttpClient(60))
                     .baseUrl(BASE_MOCK_API)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

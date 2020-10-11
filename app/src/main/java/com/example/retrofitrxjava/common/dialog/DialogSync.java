@@ -1,5 +1,7 @@
 package com.example.retrofitrxjava.common.dialog;
 
+import android.view.View;
+
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BDialogFragment;
 import com.example.retrofitrxjava.databinding.DialogSyncBinding;
@@ -19,6 +21,12 @@ public class DialogSync extends BDialogFragment<DialogSyncBinding> {
 
     @Override
     protected void initLayout() {
+        binding.synDtb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onClickSynDTB();
+            }
+        });
         binding.syncScore.setOnClickListener(view -> {  listener.onClickSynScore(); });
         binding.tvSyncSchedule.setOnClickListener(view -> { listener.onClickSynSchedule(); });
         binding.syncMoney.setOnClickListener(view -> {  listener.onClickSyncMoney(); });
@@ -28,6 +36,7 @@ public class DialogSync extends BDialogFragment<DialogSyncBinding> {
     }
 
     public interface itemOnClick{
+        void onClickSynDTB();
         void onClickSynScore();
         void onClickSynSchedule();
         void onClickSyncMoney();

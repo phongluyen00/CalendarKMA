@@ -13,6 +13,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BFragment;
 import com.example.retrofitrxjava.common.dialog.DialogFullScreen;
+import com.example.retrofitrxjava.common.dialog.DialogFullScreenXLHV;
+import com.example.retrofitrxjava.databinding.DialogCcBinding;
 import com.example.retrofitrxjava.databinding.LayoutPersonalBinding;
 import com.example.retrofitrxjava.common.adapter.TabLayOut;
 import com.example.retrofitrxjava.common.dialog.DialogSync;
@@ -87,6 +89,12 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                 dialogFullScreen.show(getFragmentManager(), "");
             });
 
+            binding.car4.setOnClickListener(v -> {
+                        DialogFullScreenXLHV dialogFullScreenXLHV = new DialogFullScreenXLHV();
+                        dialogFullScreenXLHV.show(getChildFragmentManager(), dialogFullScreenXLHV.getTag());
+                    }
+            );
+
             binding.openCamera.setOnClickListener(v -> {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -95,6 +103,12 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
             });
             binding.updateData.setOnClickListener(view -> {
                 dialogSync = new DialogSync(new DialogSync.itemOnClick() {
+                    @Override
+                    public void onClickSynDTB() {
+                        validateUpdate();
+                        presenter.syncDTB(token, password, myAPI);
+                    }
+
                     @Override
                     public void onClickSynScore() {
                         validateUpdate();

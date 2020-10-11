@@ -45,7 +45,7 @@ public class CommonPresenter implements CommonContract.Presenter {
     @SuppressLint("CheckResult")
     @Override
     public void updateScore(String token, String password, MyAPI myAPI) {
-        myAPI.synchronization(token, password)
+        myAPI.synScoreDetail(token, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> view.updateSuccess("Cập nhật dữ liệu thành công"),
@@ -75,6 +75,14 @@ public class CommonPresenter implements CommonContract.Presenter {
     @Override
     public void syncHandlingService(String token, String password, MyAPI myAPI) {
         myAPI.syncHandlingService(token, password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> view.updateSuccess("Cập nhật dữ liệu thành công"),
+                        throwable -> view.updateSuccess("Cập nhật dữ liệu thất bại"));
+    }
+
+    public void syncDTB(String token, String password, MyAPI myAPI) {
+        myAPI.synchronization(token, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> view.updateSuccess("Cập nhật dữ liệu thành công"),

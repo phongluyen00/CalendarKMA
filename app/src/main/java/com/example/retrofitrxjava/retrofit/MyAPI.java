@@ -31,7 +31,7 @@ public interface MyAPI {
     Observable<PaymentModel> getPayment(@Query("mssv") String token);
 
     @GET("getChungChi")
-    Observable<PaymentModel> getCertificate(@Query("mssv") String token);
+    Observable<CertificateResponse> getCertificate(@Query("mssv") String token);
 
     @GET("getLichHoc")
     Observable<ScheduleModelResponse> getSchedule(@Query("mssv") String token);
@@ -48,6 +48,7 @@ public interface MyAPI {
 
     // update
 
+    // đồng bộ bảng điểm TB
     @GET("synchronizationMarkAvg")
     Observable<Update> synchronization(@Query("userName") String token,
                                        @Query("passWord") String passWord);

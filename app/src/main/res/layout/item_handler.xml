@@ -5,7 +5,7 @@
 
         <variable
             name="item"
-            type="com.example.retrofitrxjava.model.CertificateResponse.Data" />
+            type="com.example.retrofitrxjava.model.HandleLearning.Data" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,7 +28,7 @@
                 android:layout_weight="0.5"
                 android:gravity="left"
                 android:maxLines="2"
-                android:text="@{item.STT}"
+                android:text="@{item.stt}"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
 
@@ -39,7 +39,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:maxLines="3"
-                android:text="@{item.chungChi1}"
+                android:text="@{item.mssv}"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
 
@@ -51,7 +51,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="@{item.diem}"
+                android:text="@{item.hocKy}"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
 
@@ -62,7 +62,7 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:maxLines="2"
-                android:text="@{item.xepLoai}"
+                android:text="@{item.mucXuLy}"
                 android:textColor="#00BCD4"
                 android:textSize="14sp"
                 android:textStyle="bold" />

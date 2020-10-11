@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 
 import com.example.retrofitrxjava.AppBinding;
+import com.example.retrofitrxjava.main.dialog.DialogContactUs;
 import com.example.retrofitrxjava.parser.RecruitmentFrg;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
@@ -29,6 +30,7 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
 
     private MainPresenter presenter;
     private CommonFragment personalFragment;
+    private RecruitmentFrg recruitmentFrg;
     private HomeFrg homeFrg = new HomeFrg();
     private LoginResponse.Data userModel;
     private DialogLogout logoutDialog;
@@ -148,7 +150,17 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
                 return true;
             case R.id.it:
                 binding.tvTitle.setText(R.string.recruitment);
-                AppUtils.loadView(this, new RecruitmentFrg());
+                AppUtils.loadView(this, RecruitmentFrg.getInstance());
+                return true;
+            case R.id.contact:
+                DialogContactUs dialogContactUs = new DialogContactUs();
+                dialogContactUs.show(getSupportFragmentManager(),"");
+                return true;
+            case R.id.study:
+                binding.tvTitle.setText("Học Lập trình Căn Bản");
+                recruitmentFrg = new RecruitmentFrg();
+                recruitmentFrg.setCheck(true);
+                AppUtils.loadView(this,recruitmentFrg);
                 return true;
         }
         return false;
