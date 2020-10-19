@@ -33,7 +33,7 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
         this.isCheck = check;
     }
 
-    public static RecruitmentFrg getInstance(){
+    public static RecruitmentFrg getInstance() {
         return new RecruitmentFrg();
     }
 
@@ -41,14 +41,14 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
 
     @Override
     protected void initLayout() {
-        Toast.makeText(getActivity(),  isCheck + "", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), isCheck + "", Toast.LENGTH_SHORT).show();
         userModel = PrefUtils.loadData(getActivity());
-        if (isCheck){
+        if (isCheck) {
             new DownloadStudy().execute(getString(R.string.link_study));
-        }else {
+        } else {
             if (userModel.getArticleListTD() != null && userModel.getArticleListTD().size() > 0) {
                 setData(userModel.getArticleListTD());
-            }else {
+            } else {
                 new DownloadTask().execute(getString(R.string.link_recruitment));
             }
         }
@@ -67,15 +67,7 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
     @Override
     public void onItemMediaClick(Article article) {
         try {
-            binding.helpWebview.setWebViewClient(new WebViewClient());
-            binding.helpWebview.getSettings().setSupportZoom(true);
-            binding.helpWebview.getSettings().setAllowContentAccess(true);
-            binding.helpWebview.getSettings().setBuiltInZoomControls(true);
-            binding.helpWebview.getSettings().setLoadWithOverviewMode(true);
-            binding.helpWebview.getSettings().setUseWideViewPort(true);
-            binding.helpWebview.loadUrl(article.getLink());
-            binding.rvRecruitment.setVisibility(View.GONE);
-            binding.helpWebview.setVisibility(View.VISIBLE);
+            defaultWedView(article.getLink());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -100,32 +92,12 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
                         Element linkHtml = element.getElementsByTag("a").first();
                         Element locationHtml = element.getElementsByTag("ul").first();
                         //Parse to model
-                        if (titleSubject != null) {
-                            String title = titleSubject.attr("title");
-                            article.setDes(title);
-                        }
-                        if (imgSubject != null) {
-                            String src = imgSubject.attr("data-src");
-                            article.setThumb(src);
-                        }
-                        if (linkSubject != null) {
-                            String link = linkSubject.attr("title");
-                            article.setTitle(link);
-                        }
-                        if (descrip != null) {
-                            String des = descrip.text();
-                            article.setIncome(des);
-                        }
-
-                        if (linkHtml != null) {
-                            String link = linkHtml.attr("href");
-                            article.setLink(link);
-                        }
-
-                        if (locationHtml != null) {
-                            String location = locationHtml.text();
-                            article.setLocation(location);
-                        }
+                        article.setDes(titleSubject == null ? "" : titleSubject.attr("title") );
+                        article.setThumb(imgSubject == null ? "" : imgSubject.attr("data-src"));
+                        article.setTitle(linkSubject.attr("title"));
+                        article.setIncome(descrip == null ? "" : descrip.text());
+                        article.setLink(linkHtml == null ? "" : linkHtml.attr("href"));
+                        article.setLocation(locationHtml != null ? locationHtml.text() : "");
                         //Add to list
                         listArticle.add(article);
                     }
@@ -147,7 +119,19 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
         }
     }
 
-    private class DownloadStudy extends AsyncTask<String, Void, ArrayList<Article>> implements ItemOnclickListener<Article>{
+    private void defaultWedView(String link){
+        binding.helpWebview.setWebViewClient(new WebViewClient());
+        binding.helpWebview.getSettings().setSupportZoom(true);
+        binding.helpWebview.getSettings().setAllowContentAccess(true);
+        binding.helpWebview.getSettings().setBuiltInZoomControls(true);
+        binding.helpWebview.getSettings().setLoadWithOverviewMode(true);
+        binding.helpWebview.getSettings().setUseWideViewPort(true);
+        binding.helpWebview.loadUrl(link);
+        binding.rvRecruitment.setVisibility(View.GONE);
+        binding.helpWebview.setVisibility(View.VISIBLE);
+    }
+
+    private class DownloadStudy extends AsyncTask<String, Void, ArrayList<Article>> implements ItemOnclickListener<Article> {
 
         @Override
         protected ArrayList<Article> doInBackground(String... strings) {
@@ -165,24 +149,15 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
                         Element linkSubject = element.getElementsByTag("a").first();
                         Element descrip = element.getElementsByTag("p").first();
                         //Parse to model
-                        if (titleSubject != null) {
-                            String title = titleSubject.text();
-                            article.setTitle(title);
-                        }
-                        if (imgSubject != null) {
-                            String src = imgSubject.attr("src");
-                            article.setThumb(src);
-                        }
+                        article.setTitle(titleSubject == null ? "" : titleSubject.text());
+                        article.setThumb(imgSubject == null ? "" : "https://codelearn.io/" + imgSubject.attr("src"));
                         if (linkSubject != null) {
                             String link = linkSubject.attr("href");
                             String title = linkSubject.attr("title");
-                            article.setLink("https://codelearn.io/" +link);
+                            article.setLink("https://codelearn.io/" + link);
                             article.setTitle(title);
                         }
-                        if (descrip != null) {
-                            String des = descrip.text();
-                            article.setDes(des);
-                        }
+                        article.setDes(descrip == null ? "" : descrip.text());
                         //Add to list
                         listArticle.add(article);
                     }
@@ -208,15 +183,7 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
         @Override
         public void onItemMediaClick(Article article) {
             try {
-                binding.helpWebview.setWebViewClient(new WebViewClient());
-                binding.helpWebview.getSettings().setSupportZoom(true);
-                binding.helpWebview.getSettings().setAllowContentAccess(true);
-                binding.helpWebview.getSettings().setBuiltInZoomControls(true);
-                binding.helpWebview.getSettings().setLoadWithOverviewMode(true);
-                binding.helpWebview.getSettings().setUseWideViewPort(true);
-                binding.helpWebview.loadUrl(article.getLink());
-                binding.rvRecruitment.setVisibility(View.GONE);
-                binding.helpWebview.setVisibility(View.VISIBLE);
+                defaultWedView(article.getLink());
             } catch (Exception e) {
                 e.printStackTrace();
             }

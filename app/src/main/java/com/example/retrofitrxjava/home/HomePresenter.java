@@ -26,9 +26,9 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void retrieveDataHome(String userName) {
         ArrayList<Advertisement> advertisements = new ArrayList<>();
-        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/nco.jpg"));
-        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/299.png"));
-        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/ts19-8-web.jpg"));
+        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/diem-chuan.jpg"));
+        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/qt-nhaphoc.jpg"));
+        advertisements.add(new Advertisement("https://vietthuong.vn/upload/content/images/tu-van/t-10/top-3-bai-piano-chao-mung-ngay-phu-nu-viet-nam-20-10-1.gif"));
         view.retrieveDataSuccess(advertisements);
     }
 

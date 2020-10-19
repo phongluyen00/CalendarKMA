@@ -15,7 +15,7 @@ public class RetrofitClient {
 
     private static Retrofit ourInstance;
 
-    public static String BASE_MOCK = "https://samples.openweathermap.org/data/2.5/";
+    public static String BASE_MOCK = "https://mockapi.superoffice.vn/api/3pi69i/";
     public static String BASE_MOCK_API = "http://27.71.231.75:82/api/Values/";
 
 

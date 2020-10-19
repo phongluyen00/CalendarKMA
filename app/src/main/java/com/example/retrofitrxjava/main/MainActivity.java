@@ -2,15 +2,23 @@ package com.example.retrofitrxjava.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 
 import com.example.retrofitrxjava.AppBinding;
 import com.example.retrofitrxjava.main.dialog.DialogContactUs;
+import com.example.retrofitrxjava.main.dialog.DialogNotification;
+import com.example.retrofitrxjava.main.model.Notification;
+import com.example.retrofitrxjava.notification.NotificationBackground;
+import com.example.retrofitrxjava.notification.event.EventUpdateNotification;
 import com.example.retrofitrxjava.parser.RecruitmentFrg;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
@@ -26,7 +34,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
-public class MainActivity extends BActivity<LayoutMainBinding> implements MainListener, MainContract.View, NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends BActivity<LayoutMainBinding>
+        implements MainListener, MainContract.View,
+        NavigationView.OnNavigationItemSelectedListener,
+        BottomNavigationView.OnNavigationItemSelectedListener {
 
     private MainPresenter presenter;
     private CommonFragment personalFragment;
@@ -35,24 +53,33 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
     private LoginResponse.Data userModel;
     private DialogLogout logoutDialog;
     RxPermissions rxPermissions;
+    private static List<Notification.Data> notificationList = new ArrayList<>();
 
     @SuppressLint("CheckResult")
     @Override
     protected void initLayout() {
+        EventBus.getDefault().register(this);
         rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.READ_PHONE_STATE).subscribe(granted -> {
-                    if (granted) {
-                    }
-                });
+        });
         userModel = PrefUtils.loadData(this);
         presenter = new MainPresenter(this);
         if (!(userModel.getScoreMediumResponse() != null)) {
             binding.progressMain.setVisibility(View.VISIBLE);
             presenter.retrieveScore(myAPI);
         }
+
+        startServices();
+
+        binding.ivNotification.setOnClickListener(v -> {
+            openDialogNotification();
+        });
+        boolean isNotification = getIntent().getBooleanExtra(NotificationBackground.EXTRA_NOTIFICATION,false);
+        if (isNotification) binding.ivNotification.performClick();
+
         binding.setListener(this);
         binding.leftMenu.setItemIconTintList(null);
         binding.setAccount(userModel);
@@ -90,6 +117,21 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
         });
     }
 
+    private void openDialogNotification() {
+        DialogNotification dialogNotification = new DialogNotification();
+        dialogNotification.show(getSupportFragmentManager(), dialogNotification.getTag());
+    }
+
+    private void startServices() {
+        Intent serviceIntent = new Intent(MainActivity.this, NotificationBackground.class);
+        ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
+    }
+
+    public void stopService() {
+        Intent serviceIntent = new Intent(this, NotificationBackground.class);
+        stopService(serviceIntent);
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.layout_main;
@@ -110,6 +152,17 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
         }
     }
 
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(EventUpdateNotification noteEvent) {
+        if (noteEvent != null) {
+            if (noteEvent.getNotifications().size() > 0){
+                Animation shake;
+                shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
+                binding.ivNotification.startAnimation(shake); // st
+            }
+        }
+    }
+
     @Override
     public void openLeftMenu() {
         binding.drawerLayout.openDrawer(GravityCompat.START);
@@ -118,6 +171,7 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -138,6 +192,7 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
                         logoutDialog.dismiss();
                         PrefUtils.saveData(MainActivity.this, null);
                         Toast.makeText(MainActivity.this, R.string.log_out_success, Toast.LENGTH_SHORT).show();
+                        stopService();
                         finish();
                     }
 
@@ -154,13 +209,13 @@ public class MainActivity extends BActivity<LayoutMainBinding> implements MainLi
                 return true;
             case R.id.contact:
                 DialogContactUs dialogContactUs = new DialogContactUs();
-                dialogContactUs.show(getSupportFragmentManager(),"");
+                dialogContactUs.show(getSupportFragmentManager(), "");
                 return true;
             case R.id.study:
                 binding.tvTitle.setText("Học Lập trình Căn Bản");
                 recruitmentFrg = new RecruitmentFrg();
                 recruitmentFrg.setCheck(true);
-                AppUtils.loadView(this,recruitmentFrg);
+                AppUtils.loadView(this, recruitmentFrg);
                 return true;
         }
         return false;

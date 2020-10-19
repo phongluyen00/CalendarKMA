@@ -73,19 +73,13 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
 
     private void checkShowView(String user, String password) {
         if (user != null) {
-            if (user.length() > 0)
-                binding.ivClearUsername.setVisibility(View.VISIBLE);
-            else binding.ivClearUsername.setVisibility(View.GONE);
+            binding.ivClearUsername.setVisibility((user.length() > 0) ? View.VISIBLE: View.GONE);
         }
 
        if (password != null){
-           if (binding.edtPassword.getText().length() > 0) {
-               binding.ivClearPassword.setVisibility(View.VISIBLE);
-               binding.showPass.setVisibility(View.VISIBLE);
-           } else {
-               binding.ivClearPassword.setVisibility(View.GONE);
-               binding.showPass.setVisibility(View.GONE);
-           }
+           int length = binding.edtPassword.getText().length();
+           binding.ivClearPassword.setVisibility((length > 0) ? View.VISIBLE : View.GONE);
+           binding.showPass.setVisibility((length > 0) ? View.VISIBLE : View.GONE);
        }
     }
 

@@ -3,6 +3,7 @@ package com.example.retrofitrxjava.retrofit;
 import com.example.retrofitrxjava.common.model.TuitionResponse;
 import com.example.retrofitrxjava.common.model.Update;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
+import com.example.retrofitrxjava.main.model.Notification;
 import com.example.retrofitrxjava.model.CertificateResponse;
 import com.example.retrofitrxjava.model.DetailScoreModel;
 import com.example.retrofitrxjava.model.HandleLearning;
@@ -13,6 +14,7 @@ import com.example.retrofitrxjava.common.model.ScheduleModelResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 /**
@@ -72,4 +74,7 @@ public interface MyAPI {
     @GET("dongBoChungChi")
     Observable<ModelResponse> syncCertificate(@Query("userName") String token,
                                               @Query("passWord") String passWord);
+
+    @POST("notification")
+    Observable<Notification> notification();
 }

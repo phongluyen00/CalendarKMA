@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.example.retrofitrxjava.main.model.Notification.Data" />
+
+        <variable
+            name="listener"
+            type="com.example.retrofitrxjava.b.ItemOnclickListener" />
+    </data>
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:background="@android:color/white"
+        android:translationZ="3dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->listener.onItemMediaClick(item)}"
+            android:padding="10dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_recruitment"
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:padding="5dp"
+                thumb="@{item.url}"
+                android:src="@drawable/ic_baseline_public_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/img_recruitment"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text"
+                app:layout_constraintBottom_toTopOf="@id/tv_title"
+                app:layout_constraintStart_toStartOf="@id/tv_title"
+                android:layout_width="0dp"
+                android:text="@{item.text}"
+                app:layout_constraintEnd_toEndOf="@id/tv_title"
+                android:layout_height="wrap_content"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:maxLines="4"
+                app:layout_constraintTop_toBottomOf="@+id/text"
+                android:text="@{item.title}"
+                android:textColor="#197C7C"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/img_recruitment"
+                />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>

@@ -25,7 +25,7 @@
             <RelativeLayout
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="220dp"
                 android:padding="10dp"
                 app:layout_constraintTop_toTopOf="parent">
 

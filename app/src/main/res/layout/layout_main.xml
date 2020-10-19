@@ -69,7 +69,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="3dp">
 
@@ -78,21 +78,8 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:padding="10dp"
-                            app:srcCompat="@drawable/ic_baseline_notifications_24" />
+                            app:srcCompat="@drawable/ic_baseline_notifications" />
 
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_width="wrap_content"
-                            android:padding="3dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:background="@drawable/custom_botron_tb"
-                            android:textColor="@android:color/white"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/iv_notification" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </RelativeLayout>
