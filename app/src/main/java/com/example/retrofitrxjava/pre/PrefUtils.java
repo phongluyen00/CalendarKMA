@@ -7,6 +7,8 @@ import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.google.gson.Gson;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.example.retrofitrxjava.common.CommonFragment.SHARED_PREFERENCE_NAME;
+import static com.example.retrofitrxjava.utils.Constant.IS_FACE_ID;
 import static com.example.retrofitrxjava.utils.Constant.KEY_ACCOUNT;
 
 public class PrefUtils {
@@ -48,4 +50,12 @@ public class PrefUtils {
         LoginResponse.Data obj = gson.fromJson(json, LoginResponse.Data.class);
         return obj;
     }
+
+    public static boolean getSetting(Context context) {
+        SharedPreferences sharedPreferences  = context.
+                getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        boolean isVolume = sharedPreferences.getBoolean(IS_FACE_ID, false);
+        return isVolume;
+    }
+
 }

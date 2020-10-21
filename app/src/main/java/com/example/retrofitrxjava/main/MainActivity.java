@@ -190,7 +190,6 @@ public class MainActivity extends BActivity<LayoutMainBinding>
                     @Override
                     public void onClickAccept(View view) {
                         logoutDialog.dismiss();
-                        PrefUtils.saveData(MainActivity.this, null);
                         Toast.makeText(MainActivity.this, R.string.log_out_success, Toast.LENGTH_SHORT).show();
                         stopService();
                         finish();

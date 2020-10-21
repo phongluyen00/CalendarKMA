@@ -10,5 +10,6 @@ public class Constant {
     public static final String FAILED = "1";
     public static final String ACCOUNT_NO_EXITS = "2";
     public static String KEY_ACCOUNT = "UserModel";
+    public static final String IS_FACE_ID = "face_id";
 
 }

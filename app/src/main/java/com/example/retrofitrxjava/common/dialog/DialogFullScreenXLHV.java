@@ -45,14 +45,14 @@ public class DialogFullScreenXLHV extends BDialogFragment<DialogCcBinding> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(response -> response.getErrorCode().equals(SUCCESS))
                 .subscribe(response -> retrieveSuccess(response),
-                        throwable -> Toast.makeText(getActivity(), getActivity().getString(R.string.error_default),
+                        throwable -> Toast.makeText(getActivity(), "Hệ thống đang bận ! Vui lòng thử lại sau !",
                                 Toast.LENGTH_SHORT).show());
 
         myAPI.getHandleLearning(userModel.getToken()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(response -> response.getErrorCode().equals(SUCCESS))
                 .subscribe(response -> retrieveHandleLearningSuccess(response),
-                        throwable -> Toast.makeText(getActivity(), getActivity().getString(R.string.error_default),
+                        throwable -> Toast.makeText(getActivity(), "Hệ thống đang bận ! Vui lòng thử lại sau !",
                                 Toast.LENGTH_SHORT).show());
         binding.ivBack.setOnClickListener(v -> dismiss());
     }

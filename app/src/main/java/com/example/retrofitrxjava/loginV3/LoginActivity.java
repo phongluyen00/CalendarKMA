@@ -7,6 +7,10 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
+
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BActivity;
 import com.example.retrofitrxjava.databinding.LayoutLoginBinding;
@@ -14,10 +18,15 @@ import com.example.retrofitrxjava.main.MainActivity;
 import com.example.retrofitrxjava.pre.PrefUtils;
 import com.example.retrofitrxjava.utils.AppUtils;
 
+import java.util.concurrent.Executor;
+
 public class LoginActivity extends BActivity<LayoutLoginBinding> implements LoginListener, LoginContract.View {
 
-    LoginPresenter presenter;
+    private LoginPresenter presenter;
     private boolean isShowPass;
+    private Executor executor;
+    private BiometricPrompt biometricPrompt;
+    private BiometricPrompt.PromptInfo promptInfo;
 
     @Override
     protected void initLayout() {
@@ -65,10 +74,58 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
             }
 
         });
+        initFingerprint();
 
         if (PrefUtils.loadData(getApplicationContext()) != null && PrefUtils.loadData(this).getToken() != null) {
             startActivity();
         }
+    }
+
+    private void initFingerprint() {
+        executor = ContextCompat.getMainExecutor(this);
+        biometricPrompt = new BiometricPrompt(this,
+                executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode,
+                                              @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                Toast.makeText(getApplicationContext(),
+                        "Authentication error: " + errString, Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(
+                    @NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                startActivity();
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Toast.makeText(getApplicationContext(), "Authentication failed",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Biometric login for my app")
+                .setSubtitle("Log in using your biometric credential")
+                .setNegativeButtonText("Use account password")
+                .build();
+
+        binding.imgFingerprint.setOnClickListener(v -> {
+            if (PrefUtils.getSetting(getApplicationContext())){
+                if (PrefUtils.loadData(getApplicationContext())!= null){
+                    biometricPrompt.authenticate(promptInfo);
+                }
+            } else {
+                Toast.makeText(this,
+                        getString(R.string.ban_can_bat_face_id), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void checkShowView(String user, String password) {

@@ -32,4 +32,6 @@
     <string name="link_actvn">http://actvn.edu.vn/Articles/thong-tin-tuyen-dung-cho-sinh-vien-52.html#page-1</string>
     <string name="log_out_success">Đăng xuất thành công !</string>
     <string name="recruitment">Tuyển dụng thực tập</string>
+    <string name="ban_can_bat_face_id">Bạn cần bật tính năng nhận diện bằng vân tay</string>
+
 </resources>

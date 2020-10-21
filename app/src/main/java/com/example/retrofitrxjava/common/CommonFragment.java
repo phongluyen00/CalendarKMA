@@ -1,20 +1,25 @@
 package com.example.retrofitrxjava.common;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BFragment;
 import com.example.retrofitrxjava.common.dialog.DialogFullScreen;
 import com.example.retrofitrxjava.common.dialog.DialogFullScreenXLHV;
-import com.example.retrofitrxjava.databinding.DialogCcBinding;
 import com.example.retrofitrxjava.databinding.LayoutPersonalBinding;
 import com.example.retrofitrxjava.common.adapter.TabLayOut;
 import com.example.retrofitrxjava.common.dialog.DialogSync;
@@ -41,6 +46,7 @@ import static com.example.retrofitrxjava.utils.AppUtils.START_HOURS1;
 import static com.example.retrofitrxjava.utils.AppUtils.START_HOURS2;
 import static com.example.retrofitrxjava.utils.AppUtils.START_HOURS4;
 import static com.example.retrofitrxjava.utils.AppUtils.START_HOURS5;
+import static com.example.retrofitrxjava.utils.Constant.IS_FACE_ID;
 
 /**
  * Create by Luyenphong
@@ -58,6 +64,8 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
     private boolean isShowView;
     private LoginResponse.Data userModel;
     private DialogConfirmShowCalendar confirmShowCalendar;
+    public static final String SHARED_PREFERENCE_NAME = "SettingGame";
+    private SharedPreferences sharedPreferences;
 
     public void setType(boolean type) {
         isType = type;
@@ -101,6 +109,32 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                     startActivityForResult(takePictureIntent, CAMERA_PIC_REQUEST);
                 }
             });
+            sharedPreferences = getActivity().
+                    getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
+            boolean isVolume = sharedPreferences.getBoolean(IS_FACE_ID, false);
+            binding.switchCompat.setChecked(isVolume);
+            binding.switchCompat.setTrackTintList(binding.switchCompat.isChecked() ?
+                    (ColorStateList.valueOf(Color.parseColor("#0CEBF3"))) :
+                    (ColorStateList.valueOf(Color.parseColor("#929697"))));
+            binding.switchCompat.setOnCheckedChangeListener(
+                    new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton,
+                                                     boolean b) {
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            if (binding.switchCompat.isChecked()) {
+                                editor.putBoolean(IS_FACE_ID, true);
+                                binding.switchCompat.setTrackTintList
+                                        (ColorStateList.valueOf(Color.parseColor("#0CEBF3")));
+                            } else {
+                                editor.putBoolean(IS_FACE_ID, false);
+                                binding.switchCompat.setTrackTintList
+                                        (ColorStateList.valueOf(Color.parseColor("#929697")));
+                            }
+                            editor.commit();
+                        }
+                    });
+
             binding.updateData.setOnClickListener(view -> {
                 dialogSync = new DialogSync(new DialogSync.itemOnClick() {
                     @Override
@@ -153,44 +187,46 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
             binding.groupTabLayout.setVisibility(View.VISIBLE);
             binding.myCalendar.setVisibility(View.GONE);
         } else {
-            if (userModel.getModelResponse() != null && userModel.getModelResponse().getData().size() > 0) {
-                binding.myCalendar.deleteAllEvent();
-                for (ScheduleModelResponse.Data schedule : userModel.getModelResponse().getData()) {
-                    putData(schedule.getCaHoc(), AppUtils.formatDate(schedule.getDatetime()),
-                            schedule.getTitle()
-                            + "\n" + "Giảng viên : " + schedule.getTeacher());
+            binding.floatingButton.setOnClickListener(v -> {
+                confirmShowCalendar = new DialogConfirmShowCalendar(new DialogConfirmShowCalendar.itemOnClick() {
+                    @Override
+                    public void onClickMonth() {
+                        confirmShowCalendar.dismiss();
+                        isShowView = false;
+                        initLayout();
+                    }
+
+                    @Override
+                    public void onClickWeek() {
+                        confirmShowCalendar.dismiss();
+                        isShowView = true;
+                        initLayout();
+                    }
+                });
+                confirmShowCalendar.show(getFragmentManager(), "");
+            });
+            if (!NetworkUtils.isConnect(getActivity())) {
+                if (userModel.getModelResponse() != null && userModel.getModelResponse().getData().size() > 0) {
+                    binding.myCalendar.deleteAllEvent();
+                    for (ScheduleModelResponse.Data schedule : userModel.getModelResponse().getData()) {
+                        putData(schedule.getCaHoc(), AppUtils.formatDate(schedule.getDatetime()),
+                                schedule.getTitle()
+                                        + "\n" + "Giảng viên : " + schedule.getTeacher());
+                    }
+                    if (!isShowView) {
+                        binding.myCalendar.showMonthViewWithBelowEvents();
+                    } else {
+                        binding.myCalendar.showWeekView();
+                        binding.myCalendar.showAgendaView();
+                    }
+                    binding.groupTabLayout.setVisibility(View.GONE);
+                    binding.myCalendar.setVisibility(View.VISIBLE);
                 }
-                if (!isShowView) {
-                    binding.myCalendar.showMonthViewWithBelowEvents();
-                } else {
-                    binding.myCalendar.showWeekView();
-                    binding.myCalendar.showAgendaView();
-                }
+            }else {
+                presenter.retrieveSchedule(token, myAPI);
                 binding.groupTabLayout.setVisibility(View.GONE);
                 binding.myCalendar.setVisibility(View.VISIBLE);
-                binding.floatingButton.setOnClickListener(v -> {
-                    confirmShowCalendar = new DialogConfirmShowCalendar(new DialogConfirmShowCalendar.itemOnClick() {
-                        @Override
-                        public void onClickMonth() {
-                            confirmShowCalendar.dismiss();
-                            isShowView = false;
-                            initLayout();
-                        }
-
-                        @Override
-                        public void onClickWeek() {
-                            confirmShowCalendar.dismiss();
-                            isShowView = true;
-                            initLayout();
-                        }
-                    });
-                    confirmShowCalendar.show(getFragmentManager(), "");
-                });
-                return;
             }
-            presenter.retrieveSchedule(token, myAPI);
-            binding.groupTabLayout.setVisibility(View.GONE);
-            binding.myCalendar.setVisibility(View.VISIBLE);
         }
 
         tabLayOut = new TabLayOut(getActivity());

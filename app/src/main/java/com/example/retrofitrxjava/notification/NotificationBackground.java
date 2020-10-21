@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -23,18 +22,14 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.b.BAdapter;
 import com.example.retrofitrxjava.main.MainActivity;
 import com.example.retrofitrxjava.notification.event.EventUpdateNotification;
-import com.example.retrofitrxjava.retrofit.MyAPI;
 import com.example.retrofitrxjava.retrofit.RetrofitClient;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
 /**
@@ -49,37 +44,34 @@ public class NotificationBackground extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Retrofit retrofit = RetrofitClient.getInstance();
     }
 
     @SuppressLint("CheckResult")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         createNotificationChannel();
+        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+                0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setContentTitle("")
+                .setSmallIcon(R.drawable.ic_baseline_notifications)
+                .setContentText("")
+                .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build();
+        startForeground(1, notification);
         Handler handler = new Handler();
         final Runnable sendData = new Runnable() {
             public void run() {
                 if (!NetworkUtils.isConnect(getApplicationContext())) {
                     return;
                 }
-
-                Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
-                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
-                        0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                        .setPriority(Notification.PRIORITY_HIGH)
-                        .setContentTitle("")
-                        .setSmallIcon(R.drawable.ic_baseline_notifications)
-                        .setContentText("")
-                        .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
-                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                        .setContentIntent(pendingIntent)
-                        .setAutoCancel(true)
-                        .build();
-                startForeground(1, notification);
                 AndroidNetworking.post("https://mockapi.superoffice.vn/api/3pi69i/notification")
                         .setPriority(Priority.MEDIUM)
                         .build()
@@ -101,7 +93,7 @@ public class NotificationBackground extends Service {
                                     int count = obj.getData().size();
                                     Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                                             .setPriority(Notification.PRIORITY_MAX)
-                                            .setContentTitle(obj.getData().get(0).getText())
+                                            .setContentTitle("Bạn có " + count +" thông báo mới !")
                                             .setSmallIcon(R.drawable.ic_baseline_notifications)
                                             .setContentText(obj.getData().get(count-1).getTitle())
                                             .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
@@ -128,7 +120,7 @@ public class NotificationBackground extends Service {
             }
         };
 
-        handler.postDelayed(sendData, 3000);
+        handler.postDelayed(sendData, 10000);
         //do heavy work on a background thread
 //        stopSelf();
 

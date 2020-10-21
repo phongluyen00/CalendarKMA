@@ -5,6 +5,7 @@ import android.view.View;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BAdapter;
 import com.example.retrofitrxjava.b.BFragment;
@@ -31,19 +32,23 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
         binding.progressLoadData.setVisibility(View.VISIBLE);
         presenter = new AveragePresenter(this);
         if (isAverage) {
-            if (scoreResponse != null) {
-                ArrayList<ScoreMediumResponse.Datum> response = new ArrayList<>();
-                for (int i = 1; i < scoreResponse.getData().size(); i++) {
-                    response.add(scoreResponse.getData().get(i));
+            if (!NetworkUtils.isConnect(getActivity())) {
+                if (scoreResponse != null) {
+                    ArrayList<ScoreMediumResponse.Datum> response = new ArrayList<>();
+                    for (int i = 1; i < scoreResponse.getData().size(); i++) {
+                        response.add(scoreResponse.getData().get(i));
+                    }
+                    fillDataScore(response);
                 }
-                fillDataScore(response);
             } else {
                 presenter.retrieveScore(compositeDisposable, myAPI, PrefUtils.loadData(getActivity()).getToken());
             }
         } else {
-            if (detailScoreModel != null && detailScoreModel.getData().size() > 0) {
-                ArrayList<DetailScoreModel.Data> data = (ArrayList<DetailScoreModel.Data>) detailScoreModel.getData();
-                fillData(data);
+            if (!NetworkUtils.isConnect(getContext())) {
+                if (detailScoreModel != null && detailScoreModel.getData().size() > 0) {
+                    ArrayList<DetailScoreModel.Data> data = (ArrayList<DetailScoreModel.Data>) detailScoreModel.getData();
+                    fillData(data);
+                }
             } else {
                 presenter.retrieveDetailScore(myAPI, PrefUtils.loadData(getActivity()).getToken());
             }
@@ -98,7 +103,6 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
 
     @Override
     public void retrieveDetailScoreSuccess(DetailScoreModel detailScoreModel) {
-
         if (detailScoreModel != null) {
             LoginResponse.Data loadData = PrefUtils.loadData(getActivity());
             loadData.setDetailScoreModel(detailScoreModel);
