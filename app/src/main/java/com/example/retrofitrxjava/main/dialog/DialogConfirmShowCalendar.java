@@ -28,10 +28,12 @@ public class DialogConfirmShowCalendar extends BDialogFragment<DialogConfirmBind
     protected void initLayout() {
         binding.tvMonth.setOnClickListener(v -> listener.onClickMonth());
         binding.tvWeek.setOnClickListener(v -> listener.onClickWeek());
+        binding.days.setOnClickListener(v -> listener.onClickDays());
     }
 
     public interface itemOnClick{
         void onClickMonth();
         void onClickWeek();
+        void onClickDays();
     }
 }

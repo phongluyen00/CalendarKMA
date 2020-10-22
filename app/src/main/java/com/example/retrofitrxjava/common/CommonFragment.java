@@ -62,6 +62,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
     private String token, password;
     DialogSync dialogSync;
     private boolean isShowView;
+    private boolean isDays;
     private LoginResponse.Data userModel;
     private DialogConfirmShowCalendar confirmShowCalendar;
     public static final String SHARED_PREFERENCE_NAME = "SettingGame";
@@ -81,6 +82,9 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
         userModel = PrefUtils.loadData(getActivity());
         token = userModel.getToken();
         password = userModel.getPassword();
+        if (isDays){
+            // code ông đẩy vào đây nhé
+        }
         if (!isShowView) {
             binding.myCalendar.showMonthViewWithBelowEvents();
         } else {
@@ -200,6 +204,13 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                     public void onClickWeek() {
                         confirmShowCalendar.dismiss();
                         isShowView = true;
+                        initLayout();
+                    }
+
+                    @Override
+                    public void onClickDays() {
+                        confirmShowCalendar.dismiss();
+                        isDays = true;
                         initLayout();
                     }
                 });
