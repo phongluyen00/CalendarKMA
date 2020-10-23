@@ -86,10 +86,12 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
             // code ông đẩy vào đây nhé
         }
         if (!isShowView) {
+            binding.myCalendars.setVisibility(View.GONE);
+            binding.myCalendar.setVisibility(View.VISIBLE);
             binding.myCalendar.showMonthViewWithBelowEvents();
         } else {
+            binding.myCalendar.setVisibility(View.VISIBLE);
             binding.myCalendar.showWeekView();
-            binding.myCalendar.showAgendaView();
         }
         if (isMenu) {
             binding.groupMenuLayout.setVisibility(View.VISIBLE);
@@ -296,27 +298,48 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
         if (data != null && data.getData().size() > 0) {
             userModel.setModelResponse(data);
             PrefUtils.saveData(getActivity(), userModel);
-            binding.myCalendar.deleteAllEvent();
             for (ScheduleModelResponse.Data schedule : data.getData()) {
                 putData(schedule.getCaHoc(), AppUtils.formatDate(schedule.getDatetime()), schedule.getTitle()
                         + "\n" + "Giảng viên :" + schedule.getTeacher());
             }
-            binding.myCalendar.showMonthViewWithBelowEvents();
+            if (!isShowView) {
+                binding.myCalendars.setVisibility(View.GONE);
+                binding.myCalendar.setVisibility(View.VISIBLE);
+                binding.myCalendar.showMonthViewWithBelowEvents();
+            } else {
+                binding.myCalendar.setVisibility(View.VISIBLE);
+                binding.myCalendar.showWeekView();
+            }
         }
     }
 
     private void putData(String time, String date, String name) {
-        if (HOURS1.equals(time)) {
-            AppUtils.putData(binding.myCalendar, date, START_HOURS1, END_HOURS1, name);
-        } else if (HOURS2.equals(time)) {
-            AppUtils.putData(binding.myCalendar, date, START_HOURS2, END_HOURS2, name);
-        } else if (HOURS3.equals(time)) {
-            AppUtils.putData(binding.myCalendar, date, AppUtils.START_HOURS3, END_HOURS3, name);
-        } else if (HOURS4.equals(time)) {
-            AppUtils.putData(binding.myCalendar, date, START_HOURS4, END_HOURS4, name);
-        } else if (HOURS5.equals(time)) {
-            AppUtils.putData(binding.myCalendar, date, START_HOURS5, END_HOURS5, name);
+        if (!isShowView) {
+            if (HOURS1.equals(time)) {
+                AppUtils.putData(binding.myCalendar, date, START_HOURS1, END_HOURS1, name);
+            } else if (HOURS2.equals(time)) {
+                AppUtils.putData(binding.myCalendar, date, START_HOURS2, END_HOURS2, name);
+            } else if (HOURS3.equals(time)) {
+                AppUtils.putData(binding.myCalendar, date, AppUtils.START_HOURS3, END_HOURS3, name);
+            } else if (HOURS4.equals(time)) {
+                AppUtils.putData(binding.myCalendar, date, START_HOURS4, END_HOURS4, name);
+            } else if (HOURS5.equals(time)) {
+                AppUtils.putData(binding.myCalendar, date, START_HOURS5, END_HOURS5, name);
+            }
+        } else {
+            if (HOURS1.equals(time)) {
+                AppUtils.putDataMyCalendars(binding.myCalendars, date, START_HOURS1, END_HOURS1, name);
+            } else if (HOURS2.equals(time)) {
+                AppUtils.putDataMyCalendars(binding.myCalendars, date, START_HOURS2, END_HOURS2, name);
+            } else if (HOURS3.equals(time)) {
+                AppUtils.putDataMyCalendars(binding.myCalendars, date, AppUtils.START_HOURS3, END_HOURS3, name);
+            } else if (HOURS4.equals(time)) {
+                AppUtils.putDataMyCalendars(binding.myCalendars, date, START_HOURS4, END_HOURS4, name);
+            } else if (HOURS5.equals(time)) {
+                AppUtils.putDataMyCalendars(binding.myCalendars, date, START_HOURS5, END_HOURS5, name);
+            }
         }
+
     }
 
     @Override

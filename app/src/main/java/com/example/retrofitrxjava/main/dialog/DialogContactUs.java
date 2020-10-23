@@ -23,20 +23,6 @@ public class DialogContactUs extends BDialogFragment<DialogContactBinding> {
     @Override
     protected void initLayout() {
         binding.ivClose.setOnClickListener(v -> dismiss());
-        binding.phoneNumberLtp.setOnClickListener(v -> {
-            call(binding.phoneNumberLtp.getText().toString().trim());
-        });
-
-        binding.phoneNumberDvh.setOnClickListener(v -> {
-            call(binding.phoneNumberDvh.getText().toString().trim());
-        });
     }
 
-    private void call(String phoneNumber){
-        Intent intent = new Intent(Intent.ACTION_DIAL,
-                Uri.fromParts("tel", phoneNumber,
-                        null));
-        startActivity(intent);
-        dismiss();
-    }
 }

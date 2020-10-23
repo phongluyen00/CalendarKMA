@@ -83,6 +83,14 @@ public class AppUtils {
         myCalendar.isSundayOff(true, "#ffffff", "#ff0000");
     }
 
+    public static void putDataMyCalendars(com.desai.vatsal.mydynamiccalendar.MyDynamicCalendar myCalendar, String date, String startTime, String endTime, String name) {
+        myCalendar.setWeekDayLayoutTextColor(R.color.red);
+        myCalendar.setCurrentDateBackgroundColor(R.color.black);
+        myCalendar.addEvent(date, startTime, endTime, name);
+        myCalendar.isSaturdayOff(true, "#ffffff", "#ff0000");
+        myCalendar.isSundayOff(true, "#ffffff", "#ff0000");
+    }
+
     public static Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
