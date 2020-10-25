@@ -19,7 +19,12 @@
             android:title="Liên hệ với chúng tôi" />
 
         <item
-            android:icon="@drawable/ic_baseline_exit_to_app_24"
+            android:id="@+id/map"
+            android:icon="@drawable/location_menu"
+            android:title="Địa chỉ" />
+
+        <item
+            android:icon="@drawable/ic_logout"
             android:id="@+id/log_out"
             android:title="Đăng xuất" />
     </group>

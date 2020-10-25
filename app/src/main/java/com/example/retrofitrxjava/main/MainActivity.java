@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 
 import com.example.retrofitrxjava.AppBinding;
+import com.example.retrofitrxjava.common.map.MapsActivity;
 import com.example.retrofitrxjava.main.dialog.DialogContactUs;
 import com.example.retrofitrxjava.main.dialog.DialogNotification;
 import com.example.retrofitrxjava.main.model.Notification;
@@ -215,6 +216,10 @@ public class MainActivity extends BActivity<LayoutMainBinding>
                 recruitmentFrg = new RecruitmentFrg();
                 recruitmentFrg.setCheck(true);
                 AppUtils.loadView(this, recruitmentFrg);
+                return true;
+            case R.id.map:
+                startActivity(new Intent(this, MapsActivity.class));
+
                 return true;
         }
         return false;
