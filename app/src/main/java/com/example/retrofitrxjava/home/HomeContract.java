@@ -10,6 +10,7 @@ public interface HomeContract {
     interface View {
         void retrieveDataSuccess(List<Advertisement> data);
         void retrieveDataEnglishSuccess(List<Article> articles);
+        void retrieveDataEnglishFFailed(String message);
     }
 
     interface Presenter {

@@ -27,10 +27,9 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img_recruitment"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:padding="5dp"
-                thumb="@{item.url}"
                 android:src="@drawable/ic_baseline_public_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/img_recruitment"
@@ -42,7 +41,8 @@
                 app:layout_constraintBottom_toTopOf="@id/tv_title"
                 app:layout_constraintStart_toStartOf="@id/tv_title"
                 android:layout_width="0dp"
-                android:text="@{item.text}"
+                android:text="@{item.tieuDe}"
+                android:textColor="#197C7C"
                 app:layout_constraintEnd_toEndOf="@id/tv_title"
                 android:layout_height="wrap_content"/>
 
@@ -54,8 +54,8 @@
                 android:layout_marginLeft="16dp"
                 android:maxLines="4"
                 app:layout_constraintTop_toBottomOf="@+id/text"
-                android:text="@{item.title}"
-                android:textColor="#197C7C"
+                android:text="@{item.noiDung}"
+                android:textColor="#D2486161"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/img_recruitment"

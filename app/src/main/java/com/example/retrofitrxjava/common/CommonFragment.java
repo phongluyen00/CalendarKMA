@@ -82,18 +82,18 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
         userModel = PrefUtils.loadData(getActivity());
         token = userModel.getToken();
         password = userModel.getPassword();
-        if (isDays){
-            // code ông đẩy vào đây nhé
-        }
         if (!isShowView) {
+            binding.floatingButton.setVisibility(View.VISIBLE);
             binding.myCalendars.setVisibility(View.GONE);
             binding.myCalendar.setVisibility(View.VISIBLE);
             binding.myCalendar.showMonthViewWithBelowEvents();
         } else {
+            binding.floatingButton.setVisibility(View.VISIBLE);
             binding.myCalendar.setVisibility(View.VISIBLE);
             binding.myCalendar.showWeekView();
         }
         if (isMenu) {
+            binding.floatingButton.setVisibility(View.GONE);
             binding.groupMenuLayout.setVisibility(View.VISIBLE);
             binding.myCalendar.setVisibility(View.GONE);
             binding.groupTabLayout.setVisibility(View.GONE);
@@ -190,6 +190,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
         }
 
         if (isType) {
+            binding.floatingButton.setVisibility(View.GONE);
             binding.groupTabLayout.setVisibility(View.VISIBLE);
             binding.myCalendar.setVisibility(View.GONE);
         } else {
@@ -199,6 +200,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                     public void onClickMonth() {
                         confirmShowCalendar.dismiss();
                         isShowView = false;
+                        isDays = false;
                         initLayout();
                     }
 
@@ -206,6 +208,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                     public void onClickWeek() {
                         confirmShowCalendar.dismiss();
                         isShowView = true;
+                        isDays = false;
                         initLayout();
                     }
 
@@ -220,7 +223,6 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
             });
             if (!NetworkUtils.isConnect(getActivity())) {
                 if (userModel.getModelResponse() != null && userModel.getModelResponse().getData().size() > 0) {
-                    binding.myCalendar.deleteAllEvent();
                     for (ScheduleModelResponse.Data schedule : userModel.getModelResponse().getData()) {
                         putData(schedule.getCaHoc(), AppUtils.formatDate(schedule.getDatetime()),
                                 schedule.getTitle()
@@ -235,6 +237,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                     binding.groupTabLayout.setVisibility(View.GONE);
                     binding.myCalendar.setVisibility(View.VISIBLE);
                 }
+                return;
             }else {
                 presenter.retrieveSchedule(token, myAPI);
                 binding.groupTabLayout.setVisibility(View.GONE);
@@ -296,11 +299,20 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
     @Override
     public void retrieveSuccess(ScheduleModelResponse data) {
         if (data != null && data.getData().size() > 0) {
-            userModel.setModelResponse(data);
-            PrefUtils.saveData(getActivity(), userModel);
+            if (userModel.getModelResponse() == null){
+                userModel.setModelResponse(data);
+                PrefUtils.saveData(getActivity(), userModel);
+            }
             for (ScheduleModelResponse.Data schedule : data.getData()) {
-                putData(schedule.getCaHoc(), AppUtils.formatDate(schedule.getDatetime()), schedule.getTitle()
+                putData(schedule.getCaHoc(), AppUtils.formatDate(schedule.getDatetime()),
+                        schedule.getTitle()
                         + "\n" + "Giảng viên :" + schedule.getTeacher());
+            }
+            if (isDays){
+                binding.myCalendar.setVisibility(View.VISIBLE);
+                binding.myCalendar.showDayView();
+                // code ông đẩy vào đây nhé
+                return;
             }
             if (!isShowView) {
                 binding.myCalendars.setVisibility(View.GONE);

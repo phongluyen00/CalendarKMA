@@ -52,7 +52,7 @@ public interface MyAPI {
 
     // đồng bộ bảng điểm TB
     @GET("synchronizationMarkAvg")
-    Observable<Update> synchronization(@Query("userName") String token,
+    Observable<ScoreMediumResponse> synchronization(@Query("userName") String token,
                                        @Query("passWord") String passWord);
 
     @GET("dongBoBangDiemChiTiet")
@@ -75,6 +75,6 @@ public interface MyAPI {
     Observable<ModelResponse> syncCertificate(@Query("userName") String token,
                                               @Query("passWord") String passWord);
 
-    @POST("notification")
-    Observable<Notification> notification();
+    @GET("getThongBao")
+    Observable<Notification> getThongBao(@Query("mssv") String token);
 }

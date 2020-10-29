@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -22,15 +23,24 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
+import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.main.MainActivity;
 import com.example.retrofitrxjava.notification.event.EventUpdateNotification;
+import com.example.retrofitrxjava.pre.PrefUtils;
+import com.example.retrofitrxjava.retrofit.MyAPI;
 import com.example.retrofitrxjava.retrofit.RetrofitClient;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
+import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
+
+import static com.example.retrofitrxjava.utils.Constant.SUCCESS;
 
 /**
  * Created by luyenphong on 10/16/2020.
@@ -40,6 +50,8 @@ import retrofit2.Retrofit;
 public class NotificationBackground extends Service {
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
     public static final String EXTRA_NOTIFICATION = "extra_notification";
+    private MyAPI myAPI;
+    protected LoginResponse.Data userModel;
 
     @Override
     public void onCreate() {
@@ -49,74 +61,33 @@ public class NotificationBackground extends Service {
     @SuppressLint("CheckResult")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Retrofit retrofit = RetrofitClient.getInstance();
+        userModel = PrefUtils.loadData(this);
+        myAPI = retrofit.create(MyAPI.class);
         createNotificationChannel();
-        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
-                0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setContentTitle("")
-                .setSmallIcon(R.drawable.ic_baseline_notifications)
-                .setContentText("")
-                .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build();
-        startForeground(1, notification);
+        myAPI.getThongBao(userModel.getToken()).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter(response -> response.getErrorCode().equals(SUCCESS))
+                .subscribe(response -> {
+                            retrieveSuccess(response.getData());
+                            Log.d("statrt service", response.getData().size() + "");
+                        },
+                        throwable ->
+                                Log.d("statrt service", "khong co du lieu" + ""));
         Handler handler = new Handler();
         final Runnable sendData = new Runnable() {
             public void run() {
-                if (!NetworkUtils.isConnect(getApplicationContext())) {
-                    return;
-                }
-                AndroidNetworking.post("https://mockapi.superoffice.vn/api/3pi69i/notification")
-                        .setPriority(Priority.MEDIUM)
-                        .build()
-                        .getAsJSONObject(new JSONObjectRequestListener() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Log.d("aaa", response.toString());
-                                Gson gson = new Gson();
-                                com.example.retrofitrxjava.main.model.Notification obj = gson.fromJson(response.toString(), com.example.retrofitrxjava.main.model.Notification.class);
-                                Log.d("aaaaa", obj.getData().size() + "");
-                                // do anything with response
-                                if (obj != null && obj.getData() != null && obj.getData().size() > 0) {
-                                    Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
-                                    notificationIntent.putExtra(EXTRA_NOTIFICATION,true);
-                                    notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
-                                            0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                                    int count = obj.getData().size();
-                                    Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                                            .setPriority(Notification.PRIORITY_MAX)
-                                            .setContentTitle("Bạn có " + count +" thông báo mới !")
-                                            .setSmallIcon(R.drawable.ic_baseline_notifications)
-                                            .setContentText(obj.getData().get(count-1).getTitle())
-                                            .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
-                                            .setSound(Uri.parse("android.resource://"
-                                                    + getApplicationContext().getPackageName() + "/" + R.raw.notification))
-                                            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                                            .setContentIntent(pendingIntent)
-                                            .setAutoCancel(true)
-                                            .build();
-                                    startForeground(1, notification);
-                                    EventBus.getDefault().post(new EventUpdateNotification(obj.getData()));
-                                }
-                            }
-
-                            @Override
-                            public void onError(ANError error) {
-                                // handle error
-                            }
-                        });
-
+                myAPI.getThongBao(userModel.getToken()).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .filter(response -> response.getErrorCode().equals(SUCCESS))
+                        .subscribe(response -> {
+                                    retrieveSuccess(response.getData());
+                                    Log.d("statrt service", response.getData().size() + "");
+                                },
+                                throwable ->
+                                        Log.d("statrt service", "khong co du lieu" + ""));
                 handler.postDelayed(this, 600000);
                 Log.d("Call Api Notification", "lyenphong");
-
             }
         };
 
@@ -125,6 +96,30 @@ public class NotificationBackground extends Service {
 //        stopSelf();
 
         return START_NOT_STICKY;
+    }
+
+    private void retrieveSuccess(List<com.example.retrofitrxjava.main.model.Notification.Data> data) {
+        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        notificationIntent.putExtra(EXTRA_NOTIFICATION, true);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+                0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        int count = data.size();
+        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setPriority(Notification.PRIORITY_MAX)
+                .setContentTitle("Bạn có " + count + " thông báo mới !")
+                .setSmallIcon(R.drawable.ic_baseline_notifications)
+                .setContentText(data.get(count - 1).getTieuDe())
+                .setSound(Uri.parse("android.resource://"
+                        + getApplicationContext().getPackageName() + "/" + R.raw.notification))
+                .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build();
+        startForeground(1, notification);
+        EventBus.getDefault().post(new EventUpdateNotification(data));
     }
 
     @Override

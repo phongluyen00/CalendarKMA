@@ -15,6 +15,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.retrofitrxjava.loginV3.model.LoginResponse;
+import com.example.retrofitrxjava.pre.PrefUtils;
 import com.example.retrofitrxjava.retrofit.MyAPI;
 import com.example.retrofitrxjava.retrofit.RetrofitClient;
 
@@ -25,6 +27,7 @@ public abstract class BDialogFragment<BD extends ViewDataBinding> extends Dialog
 
     protected BD binding;
     protected MyAPI myAPI;
+    protected LoginResponse.Data userModel;
 
     @Nullable
     @Override
@@ -57,6 +60,7 @@ public abstract class BDialogFragment<BD extends ViewDataBinding> extends Dialog
         super.onActivityCreated(savedInstanceState);
         Retrofit retrofit = RetrofitClient.getInstance();
         myAPI = retrofit.create(MyAPI.class);
+        userModel = PrefUtils.loadData(getActivity());
         initLayout();
     }
 

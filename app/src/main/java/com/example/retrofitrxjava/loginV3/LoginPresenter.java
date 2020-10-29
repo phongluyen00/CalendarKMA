@@ -24,10 +24,6 @@ public class LoginPresenter implements LoginContract.Presenter {
     @SuppressLint("CheckResult")
     @Override
     public void verifyAccount(final MyAPI myAPI, final String userAccount, final String password) {
-        if (!NetworkUtils.isConnect((Context) view)) {
-            view.verifyAccountFailed(((Context) view).getString(R.string.error_internet));
-            return;
-        }
         myAPI.loginStatus(userAccount, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

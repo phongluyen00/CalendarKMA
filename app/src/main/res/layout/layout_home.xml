@@ -47,28 +47,34 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/label1"
-                android:layout_marginLeft="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="TRUNG TÂM NGOẠI NGỮ KMA"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Cơ hội làm việc"
                 android:textColor="@android:color/black"
-                android:textSize="14sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_pager" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rc_english"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/label1"
-                tools:listitem="@layout/item_english" />
+                tools:listitem="@layout/item_recruitment" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/rc_english"
+                app:layout_constraintLeft_toLeftOf="@id/rc_english"
+                app:layout_constraintRight_toRightOf="@id/rc_english"
+                app:layout_constraintTop_toTopOf="@id/rc_english" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

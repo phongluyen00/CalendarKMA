@@ -1,11 +1,13 @@
 package com.example.retrofitrxjava.parser;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.WindowManager;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
+import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BAdapter;
 import com.example.retrofitrxjava.b.BFragment;
@@ -13,8 +15,10 @@ import com.example.retrofitrxjava.b.ItemOnclickListener;
 import com.example.retrofitrxjava.databinding.LayoutRecruitmentBinding;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.model.Article;
+import com.example.retrofitrxjava.parser.event.EventUpdateTitle;
 import com.example.retrofitrxjava.pre.PrefUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,7 +26,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implements ItemOnclickListener<Article> {
     private BAdapter<Article> adapter;
@@ -41,16 +44,22 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
 
     @Override
     protected void initLayout() {
-        Toast.makeText(getActivity(), isCheck + "", Toast.LENGTH_SHORT).show();
         userModel = PrefUtils.loadData(getActivity());
+        if (!NetworkUtils.isConnect(getContext())) {
+            if (isCheck) {
+
+            } else {
+                if (userModel.getArticleListTD() != null && userModel.getArticleListTD().size() > 0) {
+                    setData(userModel.getArticleListTD());
+                }
+            }
+            return;
+        }
+
         if (isCheck) {
             new DownloadStudy().execute(getString(R.string.link_study));
         } else {
-            if (userModel.getArticleListTD() != null && userModel.getArticleListTD().size() > 0) {
-                setData(userModel.getArticleListTD());
-            } else {
-                new DownloadTask().execute(getString(R.string.link_recruitment));
-            }
+            new DownloadTask().execute(getString(R.string.link_recruitment));
         }
     }
 
@@ -92,7 +101,7 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
                         Element linkHtml = element.getElementsByTag("a").first();
                         Element locationHtml = element.getElementsByTag("ul").first();
                         //Parse to model
-                        article.setDes(titleSubject == null ? "" : titleSubject.attr("title") );
+                        article.setDes(titleSubject == null ? "" : titleSubject.attr("title"));
                         article.setThumb(imgSubject == null ? "" : imgSubject.attr("data-src"));
                         article.setTitle(linkSubject.attr("title"));
                         article.setIncome(descrip == null ? "" : descrip.text());
@@ -119,7 +128,7 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
         }
     }
 
-    private void defaultWedView(String link){
+    private void defaultWedView(String link) {
         binding.helpWebview.setWebViewClient(new WebViewClient());
         binding.helpWebview.getSettings().setSupportZoom(true);
         binding.helpWebview.getSettings().setAllowContentAccess(true);
@@ -129,6 +138,16 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
         binding.helpWebview.loadUrl(link);
         binding.rvRecruitment.setVisibility(View.GONE);
         binding.helpWebview.setVisibility(View.VISIBLE);
+
+        binding.helpWebview.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                if (!TextUtils.isEmpty(title)) {
+                    EventBus.getDefault().post(new EventUpdateTitle(title));
+                }
+            }
+        });
     }
 
     private class DownloadStudy extends AsyncTask<String, Void, ArrayList<Article>> implements ItemOnclickListener<Article> {
@@ -202,5 +221,6 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
     protected void onBackPressed() {
         binding.helpWebview.setVisibility(View.GONE);
         binding.rvRecruitment.setVisibility(View.VISIBLE);
+        EventBus.getDefault().post(new EventUpdateTitle(getResources().getString(R.string.recruitment)));
     }
 }

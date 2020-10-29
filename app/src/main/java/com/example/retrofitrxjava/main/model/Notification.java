@@ -22,34 +22,15 @@ public class Notification extends ModelResponse {
     private List<Data> data;
 
     @Getter
-    public class Data extends ModelResponse{
-        @SerializedName("title")
+    public class Data extends ModelResponse {
+        @SerializedName("tieuDe")
         @Expose
-        private String title;
-        @SerializedName("url")
+        private String tieuDe;
+        @SerializedName("noiDung")
         @Expose
-        private String url;
+        private String noiDung;
         @SerializedName("link")
         @Expose
-        private String links;
-
-        @SerializedName("text")
-        @Expose
-        private String text;
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Data data = (Data) o;
-            return Objects.equals(title, data.title) &&
-                    Objects.equals(url, data.url) &&
-                    Objects.equals(links, data.links);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(title, url, links);
-        }
+        private String link;
     }
 }

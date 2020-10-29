@@ -3,7 +3,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/layout_login"
-        android:background="@drawable/hacker_one"
+        android:background="@drawable/meoxinh"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">

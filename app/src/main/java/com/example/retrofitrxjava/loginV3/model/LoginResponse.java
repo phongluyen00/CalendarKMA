@@ -2,6 +2,7 @@ package com.example.retrofitrxjava.loginV3.model;
 
 
 import com.example.retrofitrxjava.common.model.ScheduleModelResponse;
+import com.example.retrofitrxjava.main.model.Notification;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 import com.example.retrofitrxjava.model.Article;
 import com.example.retrofitrxjava.model.DetailScoreModel;
@@ -47,9 +48,11 @@ public class LoginResponse extends ModelResponse {
         private String password;
         private String mediumScore;
         private ScheduleModelResponse modelResponse;
+        private ScheduleModelResponse.Data modelDataResponse;
         private DetailScoreModel detailScoreModel;
         private ScoreMediumResponse scoreMediumResponse;
         private File avata;
+        private Notification notification;
         private ArrayList<Article> articleListTD;
 
     }

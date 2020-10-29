@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 
 import com.example.retrofitrxjava.AppBinding;
+import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.common.map.MapsActivity;
 import com.example.retrofitrxjava.main.dialog.DialogContactUs;
 import com.example.retrofitrxjava.main.dialog.DialogNotification;
@@ -26,6 +27,7 @@ import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.main.dialog.DialogLogout;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 import com.example.retrofitrxjava.common.CommonFragment;
+import com.example.retrofitrxjava.parser.event.EventUpdateTitle;
 import com.example.retrofitrxjava.pre.PrefUtils;
 import com.example.retrofitrxjava.b.BActivity;
 import com.example.retrofitrxjava.databinding.LayoutMainBinding;
@@ -124,6 +126,9 @@ public class MainActivity extends BActivity<LayoutMainBinding>
     }
 
     private void startServices() {
+        if (!NetworkUtils.isConnect(this)) {
+            return;
+        }
         Intent serviceIntent = new Intent(MainActivity.this, NotificationBackground.class);
         ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
     }
@@ -164,6 +169,17 @@ public class MainActivity extends BActivity<LayoutMainBinding>
         }
     }
 
+    /**
+     * Cập nhật title
+     * @param noteEvent
+     */
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEventTitle(EventUpdateTitle noteEvent) {
+        if (noteEvent != null) {
+            binding.tvTitle.setText(noteEvent.getTitle());
+        }
+    }
+
     @Override
     public void openLeftMenu() {
         binding.drawerLayout.openDrawer(GravityCompat.START);
@@ -193,6 +209,7 @@ public class MainActivity extends BActivity<LayoutMainBinding>
                         logoutDialog.dismiss();
                         Toast.makeText(MainActivity.this, R.string.log_out_success, Toast.LENGTH_SHORT).show();
                         stopService();
+//                        PrefUtils.saveData(MainActivity.this, null);
                         finish();
                     }
 
@@ -230,4 +247,7 @@ public class MainActivity extends BActivity<LayoutMainBinding>
         binding.progressMain.setVisibility(View.GONE);
     }
 
+    public void setTitle(String title){
+        binding.tvTitle.setText(title);
+    }
 }

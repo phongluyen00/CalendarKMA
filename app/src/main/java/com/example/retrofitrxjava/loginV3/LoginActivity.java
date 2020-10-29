@@ -1,5 +1,6 @@
 package com.example.retrofitrxjava.loginV3;
 
+import android.content.Context;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.InputType;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
+import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BActivity;
 import com.example.retrofitrxjava.databinding.LayoutLoginBinding;
@@ -32,7 +34,7 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
     protected void initLayout() {
         binding.setListener(this);
         presenter = new LoginPresenter(this);
-        checkShowView(binding.edtUser.getText().toString(),binding.edtPassword.getText().toString());
+        checkShowView(binding.edtUser.getText().toString(), binding.edtPassword.getText().toString());
         binding.ivClearUsername.setOnClickListener(view -> binding.edtUser.setText(""));
         binding.ivClearPassword.setOnClickListener(view -> binding.edtPassword.setText(""));
         binding.edtUser.addTextChangedListener(new TextWatcher() {
@@ -42,7 +44,7 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                checkShowView(binding.edtUser.getText().toString().trim(),null);
+                checkShowView(binding.edtUser.getText().toString().trim(), null);
             }
 
             @Override
@@ -57,7 +59,7 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                checkShowView(null,binding.edtPassword.getText().toString().trim());
+                checkShowView(null, binding.edtPassword.getText().toString().trim());
             }
 
             @Override
@@ -117,8 +119,8 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
                 .build();
 
         binding.imgFingerprint.setOnClickListener(v -> {
-            if (PrefUtils.getSetting(getApplicationContext())){
-                if (PrefUtils.loadData(getApplicationContext())!= null){
+            if (PrefUtils.getSetting(getApplicationContext())) {
+                if (PrefUtils.loadData(getApplicationContext()) != null) {
                     biometricPrompt.authenticate(promptInfo);
                 }
             } else {
@@ -130,14 +132,14 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
 
     private void checkShowView(String user, String password) {
         if (user != null) {
-            binding.ivClearUsername.setVisibility((user.length() > 0) ? View.VISIBLE: View.GONE);
+            binding.ivClearUsername.setVisibility((user.length() > 0) ? View.VISIBLE : View.GONE);
         }
 
-       if (password != null){
-           int length = binding.edtPassword.getText().length();
-           binding.ivClearPassword.setVisibility((length > 0) ? View.VISIBLE : View.GONE);
-           binding.showPass.setVisibility((length > 0) ? View.VISIBLE : View.GONE);
-       }
+        if (password != null) {
+            int length = binding.edtPassword.getText().length();
+            binding.ivClearPassword.setVisibility((length > 0) ? View.VISIBLE : View.GONE);
+            binding.showPass.setVisibility((length > 0) ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
@@ -150,6 +152,10 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
         String userName = binding.edtUser.getText().toString();
         String password = binding.edtPassword.getText().toString();
         binding.progressbar.setVisibility(View.VISIBLE);
+        if (!NetworkUtils.isConnect(this)) {
+            verifyAccountFailed(getResources().getString(R.string.error_internet));
+            return;
+        }
         presenter.verifyAccount(myAPI, userName, password);
         AppUtils.hideKeyboard(this);
     }

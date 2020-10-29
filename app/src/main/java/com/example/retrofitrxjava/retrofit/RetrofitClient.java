@@ -16,7 +16,7 @@ public class RetrofitClient {
     private static Retrofit ourInstance;
 
     public static String BASE_MOCK = "https://mockapi.superoffice.vn/api/3pi69i/";
-    public static String BASE_MOCK_API = "http://27.71.231.75:82/api/Values/";
+    public static String BASE_MOCK_API = "http://125.212.237.188/api/Values/";
 
 
     public static  OkHttpClient okHttpClient(long time) {
@@ -31,7 +31,7 @@ public class RetrofitClient {
     public static Retrofit getInstance() {
         if (ourInstance == null)
             ourInstance = new Retrofit.Builder()
-                    .client(okHttpClient(60))
+                    .client(okHttpClient(30))
                     .baseUrl(BASE_MOCK_API)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -41,4 +41,5 @@ public class RetrofitClient {
 
     private RetrofitClient() {
     }
+
 }

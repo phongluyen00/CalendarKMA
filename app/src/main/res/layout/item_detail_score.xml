@@ -2,6 +2,7 @@
 <layout>
 
     <data>
+
         <variable
             name="item"
             type="com.example.retrofitrxjava.model.DetailScoreModel.Data" />
@@ -14,58 +15,73 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/ll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/label1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.7"
-                android:text="@{item.maHocPhan}"
-                android:gravity="left"
+                android:layout_marginRight="2dp"
                 android:maxLines="2"
+                android:text="@{item.maHocPhan}"
                 android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/label2"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/label2"
                 android:layout_width="0dp"
+                android:layout_marginLeft="2dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:maxLines="3"
                 android:text="@{item.tenHocPhan}"
                 android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@id/label3"
+                app:layout_constraintStart_toEndOf="@+id/label1"
+                app:layout_constraintTop_toTopOf="@id/label1" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/label3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 android:ellipsize="end"
-                android:gravity="center"
+                android:gravity="right"
                 android:maxLines="2"
                 android:text="@{item.tkhp2}"
                 android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@id/label4"
+                app:layout_constraintStart_toEndOf="@id/label2"
+                app:layout_constraintTop_toTopOf="@id/label1" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/label4"
+                study="@{item.danhGia}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.5"
+                android:layout_marginLeft="2dp"
                 android:gravity="right"
                 android:maxLines="2"
+                android:textColor="#00BCD4"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                study="@{item.danhGia}"
-                android:textColor="#00BCD4" />
-        </LinearLayout>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/label3"
+                app:layout_constraintTop_toTopOf="@id/label1" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:layout_width="match_parent"

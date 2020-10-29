@@ -1,7 +1,6 @@
 package com.example.retrofitrxjava.home;
 
 import android.os.AsyncTask;
-
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.home.model.Advertisement;
 import com.example.retrofitrxjava.model.Article;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 
 public class HomePresenter implements HomeContract.Presenter {
 
-    public static final String MY_URL = "http://flc.actvn.edu.vn/";
+    public static final String MY_URL = "https://careerbuilder.vn/viec-lam/cntt-phan-mem-c1e1-vi.html";
     private HomeContract.View view;
 
     public HomePresenter(HomeContract.View view) {
@@ -26,9 +25,9 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void retrieveDataHome(String userName) {
         ArrayList<Advertisement> advertisements = new ArrayList<>();
-        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/diem-chuan.jpg"));
-        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/qt-nhaphoc.jpg"));
-        advertisements.add(new Advertisement("https://vietthuong.vn/upload/content/images/tu-van/t-10/top-3-bai-piano-chao-mung-ngay-phu-nu-viet-nam-20-10-1.gif"));
+        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/imgp0877.jpg"));
+        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/slide1.jpg"));
+        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/news/tt1.jpg"));
         view.retrieveDataSuccess(advertisements);
     }
 
@@ -44,9 +43,6 @@ public class HomePresenter implements HomeContract.Presenter {
 
     //Download HTML bằng AsynTask
     private class DownloadTask extends AsyncTask<String, Void, ArrayList<Article>> {
-
-        private static final String TAG = "DownloadTask";
-
         @Override
         protected ArrayList<Article> doInBackground(String... strings) {
             Document document = null;
@@ -55,30 +51,22 @@ public class HomePresenter implements HomeContract.Presenter {
                 document = (Document) Jsoup.connect(strings[0]).get();
                 if (document != null) {
                     //Lấy  html có thẻ như sau: div#latest-news > div.row > div.col-md-6 hoặc chỉ cần dùng  div.col-md-6
-                    Elements sub = document.select("div.course");
+                    Elements sub = document.select("div.job-item");
                     for (Element element : sub) {
                         Article article = new Article();
-                        Element titleSubject = element.getElementsByTag("img").first();
+                        Element titleSubject = element.getElementsByTag("a").first();
                         Element imgSubject = element.getElementsByTag("img").first();
-                        Element linkSubject = element.getElementsByTag("a").first();
+                        Elements linkSubject = element.getElementsByTag("a").after("job_link").get(1).getElementsByAttribute("title");
                         Element descrip = element.getElementsByTag("p").first();
+                        Element linkHtml = element.getElementsByTag("a").first();
+                        Element locationHtml = element.getElementsByTag("ul").first();
                         //Parse to model
-                        if (titleSubject != null) {
-                            String title = titleSubject.attr("title");
-                            article.setTitle(title);
-                        }
-                        if (imgSubject != null) {
-                            String src = imgSubject.attr("src");
-                            article.setThumb(MY_URL + src);
-                        }
-                        if (linkSubject != null) {
-                            String link = linkSubject.attr("href");
-                            article.setLink(MY_URL + link);
-                        }
-                        if (descrip != null) {
-                            String des = descrip.text();
-                            article.setDes(des);
-                        }
+                        article.setDes(titleSubject == null ? "" : titleSubject.attr("title"));
+                        article.setThumb(imgSubject == null ? "" : imgSubject.attr("data-src"));
+                        article.setTitle(linkSubject.attr("title"));
+                        article.setIncome(descrip == null ? "" : descrip.text());
+                        article.setLink(linkHtml == null ? "" : linkHtml.attr("href"));
+                        article.setLocation(locationHtml != null ? locationHtml.text() : "");
                         //Add to list
                         listArticle.add(article);
                     }
@@ -93,7 +81,9 @@ public class HomePresenter implements HomeContract.Presenter {
         @Override
         protected void onPostExecute(ArrayList<Article> articles) {
             super.onPostExecute(articles);
+            //Setup data recyclerView
             view.retrieveDataEnglishSuccess(articles);
         }
     }
+
 }
