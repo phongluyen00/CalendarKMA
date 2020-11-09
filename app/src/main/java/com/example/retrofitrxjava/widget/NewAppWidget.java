@@ -3,6 +3,7 @@ package com.example.retrofitrxjava.widget;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.example.retrofitrxjava.R;
@@ -34,9 +35,9 @@ public class NewAppWidget extends AppWidgetProvider {
             List<ScheduleModelResponse.Data> lst =  scheduleModelResponse.getData();
             for(int i = 0; i < lst.size();i++)
             {
-                if(lst.get(i).getDatetime() == toDay)
-                {
+                if (toDay.equals(lst.get(i).getDatetime())){
                     widgetText = covert(lst.get(i).getCaHoc() )+"\t"+  lst.get(i).getMonHoc() + "\n" ;
+                    Log.d("AAAAAAAAAAAA",toDay + "-----------" + lst.get(i).getDatetime());
                 }
             }
         }
