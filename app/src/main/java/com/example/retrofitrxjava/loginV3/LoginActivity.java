@@ -21,7 +21,6 @@ import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BActivity;
 import com.example.retrofitrxjava.databinding.LayoutLoginBinding;
 import com.example.retrofitrxjava.main.MainActivity;
-import com.example.retrofitrxjava.pre.PrefUtils;
 import com.example.retrofitrxjava.utils.AppUtils;
 
 import java.io.IOException;
@@ -98,9 +97,9 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
         });
         initFingerprint();
 
-        if (PrefUtils.loadData(getApplicationContext()) != null && PrefUtils.loadData(this).getToken() != null) {
-            startActivity();
-        }
+//        if (PrefUtils.loadData(getApplicationContext()) != null && PrefUtils.loadData(this).getToken() != null) {
+//            startActivity();
+//        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

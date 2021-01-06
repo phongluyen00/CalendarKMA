@@ -262,8 +262,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_baseline_remove_red_eye_24" />
+                    android:layout_gravity="center" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"

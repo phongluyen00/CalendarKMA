@@ -13,10 +13,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitClient {
 
+    static {
+        System.loadLibrary("security");
+    }
+
+    private static native String getStringHello();
+
     private static Retrofit ourInstance;
 
     public static String BASE_MOCK = "https://mockapi.superoffice.vn/api/3pi69i/";
-    public static String BASE_MOCK_API = "http://125.212.237.188/api/Values/";
+    public static String BASE_MOCK_API = getStringHello();
 
 
     public static  OkHttpClient okHttpClient(long time) {
