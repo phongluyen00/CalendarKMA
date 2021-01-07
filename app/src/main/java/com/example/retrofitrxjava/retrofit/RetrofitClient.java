@@ -1,5 +1,8 @@
 package com.example.retrofitrxjava.retrofit;
 
+import com.androidnetworking.interceptors.HttpLoggingInterceptor;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -28,6 +31,8 @@ public class RetrofitClient {
     public static  OkHttpClient okHttpClient(long time) {
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                 .connectTimeout(time, TimeUnit.SECONDS)
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .addNetworkInterceptor(new StethoInterceptor())
                 .readTimeout(time, TimeUnit.SECONDS)
                 .writeTimeout(time, TimeUnit.SECONDS)
                 .build();
