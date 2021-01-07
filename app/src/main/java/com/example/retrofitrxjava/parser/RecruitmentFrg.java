@@ -56,11 +56,11 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
             return;
         }
 
-        if (isCheck) {
-            new DownloadStudy().execute(getString(R.string.link_study));
-        } else {
-            new DownloadTask().execute(getString(R.string.link_recruitment));
-        }
+//        if (isCheck) {
+//            new DownloadStudy().execute(getString(R.string.link_study));
+//        } else {
+//            new DownloadTask().execute(getString(R.string.link_recruitment));
+//        }
     }
 
     @Override

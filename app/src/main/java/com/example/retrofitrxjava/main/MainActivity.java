@@ -61,7 +61,7 @@ public class MainActivity extends BActivity<LayoutMainBinding>
     @SuppressLint("CheckResult")
     @Override
     protected void initLayout() {
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
         rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -75,7 +75,7 @@ public class MainActivity extends BActivity<LayoutMainBinding>
             presenter.retrieveScore(myAPI);
         }
 
-        // startServices();
+//        startServices();
 
         binding.ivNotification.setOnClickListener(v -> {
             openDialogNotification();
@@ -133,10 +133,10 @@ public class MainActivity extends BActivity<LayoutMainBinding>
         ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
     }
 
-    public void stopService() {
-        Intent serviceIntent = new Intent(this, NotificationBackground.class);
-        stopService(serviceIntent);
-    }
+//    public void stopService() {
+//        Intent serviceIntent = new Intent(this, NotificationBackground.class);
+//        stopService(serviceIntent);
+//    }
 
     @Override
     protected int getLayoutId() {
@@ -158,16 +158,16 @@ public class MainActivity extends BActivity<LayoutMainBinding>
         }
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEvent(EventUpdateNotification noteEvent) {
-        if (noteEvent != null) {
-            if (noteEvent.getNotifications().size() > 0) {
-                Animation shake;
-                shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
-                binding.ivNotification.startAnimation(shake); // st
-            }
-        }
-    }
+//    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+//    public void onEvent(EventUpdateNotification noteEvent) {
+//        if (noteEvent != null) {
+//            if (noteEvent.getNotifications().size() > 0){
+//                Animation shake;
+//                shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
+//                binding.ivNotification.startAnimation(shake); // st
+//            }
+//        }
+//    }
 
     /**
      * Cập nhật title
@@ -209,7 +209,7 @@ public class MainActivity extends BActivity<LayoutMainBinding>
                     public void onClickAccept(View view) {
                         logoutDialog.dismiss();
                         Toast.makeText(MainActivity.this, R.string.log_out_success, Toast.LENGTH_SHORT).show();
-                        stopService();
+//                        stopService();
 //                        PrefUtils.saveData(MainActivity.this, null);
                         finish();
                     }

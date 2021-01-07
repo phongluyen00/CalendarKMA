@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Keep;
+
 import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BAdapter;
