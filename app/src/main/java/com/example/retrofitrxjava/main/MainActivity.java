@@ -3,6 +3,7 @@ package com.example.retrofitrxjava.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,6 +17,7 @@ import androidx.core.view.GravityCompat;
 import com.example.retrofitrxjava.AppBinding;
 import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.common.map.MapsActivity;
+import com.example.retrofitrxjava.loginV3.LoginActivity;
 import com.example.retrofitrxjava.main.dialog.DialogContactUs;
 import com.example.retrofitrxjava.main.dialog.DialogNotification;
 import com.example.retrofitrxjava.main.model.Notification;
@@ -211,6 +213,9 @@ public class MainActivity extends BActivity<LayoutMainBinding>
                         Toast.makeText(MainActivity.this, R.string.log_out_success, Toast.LENGTH_SHORT).show();
 //                        stopService();
 //                        PrefUtils.saveData(MainActivity.this, null);
+                        Log.i("hadtt", "startActivity");
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
                         finish();
                     }
 

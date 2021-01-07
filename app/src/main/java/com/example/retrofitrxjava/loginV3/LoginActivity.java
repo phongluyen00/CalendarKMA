@@ -414,6 +414,7 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
+        finish();
     }
 
     @Override
