@@ -34,5 +34,6 @@
     <string name="recruitment">Tuyển dụng thực tập</string>
     <string name="ban_can_bat_face_id">Bạn cần bật tính năng nhận diện bằng vân tay</string>
     <string name="title_activity_maps">Map</string>
+    <string name="content_verification_otp">We sent a verification code to %s</string>
 
 </resources>

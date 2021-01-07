@@ -16,7 +16,7 @@ public class RetrofitClient {
     private static Retrofit ourInstance;
 
     public static String BASE_MOCK = "https://mockapi.superoffice.vn/api/3pi69i/";
-    public static String BASE_MOCK_API = "http://125.212.237.188/api/Values/";
+    public static String BASE_MOCK_API = "https://mockapi.superoffice.vn/api/swu86/";
 
 
     public static  OkHttpClient okHttpClient(long time) {

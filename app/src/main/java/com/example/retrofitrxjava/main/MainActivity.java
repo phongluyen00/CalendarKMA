@@ -75,12 +75,12 @@ public class MainActivity extends BActivity<LayoutMainBinding>
             presenter.retrieveScore(myAPI);
         }
 
-        startServices();
+        // startServices();
 
         binding.ivNotification.setOnClickListener(v -> {
             openDialogNotification();
         });
-        boolean isNotification = getIntent().getBooleanExtra(NotificationBackground.EXTRA_NOTIFICATION,false);
+        boolean isNotification = getIntent().getBooleanExtra(NotificationBackground.EXTRA_NOTIFICATION, false);
         if (isNotification) binding.ivNotification.performClick();
 
         binding.setListener(this);
@@ -161,7 +161,7 @@ public class MainActivity extends BActivity<LayoutMainBinding>
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(EventUpdateNotification noteEvent) {
         if (noteEvent != null) {
-            if (noteEvent.getNotifications().size() > 0){
+            if (noteEvent.getNotifications().size() > 0) {
                 Animation shake;
                 shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
                 binding.ivNotification.startAnimation(shake); // st
@@ -171,6 +171,7 @@ public class MainActivity extends BActivity<LayoutMainBinding>
 
     /**
      * Cập nhật title
+     *
      * @param noteEvent
      */
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -247,7 +248,7 @@ public class MainActivity extends BActivity<LayoutMainBinding>
         binding.progressMain.setVisibility(View.GONE);
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         binding.tvTitle.setText(title);
     }
 }

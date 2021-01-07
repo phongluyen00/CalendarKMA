@@ -27,7 +27,7 @@ public class LoginResponse extends ModelResponse {
 
     @Getter
     @Setter
-    public static class Data  {
+    public static class Data {
 
         @SerializedName("MSSV")
         @Expose
@@ -44,6 +44,9 @@ public class LoginResponse extends ModelResponse {
         @SerializedName("trangThaiHocTap")
         @Expose
         private String status;
+        @SerializedName("phone")
+        @Expose
+        public String phone;
         private String token;
         private String password;
         private String mediumScore;
