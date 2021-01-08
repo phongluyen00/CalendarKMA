@@ -2,14 +2,19 @@ package com.example.retrofitrxjava.security;
 
 import android.util.Base64;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.SecretKeyFactory;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -18,44 +23,56 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AESHelper {
 
-    private static final int pswdIterations = 10;
-    private static final int keySize = 128;
-    private static final String cypherInstance = "AES/CBC/PKCS5Padding";
-    private static final String secretKeyInstance = "PBKDF2WithHmacSHA1";
-    private static final String plainText = "sampleText";
-    private static final String AESSalt = "exampleSalt";
-    private static final String initializationVector = "8119745113154120";
+    private final String characterEncoding = "UTF-8";
+    private final String cipherTransformation = "AES/CBC/PKCS5Padding";
+    private final String aesEncryptionAlgorithm = "AES";
 
-    public static String encrypt(String textToEncrypt) throws Exception {
-
-        SecretKeySpec skeySpec = new SecretKeySpec(getRaw(plainText, AESSalt), "AES");
-        Cipher cipher = Cipher.getInstance(cypherInstance);
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(initializationVector.getBytes()));
-        byte[] encrypted = cipher.doFinal(textToEncrypt.getBytes());
-        return Base64.encodeToString(encrypted, Base64.DEFAULT);
+    public byte[] decrypt(byte[] cipherText, byte[] key, byte[] initialVector) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException {
+        Cipher cipher = Cipher.getInstance(cipherTransformation);
+        SecretKeySpec secretKeySpecy = new SecretKeySpec(key, aesEncryptionAlgorithm);
+        IvParameterSpec ivParameterSpec = new IvParameterSpec(initialVector);
+        cipher.init(Cipher.DECRYPT_MODE, secretKeySpecy, ivParameterSpec);
+        cipherText = cipher.doFinal(cipherText);
+        return cipherText;
     }
 
-    public static String decrypt(String textToDecrypt) throws Exception {
-
-        byte[] encryted_bytes = Base64.decode(textToDecrypt, Base64.DEFAULT);
-        SecretKeySpec skeySpec = new SecretKeySpec(getRaw(plainText, AESSalt), "AES");
-        Cipher cipher = Cipher.getInstance(cypherInstance);
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(initializationVector.getBytes()));
-        byte[] decrypted = cipher.doFinal(encryted_bytes);
-        return new String(decrypted, "UTF-8");
+    public byte[] encrypt(byte[] plainText, byte[] key, byte[] initialVector) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance(cipherTransformation);
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key, aesEncryptionAlgorithm);
+        IvParameterSpec ivParameterSpec = new IvParameterSpec(initialVector);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
+        plainText = cipher.doFinal(plainText);
+        return plainText;
     }
 
-    private static byte[] getRaw(String plainText, String salt) {
-        try {
-            SecretKeyFactory factory = SecretKeyFactory.getInstance(secretKeyInstance);
-            KeySpec spec = new PBEKeySpec(plainText.toCharArray(), salt.getBytes(), pswdIterations, keySize);
-            return factory.generateSecret(spec).getEncoded();
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return new byte[0];
+    private byte[] getKeyBytes(String key) throws UnsupportedEncodingException {
+        byte[] keyBytes = new byte[16];
+        byte[] parameterKeyBytes = key.getBytes(characterEncoding);
+        System.arraycopy(parameterKeyBytes, 0, keyBytes, 0, Math.min(parameterKeyBytes.length, keyBytes.length));
+        return keyBytes;
     }
 
+    /// <summary>
+    /// Encrypts plaintext using AES 128bit key and a Chain Block Cipher and returns a base64 encoded string
+    /// </summary>
+    /// <param name="plainText">Plain text to encrypt</param>
+    /// <param name="key">Secret key</param>
+    /// <returns>Base64 encoded string</returns>
+    public String encrypt(String plainText, String key) throws UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+        byte[] plainTextbytes = plainText.getBytes(characterEncoding);
+        byte[] keyBytes = getKeyBytes(key);
+        return android.util.Base64.encodeToString(encrypt(plainTextbytes, keyBytes, keyBytes), Base64.DEFAULT);
+    }
+
+    /// <summary>
+    /// Decrypts a base64 encoded string using the given key (AES 128bit key and a Chain Block Cipher)
+    /// </summary>
+    /// <param name="encryptedText">Base64 Encoded String</param>
+    /// <param name="key">Secret Key</param>
+    /// <returns>Decrypted String</returns>
+    public String decrypt(String encryptedText, String key) throws KeyException, GeneralSecurityException, GeneralSecurityException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException, UnsupportedEncodingException {
+        byte[] cipheredBytes = Base64.decode(encryptedText, Base64.DEFAULT);
+        byte[] keyBytes = getKeyBytes(key);
+        return new String(decrypt(cipheredBytes, keyBytes, keyBytes), characterEncoding);
+    }
 }

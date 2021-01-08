@@ -16,16 +16,41 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.custom.MyDynamicCalendar;
+import com.example.retrofitrxjava.loginV3.model.LoginResponse;
+import com.example.retrofitrxjava.security.AESHelper;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * Create by Luyenphong
  * luyenphong00@gmail.com
  */
 public class AppUtils {
+
+    static {
+        System.loadLibrary("security");
+    }
+
+    private static native String getKeyAES();
+
+    public static native String getAPI();
+
+    public static String privateKey = getKeyAES();
 
     public static void loadView(Context context, Fragment fragment) {
         FragmentActivity fragmentActivity = (FragmentActivity) context;
@@ -120,6 +145,34 @@ public class AppUtils {
             }
         }
         return false;
+    }
+
+    public static LoginResponse.Data decryptData(String decryptText) {
+        ArrayList<String> stringArrayList = new ArrayList<>();
+        JSONArray jArray;
+        Gson gson = new Gson();
+        try {
+            jArray = new JSONArray(decryptText);
+            for (int i = 0; i < jArray.length(); i++) {
+                stringArrayList.add(jArray.getString(i));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return gson.fromJson(stringArrayList.get(0), LoginResponse.Data.class);
+    }
+
+    public static String entryData(String textEncrypt) {
+        String encryptText;
+        try {
+            encryptText = new AESHelper().encrypt(textEncrypt, getKeyAES());
+            return encryptText;
+        } catch (UnsupportedEncodingException | InvalidKeyException | NoSuchAlgorithmException
+                | NoSuchPaddingException | InvalidAlgorithmParameterException | IllegalBlockSizeException
+                | BadPaddingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

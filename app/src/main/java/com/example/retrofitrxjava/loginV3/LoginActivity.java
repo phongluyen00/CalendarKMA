@@ -63,14 +63,6 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
     private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
-    private static final String KEY_VERIFY_IN_PROGRESS = "key_verify_in_progress";
-
-    private static final int STATE_INITIALIZED = 1;
-    private static final int STATE_CODE_SENT = 2;
-    private static final int STATE_VERIFY_FAILED = 3;
-    private static final int STATE_VERIFY_SUCCESS = 4;
-    private static final int STATE_SIGNIN_FAILED = 5;
-    private static final int STATE_SIGNIN_SUCCESS = 6;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -141,16 +133,13 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
         });
 
         binding.tvReSend.setOnClickListener(v -> {
-            if (!TextUtils.isEmpty(data.phone)) {
-                resendVerificationCode(data.phone, mResendToken);
+            if (!TextUtils.isEmpty(data.getSdt())) {
+                resendVerificationCode(data.getSdt(), mResendToken);
             }
         });
 
         initCallBackOTP();
 
-//        if (PrefUtils.loadData(getApplicationContext()) != null && PrefUtils.loadData(this).getToken() != null) {
-//            startActivity();
-//        }
     }
 
     private void initCallBackOTP() {
@@ -231,7 +220,7 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
             public void onAuthenticationSucceeded(
                     @NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                startActivity();
+                onClick();
             }
 
             @Override
@@ -257,60 +246,41 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
                         .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
                         .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
                         .setUserAuthenticationRequired(true)
-                        // Invalidate the keys if the user has registered a new biometric
-                        // credential, such as a new fingerprint. Can call this method only
-                        // on Android 7.0 (API level 24) or higher. The variable
-                        // "invalidatedByBiometricEnrollment" is true by default.
                         .setInvalidatedByBiometricEnrollment(true)
                         .build());
             }
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (NoSuchProviderException | NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
 
         binding.imgFingerprint.setOnClickListener(v -> {
-//            biometricPrompt.authenticate(promptInfo);
             Cipher cipher = null;
             try {
                 cipher = getCipher();
-            } catch (NoSuchPaddingException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
+            } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
             SecretKey secretKey = null;
             try {
                 secretKey = getSecretKey();
-            } catch (KeyStoreException e) {
-                e.printStackTrace();
-            } catch (CertificateException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (UnrecoverableKeyException e) {
+            } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException | UnrecoverableKeyException e) {
                 e.printStackTrace();
             }
             try {
+                assert cipher != null;
                 cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             } catch (InvalidKeyException e) {
                 e.printStackTrace();
             }
-            biometricPrompt.authenticate(promptInfo,
-                    new BiometricPrompt.CryptoObject(cipher));
-//            if (PrefUtils.getSetting(getApplicationContext())) {
-//                if (PrefUtils.loadData(getApplicationContext()) != null) {
-//                    biometricPrompt.authenticate(promptInfo);
-//                }
-//            } else {
-//                Toast.makeText(this,
-//                        getString(R.string.ban_can_bat_face_id), Toast.LENGTH_SHORT).show();
-//            }
+            if (PrefUtils.getSetting(getApplicationContext())) {
+                if (PrefUtils.loadData(getApplicationContext()) != null) {
+                    biometricPrompt.authenticate(promptInfo,
+                            new BiometricPrompt.CryptoObject(cipher));
+                }
+            } else {
+                Toast.makeText(this,
+                        getString(R.string.ban_can_bat_face_id), Toast.LENGTH_SHORT).show();
+            }
 
         });
     }
@@ -356,14 +326,19 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
 
     @Override
     public void onClick() {
-        String userName = binding.edtUser.getText().toString();
-        String password = binding.edtPassword.getText().toString();
-        binding.progressbar.setVisibility(View.VISIBLE);
+        String userName = "userName=" + binding.edtUser.getText().toString().trim();
+        String password = "&passWord=" + binding.edtPassword.getText().toString().trim();
+
         if (!NetworkUtils.isConnect(this)) {
             verifyAccountFailed(getResources().getString(R.string.error_internet));
             return;
         }
-        presenter.verifyAccount(myAPI, userName, password);
+        if (!TextUtils.isEmpty(binding.edtUser.getText().toString().trim()) && !TextUtils.isEmpty(binding.edtPassword.getText().toString().trim())) {
+            binding.progressbar.setVisibility(View.VISIBLE);
+            presenter.verifyAccount(AppUtils.entryData(userName + password));
+        }else {
+            Toast.makeText(this, "Nhập đủ dữ liệu !", Toast.LENGTH_SHORT).show();
+        }
         AppUtils.hideKeyboard(this);
     }
 
@@ -374,19 +349,26 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
     private LoginResponse.Data data;
 
     @Override
-    public void pushView(LoginResponse.Data phone) {
+    public void pushView(LoginResponse.Data data) {
         binding.progressbar.setVisibility(View.GONE);
-        if (!TextUtils.isEmpty(phone.phone)) {
-//nhap otp
-            data = phone;
-            binding.layoutLogin.setVisibility(View.GONE);
-            binding.layoutOtp.setVisibility(View.VISIBLE);
-            int phone1 = Integer.parseInt(phone.phone);
-            binding.tvContent2.setText(getString(R.string.content_verification_otp, "+84" + phone1));
-            startPhoneNumberVerification(phone1);
-        } else {
-            loginSuccess(phone);
-        }
+//        if (!TextUtils.isEmpty(data.getSdt())) {
+//        //  verify otp
+//            this.data = data;
+//            binding.layoutLogin.setVisibility(View.GONE);
+//            binding.layoutOtp.setVisibility(View.VISIBLE);
+//            String tel = data.getSdt();
+//            int phone1 = 0;
+//            if (tel.startsWith("016")){
+//                phone1 = Integer.parseInt(tel.replace("016","03"));
+//            }else {
+//                phone1 = Integer.parseInt(tel);
+//            }
+//
+//            binding.tvContent2.setText(getString(R.string.content_verification_otp, "+84" + phone1));
+//            startPhoneNumberVerification(phone1);
+//        } else {
+            loginSuccess(data);
+//        }
     }
 
     private void startPhoneNumberVerification(int phone) {

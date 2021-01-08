@@ -33,7 +33,7 @@ public class DialogFullScreen extends BDialogFragment<LayoutDialogFullscreenBind
     @SuppressLint("CheckResult")
     @Override
     protected void initLayout() {
-        binding.tvId.setText(PrefUtils.loadData(getActivity()).getName());
+        binding.tvId.setText(PrefUtils.loadData(getActivity()).getTen());
         binding.ivBack.setOnClickListener(view -> dismiss());
         myAPI.getPayment(PrefUtils.loadData(getActivity()).getToken())
                 .subscribeOn(Schedulers.io())

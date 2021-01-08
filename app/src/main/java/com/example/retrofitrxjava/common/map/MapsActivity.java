@@ -1,7 +1,5 @@
 package com.example.retrofitrxjava.common.map;
 
-import android.view.View;
-
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.b.BActivity;
 import com.example.retrofitrxjava.databinding.ActivityMapsBinding;

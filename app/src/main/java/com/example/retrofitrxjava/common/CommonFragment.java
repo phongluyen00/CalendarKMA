@@ -59,7 +59,6 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
     private boolean isType;
     private boolean isMenu;
     private CommonPresenter presenter;
-    private String token, password;
     DialogSync dialogSync;
     private boolean isShowView;
     private boolean isDays;
@@ -80,8 +79,6 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
     protected void initLayout() {
         presenter = new CommonPresenter(this);
         userModel = PrefUtils.loadData(getActivity());
-        token = userModel.getToken();
-        password = userModel.getPassword();
         if (!isShowView) {
             binding.floatingButton.setVisibility(View.VISIBLE);
             binding.myCalendars.setVisibility(View.GONE);
@@ -146,37 +143,37 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                     @Override
                     public void onClickSynDTB() {
                         validateUpdate();
-                        presenter.syncDTB(token, password, myAPI);
+                        presenter.syncDTB(userModel.getUserName(), userModel.getPassWord(), myAPI);
                     }
 
                     @Override
                     public void onClickSynScore() {
                         validateUpdate();
-                        presenter.updateScore(token, password, myAPI);
+                        presenter.updateScore(userModel.getUserName(), userModel.getPassWord(), myAPI);
                     }
 
                     @Override
                     public void onClickSynSchedule() {
                         validateUpdate();
-                        presenter.updateSchedule(token, password, myAPI);
+                        presenter.updateSchedule(userModel.getUserName(), userModel.getPassWord(), myAPI);
                     }
 
                     @Override
                     public void onClickSyncMoney() {
                         validateUpdate();
-                        presenter.updateMoney(token, password, myAPI);
+                        presenter.updateMoney(userModel.getUserName(), userModel.getPassWord(), myAPI);
                     }
 
                     @Override
                     public void onClickSyncWaring() {
                         validateUpdate();
-                        presenter.syncHandlingService(token, password, myAPI);
+                        presenter.syncHandlingService(userModel.getUserName(), userModel.getPassWord(), myAPI);
                     }
 
                     @Override
                     public void onClickSyncCC() {
                         validateUpdate();
-                        presenter.syncCertificate(token, password, myAPI);
+                        presenter.syncCertificate(userModel.getUserName(), userModel.getPassWord(), myAPI);
                     }
 
                     @Override
@@ -239,7 +236,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                 }
                 return;
             }else {
-                presenter.retrieveSchedule(token, myAPI);
+//                presenter.retrieveSchedule(userModel.getUserName(), myAPI);
                 binding.groupTabLayout.setVisibility(View.GONE);
                 binding.myCalendar.setVisibility(View.VISIBLE);
             }
@@ -311,7 +308,6 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
             if (isDays){
                 binding.myCalendar.setVisibility(View.VISIBLE);
                 binding.myCalendar.showDayView();
-                // code ông đẩy vào đây nhé
                 return;
             }
             if (!isShowView) {

@@ -1,6 +1,7 @@
 package com.example.retrofitrxjava.retrofit;
 
 import com.androidnetworking.interceptors.HttpLoggingInterceptor;
+import com.example.retrofitrxjava.utils.AppUtils;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.util.concurrent.TimeUnit;
@@ -20,12 +21,9 @@ public class RetrofitClient {
         System.loadLibrary("security");
     }
 
-    private static native String getStringHello();
-
     private static Retrofit ourInstance;
 
-    public static String BASE_MOCK = "https://mockapi.superoffice.vn/api/3pi69i/";
-    public static String BASE_MOCK_API = getStringHello();
+    public static String BASE_MOCK_API = AppUtils.getAPI();
 
 
     public static  OkHttpClient okHttpClient(long time) {

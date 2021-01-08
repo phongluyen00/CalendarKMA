@@ -6,7 +6,6 @@ import com.example.retrofitrxjava.main.model.Notification;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 import com.example.retrofitrxjava.model.Article;
 import com.example.retrofitrxjava.model.DetailScoreModel;
-import com.example.retrofitrxjava.model.ModelResponse;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,7 +16,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-public class LoginResponse extends ModelResponse {
+public class LoginResponse{
+
     @SerializedName("data")
     @Expose
     private Data data;
@@ -27,28 +27,44 @@ public class LoginResponse extends ModelResponse {
 
     @Getter
     @Setter
-    public static class Data {
+    public class Data {
 
-        @SerializedName("MSSV")
+        @SerializedName("Id")
         @Expose
-        private String id;
-        @SerializedName("hoTen")
+        private Integer id;
+        @SerializedName("hoDem")
         @Expose
-        private String name;
+        private Object hoDem;
+        @SerializedName("ten")
+        @Expose
+        private String ten;
+
+        @SerializedName("cmtnd")
+        @Expose
+        private String cmtnd;
+        @SerializedName("ngaySinh")
+        @Expose
+        private String ngaySinh;
+        @SerializedName("noiSinh")
+        @Expose
+        private String noiSinh;
+        @SerializedName("sdt")
+        @Expose
+        private String sdt;
+        @SerializedName("email")
+        @Expose
+        private String email;
+
+        @SerializedName("userName")
+        @Expose
+        private String userName;
+        @SerializedName("passWord")
+        @Expose
+        private String passWord;
         @SerializedName("khoa")
         @Expose
-        private String khoa;
-        @SerializedName("lop")
-        @Expose
-        private String classRoom;
-        @SerializedName("trangThaiHocTap")
-        @Expose
-        private String status;
-        @SerializedName("phone")
-        @Expose
-        public String phone;
+
         private String token;
-        private String password;
         private String mediumScore;
         private ScheduleModelResponse modelResponse;
         private ScheduleModelResponse.Data modelDataResponse;
@@ -57,7 +73,6 @@ public class LoginResponse extends ModelResponse {
         private File avata;
         private Notification notification;
         private ArrayList<Article> articleListTD;
-
     }
 
 }

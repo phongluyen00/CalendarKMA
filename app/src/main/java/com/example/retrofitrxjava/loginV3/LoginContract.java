@@ -11,6 +11,6 @@ public interface LoginContract {
     }
 
     interface Presenter {
-        void verifyAccount(MyAPI myAPI, String userAccount, String password);
+        void verifyAccount(String userAccount);
     }
 }

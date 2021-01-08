@@ -118,14 +118,14 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.lvScore.setLayoutManager(layoutManager);
-        binding.rlHeader.setVisibility(View.VISIBLE);
+        binding.rlHeader.setVisibility(View.GONE);
         binding.lvScore.setAdapter(dataBAdapter);
         binding.progressLoadData.setVisibility(View.GONE);
         dataBAdapter.setData(data);
         if (data != null && data.size() > 0) {
             binding.groupNoData.setVisibility(View.GONE);
         } else {
-            binding.groupNoData.setVisibility(View.VISIBLE);
+            binding.groupNoData.setVisibility(View.GONE);
             binding.rlHeader.setVisibility(View.GONE);
         }
     }

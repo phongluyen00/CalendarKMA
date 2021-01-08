@@ -1,13 +1,10 @@
 package com.example.retrofitrxjava.home;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
-
-import androidx.annotation.Keep;
 
 import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
@@ -20,13 +17,11 @@ import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.home.model.Advertisement;
 import com.example.retrofitrxjava.model.Article;
 import com.example.retrofitrxjava.pre.PrefUtils;
-import com.example.retrofitrxjava.Test123;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeListener,
-        HomeContract.View, ItemOnclickListener<Article> {
+public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeContract.View, ItemOnclickListener<Article> {
 
     private BannerAdapter adapter1;
     private android.os.Handler handler;
@@ -54,7 +49,6 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
             return;
         }
         presenter.retrieveDataEnglish();
-        binding.setListener(this);
     }
 
     @Override
@@ -65,11 +59,6 @@ public class HomeFrg extends BFragment<LayoutHomeBindingImpl> implements HomeLis
     @Override
     public int getTitle() {
         return R.string.home;
-    }
-
-    @Override
-    public void onClick() {
-        startActivity(new Intent(getActivity(), Test123.class));
     }
 
     @Override

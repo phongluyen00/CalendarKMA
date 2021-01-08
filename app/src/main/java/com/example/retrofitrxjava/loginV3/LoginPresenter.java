@@ -2,39 +2,39 @@ package com.example.retrofitrxjava.loginV3;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
-import com.example.retrofitrxjava.pre.PrefUtils;
 import com.example.retrofitrxjava.retrofit.MyAPI;
+import com.example.retrofitrxjava.retrofit.RetrofitClient;
+import com.example.retrofitrxjava.security.AESHelper;
+import com.example.retrofitrxjava.utils.AppUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Retrofit;
 
 import static com.example.retrofitrxjava.utils.Constant.SUCCESS;
 
 public class LoginPresenter implements LoginContract.Presenter {
     private LoginContract.View view;
+    private MyAPI myAPI;
 
     public LoginPresenter(LoginContract.View view) {
+        Retrofit retrofit = RetrofitClient.getInstance();
+        myAPI = retrofit.create(MyAPI.class);
         this.view = view;
     }
 
     @SuppressLint("CheckResult")
     @Override
-    public void verifyAccount(final MyAPI myAPI, final String userAccount, final String password) {
-        myAPI.loginStatus(userAccount, password)
+    public void verifyAccount(String entryDataLogin) {
+        myAPI.loginStatus(entryDataLogin)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(loginResponse -> {
-                    loginResponse.getData().setToken(userAccount);
-                    loginResponse.getData().setPassword(password);
-                    LoginResponse.Data data = loginResponse.getData();
-                    Log.i("hadtt", "" + data.phone);
-
+                    String decryptText = new AESHelper().decrypt(loginResponse.getData(), AppUtils.privateKey);
+                    LoginResponse.Data data = AppUtils.decryptData(decryptText);
                     if (loginResponse.getErrorCode().equals(SUCCESS)) {
                         view.pushView(data);
                     } else {

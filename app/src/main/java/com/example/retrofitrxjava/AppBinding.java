@@ -88,6 +88,8 @@ public class AppBinding {
                 tv.setTextColor(Color.parseColor("#BAFA0133"));
             }
             tv.setText(score+"");
+        }else {
+            tv.setText("0");
         }
     }
 
@@ -118,7 +120,7 @@ public class AppBinding {
         if (file != null){
             img.setImageURI(Uri.fromFile(new File(file+"")));
         }else {
-            img.setImageResource(R.drawable.ebba92202bbad4e48dab);
+            img.setImageResource(R.drawable.ninja);
         }
     }
 

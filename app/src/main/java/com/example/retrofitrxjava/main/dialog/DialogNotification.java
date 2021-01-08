@@ -62,7 +62,7 @@ public class DialogNotification extends BDialogFragment<DialogNotificationBindin
                             retrieveHandleLearningSuccess(response.getData());
                         },
                         throwable -> {
-                            retrieveHandleLearningSuccess(userModel.getNotification().getData());
+//                            retrieveHandleLearningSuccess(userModel.getNotification().getData());
                         });
     }
 

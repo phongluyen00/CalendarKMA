@@ -39,8 +39,14 @@ jstring Java_com_example_androidndk_MainActivity_getString(JNIEnv *env, jobject 
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_example_retrofitrxjava_retrofit_RetrofitClient_getStringHello(JNIEnv *env, jobject instance) {
+Java_com_example_retrofitrxjava_utils_AppUtils_getAPI(JNIEnv *env, jobject instance) {
 
-    return (*env)->  NewStringUTF(env, "https://mockapi.superoffice.vn/api/swu86/");
+    return (*env)->  NewStringUTF(env, "http://171.244.133.160/api/Values/");
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_example_retrofitrxjava_utils_AppUtils_getKeyAES(JNIEnv *env, jobject instance) {
+
+    return (*env)->  NewStringUTF(env, "hocvienkythuatmatma2020");
 }
 

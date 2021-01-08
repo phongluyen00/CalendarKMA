@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,7 +20,6 @@ import com.example.retrofitrxjava.main.dialog.DialogContactUs;
 import com.example.retrofitrxjava.main.dialog.DialogNotification;
 import com.example.retrofitrxjava.main.model.Notification;
 import com.example.retrofitrxjava.notification.NotificationBackground;
-import com.example.retrofitrxjava.notification.event.EventUpdateNotification;
 import com.example.retrofitrxjava.parser.RecruitmentFrg;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
@@ -57,13 +54,13 @@ public class MainActivity extends BActivity<LayoutMainBinding>
     private HomeFrg homeFrg = new HomeFrg();
     private LoginResponse.Data userModel;
     private DialogLogout logoutDialog;
-    RxPermissions rxPermissions;
+    private RxPermissions rxPermissions;
     private static List<Notification.Data> notificationList = new ArrayList<>();
 
     @SuppressLint("CheckResult")
     @Override
     protected void initLayout() {
-//        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
         rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -74,7 +71,7 @@ public class MainActivity extends BActivity<LayoutMainBinding>
         presenter = new MainPresenter(this);
         if (!(userModel.getScoreMediumResponse() != null)) {
             binding.progressMain.setVisibility(View.VISIBLE);
-            presenter.retrieveScore(myAPI);
+//            presenter.retrieveScore(myAPI);
         }
 
 //        startServices();
@@ -93,7 +90,7 @@ public class MainActivity extends BActivity<LayoutMainBinding>
         binding.navView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.nav_home:
-                    AppBinding.setName(binding.tvTitle, userModel.getName());
+                    AppBinding.setName(binding.tvTitle, userModel.getTen());
                     binding.rlToolbar.setVisibility(View.VISIBLE);
                     AppUtils.loadView(MainActivity.this, homeFrg);
                     return true;
