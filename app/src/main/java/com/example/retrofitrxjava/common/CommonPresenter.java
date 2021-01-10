@@ -2,6 +2,7 @@ package com.example.retrofitrxjava.common;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.retrofitrxjava.common.model.ScheduleModelResponse;
 import com.example.retrofitrxjava.retrofit.MyAPI;
@@ -27,6 +28,7 @@ public class CommonPresenter implements CommonContract.Presenter {
                 .subscribe(response -> {
                             String decryptText = new AESHelper().decrypt(response.getData(), AppUtils.privateKey);
                             ScheduleModelResponse scheduleModelResponse = new ScheduleModelResponse();
+                            Log.d("AAAAAAAAAAAAA", decryptText);
                             scheduleModelResponse.setData(AppUtils.getListDataSchedule(decryptText));
                             view.retrieveSuccess(scheduleModelResponse);
                         },

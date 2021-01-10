@@ -18,15 +18,17 @@ import io.reactivex.schedulers.Schedulers;
 public class MainPresenter implements MainContract.Presenter {
 
     private MainContract.View view;
+    private Context context;
 
     public MainPresenter(MainContract.View view) {
+        context = (Context) view;
         this.view = view;
     }
 
     @SuppressLint("CheckResult")
     @Override
     public void retrieveScore(MyAPI myAPI) {
-            myAPI.getScoreMedium(PrefUtils.loadData((Context) view).getUserEntry()).subscribeOn(Schedulers.io())
+            myAPI.getScoreMedium(PrefUtils.loadData((Context) view).getUserEntry(context)).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(response -> {
                         String decryptText = new AESHelper().decrypt(response.getData(), AppUtils.privateKey);

@@ -35,7 +35,7 @@ public class DialogFullScreen extends BDialogFragment<LayoutDialogFullscreenBind
     protected void initLayout() {
         binding.tvId.setText(PrefUtils.loadData(getActivity()).getTen());
         binding.ivBack.setOnClickListener(view -> dismiss());
-        myAPI.getPayment(AppUtils.entryData(userModel.getUserEntry()))
+        myAPI.getPayment(AppUtils.entryData(userModel.getUserEntry(getActivity())))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(paymentModel -> {
@@ -46,7 +46,7 @@ public class DialogFullScreen extends BDialogFragment<LayoutDialogFullscreenBind
                     Log.d("AAAAA", error.getMessage());
                 });
 
-        myAPI.getlephiHocphi(AppUtils.entryData(userModel.getUserEntry()))
+        myAPI.getlephiHocphi(AppUtils.entryData(userModel.getUserEntry(getActivity())))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tuitionResponse -> {

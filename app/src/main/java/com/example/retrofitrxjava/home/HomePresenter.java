@@ -38,7 +38,7 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void retrieveDataEnglish() {
-        new DownloadTask().execute(MY_URL);
+//        new DownloadTask().execute(MY_URL);
     }
 
     //Download HTML bằng AsynTask

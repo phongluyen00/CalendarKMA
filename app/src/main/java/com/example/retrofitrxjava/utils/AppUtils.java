@@ -105,6 +105,16 @@ public class AppUtils {
     public static final String START_HOURS5 = "18:00";
     public static final String END_HOURS5 = "20:30";
 
+    // DO AN TOT NGHIEP SANG
+    public static final String DATNS = "1,2,3,4 ";
+    public static final String START_DATNS = "7:00";
+    public static final String END_DATNS = "10:30";
+    // DO AN TOT NGHIEP CHIEU
+    public static final String DATNC = "9,10,11,12";
+    public static final String START_DATNC = "10:30";
+    public static final String END_DATNC = "14:55";
+
+
     public static void putData(MyDynamicCalendar myCalendar, String date, String startTime, String endTime, String name) {
         myCalendar.setWeekDayLayoutTextColor(R.color.red);
         myCalendar.setCurrentDateBackgroundColor(R.color.black);
@@ -199,6 +209,10 @@ public class AppUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static String getRequestData(Context context, String input1,String input2){
+        return context.getString(R.string.encode_data,input1,input2);
     }
 
 }

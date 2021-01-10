@@ -19,7 +19,9 @@ android {
         }
 
         debug {
-            minifyEnabled false
+//            useProguard true   //Làm rối code
+//            minifyEnabled true
+//            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

@@ -60,7 +60,7 @@ public class MainActivity extends BActivity<LayoutMainBinding>
     @SuppressLint("CheckResult")
     @Override
     protected void initLayout() {
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
         rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -71,7 +71,7 @@ public class MainActivity extends BActivity<LayoutMainBinding>
         presenter = new MainPresenter(this);
         if (!(userModel.getScoreMediumResponse() != null)) {
             binding.progressMain.setVisibility(View.VISIBLE);
-//            presenter.retrieveScore(myAPI);
+            presenter.retrieveScore(myAPI);
         }
 
 //        startServices();

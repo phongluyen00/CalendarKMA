@@ -41,7 +41,7 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
                     fillDataScore(response);
                 }
             } else {
-                presenter.retrieveScore(compositeDisposable, myAPI, userModel.getUserEntry());
+                presenter.retrieveScore(compositeDisposable, myAPI, userModel.getUserEntry(getActivity()));
             }
         } else {
             if (!NetworkUtils.isConnect(getContext())) {
@@ -50,7 +50,7 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
                     fillData(data);
                 }
             } else {
-                    presenter.retrieveDetailScore(myAPI,userModel.getUserEntry());
+                    presenter.retrieveDetailScore(myAPI,userModel.getUserEntry(getActivity()));
             }
         }
     }

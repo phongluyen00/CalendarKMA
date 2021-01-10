@@ -32,6 +32,10 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.io.File;
 import java.util.Objects;
 
+import static com.example.retrofitrxjava.utils.AppUtils.DATNC;
+import static com.example.retrofitrxjava.utils.AppUtils.DATNS;
+import static com.example.retrofitrxjava.utils.AppUtils.END_DATNC;
+import static com.example.retrofitrxjava.utils.AppUtils.END_DATNS;
 import static com.example.retrofitrxjava.utils.AppUtils.END_HOURS1;
 import static com.example.retrofitrxjava.utils.AppUtils.END_HOURS2;
 import static com.example.retrofitrxjava.utils.AppUtils.END_HOURS3;
@@ -42,6 +46,8 @@ import static com.example.retrofitrxjava.utils.AppUtils.HOURS2;
 import static com.example.retrofitrxjava.utils.AppUtils.HOURS3;
 import static com.example.retrofitrxjava.utils.AppUtils.HOURS4;
 import static com.example.retrofitrxjava.utils.AppUtils.HOURS5;
+import static com.example.retrofitrxjava.utils.AppUtils.START_DATNC;
+import static com.example.retrofitrxjava.utils.AppUtils.START_DATNS;
 import static com.example.retrofitrxjava.utils.AppUtils.START_HOURS1;
 import static com.example.retrofitrxjava.utils.AppUtils.START_HOURS2;
 import static com.example.retrofitrxjava.utils.AppUtils.START_HOURS4;
@@ -139,37 +145,37 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                     @Override
                     public void onClickSynDTB() {
                         validateUpdate();
-                        presenter.syncDTB(userModel.getUserAndPassWordEntry(), myAPI);
+                        presenter.syncDTB(userModel.getUserAndPassWordEntry(Objects.requireNonNull(getActivity())), myAPI);
                     }
 
                     @Override
                     public void onClickSynScore() {
                         validateUpdate();
-                        presenter.updateScore(userModel.getUserAndPassWordEntry(), myAPI);
+                        presenter.updateScore(userModel.getUserAndPassWordEntry(Objects.requireNonNull(getActivity())), myAPI);
                     }
 
                     @Override
                     public void onClickSynSchedule() {
                         validateUpdate();
-                        presenter.updateSchedule(userModel.getUserAndPassWordEntry(), myAPI);
+                        presenter.updateSchedule(userModel.getUserAndPassWordEntry(Objects.requireNonNull(getActivity())), myAPI);
                     }
 
                     @Override
                     public void onClickSyncMoney() {
                         validateUpdate();
-                        presenter.updateMoney(userModel.getUserAndPassWordEntry(), myAPI);
+                        presenter.updateMoney(userModel.getUserAndPassWordEntry(Objects.requireNonNull(getActivity())), myAPI);
                     }
 
                     @Override
                     public void onClickSyncWaring() {
                         validateUpdate();
-                        presenter.syncHandlingService(userModel.getUserAndPassWordEntry(), myAPI);
+                        presenter.syncHandlingService(userModel.getUserAndPassWordEntry(Objects.requireNonNull(getActivity())), myAPI);
                     }
 
                     @Override
                     public void onClickSyncCC() {
                         validateUpdate();
-                        presenter.syncCertificate(userModel.getUserAndPassWordEntry(), myAPI);
+                        presenter.syncCertificate(userModel.getUserAndPassWordEntry(Objects.requireNonNull(getActivity())), myAPI);
                     }
 
                     @Override
@@ -232,7 +238,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                 }
                 return;
             }else {
-                presenter.retrieveSchedule(userModel.getUserEntry(), myAPI);
+                presenter.retrieveSchedule(userModel.getUserEntry(getActivity()), myAPI);
                 binding.groupTabLayout.setVisibility(View.GONE);
                 binding.myCalendar.setVisibility(View.VISIBLE);
             }
@@ -319,28 +325,36 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
 
     private void putData(String time, String date, String name) {
         if (!isShowView) {
-            if (HOURS1.equals(time)) {
+            if (HOURS1.contains(time)) {
                 AppUtils.putData(binding.myCalendar, date, START_HOURS1, END_HOURS1, name);
-            } else if (HOURS2.equals(time)) {
+            } else if (HOURS2.contains(time)) {
                 AppUtils.putData(binding.myCalendar, date, START_HOURS2, END_HOURS2, name);
-            } else if (HOURS3.equals(time)) {
+            } else if (HOURS3.contains(time)) {
                 AppUtils.putData(binding.myCalendar, date, AppUtils.START_HOURS3, END_HOURS3, name);
-            } else if (HOURS4.equals(time)) {
+            } else if (HOURS4.contains(time)) {
                 AppUtils.putData(binding.myCalendar, date, START_HOURS4, END_HOURS4, name);
-            } else if (HOURS5.equals(time)) {
+            } else if (HOURS5.contains(time)) {
                 AppUtils.putData(binding.myCalendar, date, START_HOURS5, END_HOURS5, name);
+            }else if (DATNS.contains(time)){
+                AppUtils.putData(binding.myCalendar, date, START_DATNS, END_DATNS, name);
+            }else if (DATNC.contains(time)){
+                AppUtils.putData(binding.myCalendar, date, START_DATNC, END_DATNC, name);
             }
         } else {
-            if (HOURS1.equals(time)) {
+            if (HOURS1.contains(time)) {
                 AppUtils.putDataMyCalendars(binding.myCalendars, date, START_HOURS1, END_HOURS1, name);
-            } else if (HOURS2.equals(time)) {
+            } else if (HOURS2.contains(time)) {
                 AppUtils.putDataMyCalendars(binding.myCalendars, date, START_HOURS2, END_HOURS2, name);
-            } else if (HOURS3.equals(time)) {
+            } else if (HOURS3.contains(time)) {
                 AppUtils.putDataMyCalendars(binding.myCalendars, date, AppUtils.START_HOURS3, END_HOURS3, name);
-            } else if (HOURS4.equals(time)) {
+            } else if (HOURS4.contains(time)) {
                 AppUtils.putDataMyCalendars(binding.myCalendars, date, START_HOURS4, END_HOURS4, name);
-            } else if (HOURS5.equals(time)) {
+            } else if (HOURS5.contains(time)) {
                 AppUtils.putDataMyCalendars(binding.myCalendars, date, START_HOURS5, END_HOURS5, name);
+            }else if (DATNS.contains(time)){
+                AppUtils.putData(binding.myCalendar, date, START_DATNS, END_DATNS, name);
+            }else if (DATNC.contains(time)){
+                AppUtils.putData(binding.myCalendar, date, START_DATNC, END_DATNC, name);
             }
         }
 

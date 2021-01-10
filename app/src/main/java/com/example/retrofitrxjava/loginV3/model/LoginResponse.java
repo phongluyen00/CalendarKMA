@@ -1,6 +1,9 @@
 package com.example.retrofitrxjava.loginV3.model;
 
 
+import android.content.Context;
+
+import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.common.model.ScheduleModelResponse;
 import com.example.retrofitrxjava.main.model.Notification;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
@@ -82,12 +85,12 @@ public class LoginResponse{
             return sdt;
         }
 
-        public String getUserEntry() {
-            return AppUtils.entryData("mssv=" + userName);
+        public String getUserEntry(Context context) {
+            return AppUtils.entryData(context.getString(R.string.encode_input,userName));
         }
 
-        public String getUserAndPassWordEntry(){
-            return AppUtils.entryData("userName=" + userName + "&passWord=" + passWord);
+        public String getUserAndPassWordEntry(Context context){
+            return AppUtils.entryData(context.getString(R.string.encode_data,userName,passWord));
         }
     }
 

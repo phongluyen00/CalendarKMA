@@ -35,5 +35,8 @@
     <string name="ban_can_bat_face_id">Bạn cần bật tính năng</string>
     <string name="title_activity_maps">Map</string>
     <string name="content_verification_otp">We sent a verification code to %s</string>
+    <string name="encode_data">userName=%s&amp;passWord=%s</string>
+    <string name="encode_input">mssv=%s</string>
+    <string name="validate_eddittext">Nhập đủ dữ liệu !</string>
 
 </resources>

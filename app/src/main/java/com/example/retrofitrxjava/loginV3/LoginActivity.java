@@ -1,5 +1,6 @@
 package com.example.retrofitrxjava.loginV3;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
@@ -10,6 +11,8 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,6 +50,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
@@ -326,18 +330,22 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
 
     @Override
     public void onClick() {
-        String userName = "userName=" + binding.edtUser.getText().toString().trim();
-        String password = "&passWord=" + binding.edtPassword.getText().toString().trim();
+
 
         if (!NetworkUtils.isConnect(this)) {
             verifyAccountFailed(getResources().getString(R.string.error_internet));
             return;
         }
         if (!TextUtils.isEmpty(binding.edtUser.getText().toString().trim()) && !TextUtils.isEmpty(binding.edtPassword.getText().toString().trim())) {
+            String userName = binding.edtUser.getText().toString().trim();
+            String password = binding.edtPassword.getText().toString().trim();
+            String enCode = getResources().getString(R.string.encode_data,userName,password);
+            Log.d("AAAAAAAAAAAA", enCode);
+            Log.d("Encode", Objects.requireNonNull(AppUtils.entryData(enCode)));
             binding.progressbar.setVisibility(View.VISIBLE);
-            presenter.verifyAccount(AppUtils.entryData(userName + password));
+            presenter.verifyAccount(AppUtils.entryData(enCode));
         }else {
-            Toast.makeText(this, "Nhập đủ dữ liệu !", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.validate_eddittext), Toast.LENGTH_SHORT).show();
         }
         AppUtils.hideKeyboard(this);
     }
@@ -351,28 +359,26 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
     @Override
     public void pushView(LoginResponse.Data data) {
         binding.progressbar.setVisibility(View.GONE);
-//        if (!TextUtils.isEmpty(data.getSdt())) {
-//        //  verify otp
-//            this.data = data;
-//            binding.layoutLogin.setVisibility(View.GONE);
-//            binding.layoutOtp.setVisibility(View.VISIBLE);
-//            String tel = data.getSdt();
-//            int phone1 = 0;
-//            if (tel.startsWith("016")){
-//                phone1 = Integer.parseInt(tel.replace("016","03"));
-//            }else {
-//                phone1 = Integer.parseInt(tel);
-//            }
-//
-//            binding.tvContent2.setText(getString(R.string.content_verification_otp, "+84" + phone1));
-//            startPhoneNumberVerification(phone1);
-//        } else {
+        if (!TextUtils.isEmpty(data.getSdt())) {
+        //  verify otp
+            this.data = data;
+            binding.layoutLogin.setVisibility(View.GONE);
+            binding.layoutOtp.setVisibility(View.VISIBLE);
+            String tel = data.getSdt();
+            int phone1 = Integer.parseInt(tel);
+            binding.tvContent2.setText(getString(R.string.content_verification_otp, "+84" + phone1));
+            startPhoneNumberVerification(phone1);
+        } else {
             loginSuccess(data);
-//        }
+        }
     }
 
     private void startPhoneNumberVerification(int phone) {
+        Animation shake;
+        shake = AnimationUtils.loadAnimation(
 
+                getApplicationContext(),R.anim.shake);
+        binding.iconPhone.startAnimation(shake); // st
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
                         .setPhoneNumber("+84" + phone)       // Phone number to verify
