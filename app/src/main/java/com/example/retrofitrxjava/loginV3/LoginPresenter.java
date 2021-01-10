@@ -14,8 +14,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
-import static com.example.retrofitrxjava.utils.Constant.SUCCESS;
-
 public class LoginPresenter implements LoginContract.Presenter {
     private LoginContract.View view;
     private MyAPI myAPI;
@@ -34,8 +32,8 @@ public class LoginPresenter implements LoginContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(loginResponse -> {
                     String decryptText = new AESHelper().decrypt(loginResponse.getData(), AppUtils.privateKey);
-                    LoginResponse.Data data = AppUtils.decryptData(decryptText);
-                    if (loginResponse.getErrorCode().equals(SUCCESS)) {
+                    LoginResponse.Data data = (LoginResponse.Data) AppUtils.GenericInstance(decryptText,LoginResponse.Data.class);
+                    if (loginResponse.getErrorCode() == 1) {
                         view.pushView(data);
                     } else {
                         view.verifyAccountFailed(((Context) view).getString(R.string.login_failed));

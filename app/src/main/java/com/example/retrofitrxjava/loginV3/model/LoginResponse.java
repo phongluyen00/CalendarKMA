@@ -6,6 +6,7 @@ import com.example.retrofitrxjava.main.model.Notification;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 import com.example.retrofitrxjava.model.Article;
 import com.example.retrofitrxjava.model.DetailScoreModel;
+import com.example.retrofitrxjava.utils.AppUtils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -25,8 +26,8 @@ public class LoginResponse{
     public LoginResponse() {
     }
 
-    @Getter
     @Setter
+    @Getter
     public class Data {
 
         @SerializedName("Id")
@@ -73,6 +74,21 @@ public class LoginResponse{
         private File avata;
         private Notification notification;
         private ArrayList<Article> articleListTD;
+
+        public String getSdt() {
+            if (sdt.startsWith("016")){
+                return sdt.replace("016","03");
+            }
+            return sdt;
+        }
+
+        public String getUserEntry() {
+            return AppUtils.entryData("mssv=" + userName);
+        }
+
+        public String getUserAndPassWordEntry(){
+            return AppUtils.entryData("userName=" + userName + "&passWord=" + passWord);
+        }
     }
 
 }

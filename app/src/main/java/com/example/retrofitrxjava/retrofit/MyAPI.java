@@ -23,29 +23,25 @@ import retrofit2.http.Query;
 public interface MyAPI {
 
     @GET("getScoreMedium")
-    Observable<ScoreMediumResponse> getScoreMedium(@Query("mssv") String token);
+    Observable<ModelLogin> getScoreMedium(@Query("key") String enCodeUserName);
 
     @GET("getXuLyHocVu")
-    Observable<HandleLearning> getHandleLearning(@Query("mssv") String token);
+    Observable<HandleLearning> getHandleLearning(@Query("key") String enCodeUserName);
 
     @GET("getDanhSachKhoanPhaiDong")
-    Observable<PaymentModel> getPayment(@Query("mssv") String token);
+    Observable<PaymentModel> getPayment(@Query("key") String enCodeUserName);
 
     @GET("getChungChi")
-    Observable<CertificateResponse> getCertificate(@Query("mssv") String token);
+    Observable<CertificateResponse> getCertificate(@Query("key") String enCodeUserName);
 
     @GET("getLichHoc")
-    Observable<ScheduleModelResponse> getSchedule(@Query("mssv") String token);
+    Observable<ModelLogin>  getSchedule(@Query("key") String enCodeUserName);
 
     @GET("getBangDiemChiTiet")
-    Observable<DetailScoreModel> getDetailScore(@Query("mssv") String token);
+    Observable<DetailScoreModel> getDetailScore(@Query("key") String enCodeUserName);
 
     @GET("getlephiHocphi")
-    Observable<TuitionResponse> getlephiHocphi(@Query("mssv") String token);
-
-    @GET("loginStatus")
-    Observable<LoginResponse> loginStatus(@Query("userName") String token,
-                                          @Query("passWord") String passWord);
+    Observable<TuitionResponse> getlephiHocphi(@Query("key") String enCodeUserName);
 
     @GET("loginStatus")
     Observable<ModelLogin> loginStatus(@Query("key") String text);
@@ -54,29 +50,23 @@ public interface MyAPI {
 
     // đồng bộ bảng điểm TB
     @GET("synchronizationMarkAvg")
-    Observable<ScoreMediumResponse> synchronization(@Query("userName") String token,
-                                       @Query("passWord") String passWord);
+    Observable<ScoreMediumResponse> synchronization(@Query("key") String entryData );
 
     @GET("dongBoBangDiemChiTiet")
-    Observable<ModelResponse> synScoreDetail(@Query("userName") String token,
-                                             @Query("passWord") String passWord);
+    Observable<ModelResponse> synScoreDetail(@Query("key") String entryData);
 
     @GET("dongBoLicHoc")
-    Observable<ModelResponse> synSchedule(@Query("userName") String token,
-                                          @Query("passWord") String passWord);
+    Observable<ModelResponse> synSchedule(@Query("key") String entryData);
 
     @GET("DongBolephihocphi")
-    Observable<ModelResponse> synMoney(@Query("userName") String token,
-                                       @Query("passWord") String passWord);
+    Observable<ModelResponse> synMoney(@Query("key") String entryData);
 
     @GET("dongBoXuLyHocVu")
-    Observable<ModelResponse> syncHandlingService(@Query("userName") String token,
-                                                  @Query("passWord") String passWord);
+    Observable<ModelResponse> syncHandlingService(@Query("key") String entryData);
 
     @GET("dongBoChungChi")
-    Observable<ModelResponse> syncCertificate(@Query("userName") String token,
-                                              @Query("passWord") String passWord);
+    Observable<ModelResponse> syncCertificate(@Query("key") String entryData);
 
     @GET("getThongBao")
-    Observable<Notification> getThongBao(@Query("mssv") String token);
+    Observable<Notification> getThongBao(@Query("mssv") String enCodeUserName);
 }

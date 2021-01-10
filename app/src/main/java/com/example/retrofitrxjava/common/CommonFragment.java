@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -31,6 +30,7 @@ import com.example.retrofitrxjava.utils.AppUtils;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.io.File;
+import java.util.Objects;
 
 import static com.example.retrofitrxjava.utils.AppUtils.END_HOURS1;
 import static com.example.retrofitrxjava.utils.AppUtils.END_HOURS2;
@@ -78,7 +78,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
     @Override
     protected void initLayout() {
         presenter = new CommonPresenter(this);
-        userModel = PrefUtils.loadData(getActivity());
+        userModel = PrefUtils.loadData(Objects.requireNonNull(getActivity()));
         if (!isShowView) {
             binding.floatingButton.setVisibility(View.VISIBLE);
             binding.myCalendars.setVisibility(View.GONE);
@@ -112,7 +112,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                     startActivityForResult(takePictureIntent, CAMERA_PIC_REQUEST);
                 }
             });
-            sharedPreferences = getActivity().
+            sharedPreferences = Objects.requireNonNull(getActivity()).
                     getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
             boolean isVolume = sharedPreferences.getBoolean(IS_FACE_ID, false);
             binding.switchCompat.setChecked(isVolume);
@@ -120,22 +120,18 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                     (ColorStateList.valueOf(Color.parseColor("#0CEBF3"))) :
                     (ColorStateList.valueOf(Color.parseColor("#929697"))));
             binding.switchCompat.setOnCheckedChangeListener(
-                    new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton compoundButton,
-                                                     boolean b) {
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            if (binding.switchCompat.isChecked()) {
-                                editor.putBoolean(IS_FACE_ID, true);
-                                binding.switchCompat.setTrackTintList
-                                        (ColorStateList.valueOf(Color.parseColor("#0CEBF3")));
-                            } else {
-                                editor.putBoolean(IS_FACE_ID, false);
-                                binding.switchCompat.setTrackTintList
-                                        (ColorStateList.valueOf(Color.parseColor("#929697")));
-                            }
-                            editor.commit();
+                    (compoundButton, b) -> {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        if (binding.switchCompat.isChecked()) {
+                            editor.putBoolean(IS_FACE_ID, true);
+                            binding.switchCompat.setTrackTintList
+                                    (ColorStateList.valueOf(Color.parseColor("#0CEBF3")));
+                        } else {
+                            editor.putBoolean(IS_FACE_ID, false);
+                            binding.switchCompat.setTrackTintList
+                                    (ColorStateList.valueOf(Color.parseColor("#929697")));
                         }
+                        editor.apply();
                     });
 
             binding.updateData.setOnClickListener(view -> {
@@ -143,37 +139,37 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                     @Override
                     public void onClickSynDTB() {
                         validateUpdate();
-                        presenter.syncDTB(userModel.getUserName(), userModel.getPassWord(), myAPI);
+                        presenter.syncDTB(userModel.getUserAndPassWordEntry(), myAPI);
                     }
 
                     @Override
                     public void onClickSynScore() {
                         validateUpdate();
-                        presenter.updateScore(userModel.getUserName(), userModel.getPassWord(), myAPI);
+                        presenter.updateScore(userModel.getUserAndPassWordEntry(), myAPI);
                     }
 
                     @Override
                     public void onClickSynSchedule() {
                         validateUpdate();
-                        presenter.updateSchedule(userModel.getUserName(), userModel.getPassWord(), myAPI);
+                        presenter.updateSchedule(userModel.getUserAndPassWordEntry(), myAPI);
                     }
 
                     @Override
                     public void onClickSyncMoney() {
                         validateUpdate();
-                        presenter.updateMoney(userModel.getUserName(), userModel.getPassWord(), myAPI);
+                        presenter.updateMoney(userModel.getUserAndPassWordEntry(), myAPI);
                     }
 
                     @Override
                     public void onClickSyncWaring() {
                         validateUpdate();
-                        presenter.syncHandlingService(userModel.getUserName(), userModel.getPassWord(), myAPI);
+                        presenter.syncHandlingService(userModel.getUserAndPassWordEntry(), myAPI);
                     }
 
                     @Override
                     public void onClickSyncCC() {
                         validateUpdate();
-                        presenter.syncCertificate(userModel.getUserName(), userModel.getPassWord(), myAPI);
+                        presenter.syncCertificate(userModel.getUserAndPassWordEntry(), myAPI);
                     }
 
                     @Override
@@ -181,7 +177,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                         dialogSync.dismiss();
                     }
                 });
-                dialogSync.show(getFragmentManager(), "");
+                dialogSync.show(getChildFragmentManager(), "");
             });
             return;
         }
@@ -236,7 +232,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                 }
                 return;
             }else {
-//                presenter.retrieveSchedule(userModel.getUserName(), myAPI);
+                presenter.retrieveSchedule(userModel.getUserEntry(), myAPI);
                 binding.groupTabLayout.setVisibility(View.GONE);
                 binding.myCalendar.setVisibility(View.VISIBLE);
             }
@@ -298,7 +294,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
         if (data != null && data.getData().size() > 0) {
             if (userModel.getModelResponse() == null){
                 userModel.setModelResponse(data);
-                PrefUtils.saveData(getActivity(), userModel);
+                PrefUtils.saveData(Objects.requireNonNull(getActivity()), userModel);
             }
             for (ScheduleModelResponse.Data schedule : data.getData()) {
                 putData(schedule.getCaHoc(), AppUtils.formatDate(schedule.getDatetime()),

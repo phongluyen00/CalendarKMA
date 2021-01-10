@@ -7,15 +7,17 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class ScheduleModelResponse extends ModelResponse {
     @SerializedName("data")
     @Expose
     private List<Data> data = null;
 
     @Getter
-    public class Data extends ModelResponse{
+    public class Data{
 
         @SerializedName("mssv")
         @Expose

@@ -10,4 +10,5 @@ public class ModelResponse {
     @SerializedName("errorCode")
     @Expose
     private String errorCode;
+
 }

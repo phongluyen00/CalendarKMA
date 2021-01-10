@@ -17,6 +17,7 @@ import com.example.retrofitrxjava.databinding.DialogNotificationBinding;
 import com.example.retrofitrxjava.main.model.Notification;
 import com.example.retrofitrxjava.model.HandleLearning;
 import com.example.retrofitrxjava.pre.PrefUtils;
+import com.example.retrofitrxjava.utils.AppUtils;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -51,7 +52,7 @@ public class DialogNotification extends BDialogFragment<DialogNotificationBindin
             retrieveHandleLearningSuccess(userModel.getNotification().getData());
             return;
         }
-        myAPI.getThongBao(userModel.getToken()).subscribeOn(Schedulers.io())
+        myAPI.getThongBao(AppUtils.entryData("mssv="+userModel.getUserName())).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(response -> response.getErrorCode().equals(SUCCESS))
                 .subscribe(response -> {

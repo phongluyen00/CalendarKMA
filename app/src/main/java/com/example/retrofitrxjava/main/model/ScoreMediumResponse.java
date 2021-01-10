@@ -8,8 +8,10 @@ import java.util.ArrayList;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class ScoreMediumResponse extends ModelResponse {
 
     @SerializedName("data")
@@ -17,6 +19,7 @@ public class ScoreMediumResponse extends ModelResponse {
     private ArrayList<Datum> data = null;
 
     @Getter
+    @Setter
     @NoArgsConstructor
     public class Datum extends ModelResponse {
 

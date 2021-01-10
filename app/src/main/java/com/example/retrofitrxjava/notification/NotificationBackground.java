@@ -12,16 +12,10 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.main.MainActivity;
@@ -29,10 +23,9 @@ import com.example.retrofitrxjava.notification.event.EventUpdateNotification;
 import com.example.retrofitrxjava.pre.PrefUtils;
 import com.example.retrofitrxjava.retrofit.MyAPI;
 import com.example.retrofitrxjava.retrofit.RetrofitClient;
-import com.google.gson.Gson;
+import com.example.retrofitrxjava.utils.AppUtils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -65,7 +58,7 @@ public class NotificationBackground extends Service {
         userModel = PrefUtils.loadData(this);
         myAPI = retrofit.create(MyAPI.class);
         createNotificationChannel();
-        myAPI.getThongBao(userModel.getToken()).subscribeOn(Schedulers.io())
+        myAPI.getThongBao(AppUtils.entryData("mssv="+userModel.getUserName())).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(response -> response.getErrorCode().equals(SUCCESS))
                 .subscribe(response -> {
@@ -77,7 +70,7 @@ public class NotificationBackground extends Service {
         Handler handler = new Handler();
         final Runnable sendData = new Runnable() {
             public void run() {
-                myAPI.getThongBao(userModel.getToken()).subscribeOn(Schedulers.io())
+                myAPI.getThongBao(AppUtils.entryData("mssv="+userModel.getUserName())).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .filter(response -> response.getErrorCode().equals(SUCCESS))
                         .subscribe(response -> {

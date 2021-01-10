@@ -17,14 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitClient {
 
-    static {
-        System.loadLibrary("security");
-    }
-
     private static Retrofit ourInstance;
-
-    public static String BASE_MOCK_API = AppUtils.getAPI();
-
 
     public static  OkHttpClient okHttpClient(long time) {
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
@@ -41,7 +34,7 @@ public class RetrofitClient {
         if (ourInstance == null)
             ourInstance = new Retrofit.Builder()
                     .client(okHttpClient(30))
-                    .baseUrl(BASE_MOCK_API)
+                    .baseUrl(AppUtils.getAPI())
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();

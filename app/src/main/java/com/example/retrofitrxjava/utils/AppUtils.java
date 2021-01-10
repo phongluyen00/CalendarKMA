@@ -15,22 +15,27 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.retrofitrxjava.R;
+import com.example.retrofitrxjava.common.model.ScheduleModelResponse;
 import com.example.retrofitrxjava.custom.MyDynamicCalendar;
-import com.example.retrofitrxjava.loginV3.model.LoginResponse;
+import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
+import com.example.retrofitrxjava.model.DetailScoreModel;
 import com.example.retrofitrxjava.security.AESHelper;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -147,7 +152,7 @@ public class AppUtils {
         return false;
     }
 
-    public static LoginResponse.Data decryptData(String decryptText) {
+    public static <T> Object GenericInstance(String decryptText, Class<T> tClass) {
         ArrayList<String> stringArrayList = new ArrayList<>();
         JSONArray jArray;
         Gson gson = new Gson();
@@ -159,7 +164,28 @@ public class AppUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return gson.fromJson(stringArrayList.get(0), LoginResponse.Data.class);
+        return gson.fromJson(stringArrayList.get(0), tClass);
+    }
+
+    public static  List<ScheduleModelResponse.Data> getListDataSchedule(String decryptText) {
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<ScheduleModelResponse.Data>>(){}.getType();
+        List<ScheduleModelResponse.Data> contactList = gson.fromJson(decryptText, type);
+        return contactList;
+    }
+
+    public static  List<ScoreMediumResponse.Datum> getScoreMediumResponse(String decryptText) {
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<ScoreMediumResponse.Datum>>(){}.getType();
+        List<ScoreMediumResponse.Datum> contactList = gson.fromJson(decryptText, type);
+        return contactList;
+    }
+
+    public static  List<DetailScoreModel.Data> getDetailScoreModel(String decryptText) {
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<DetailScoreModel.Data>>(){}.getType();
+        List<DetailScoreModel.Data> contactList = gson.fromJson(decryptText, type);
+        return contactList;
     }
 
     public static String entryData(String textEncrypt) {

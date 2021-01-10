@@ -13,6 +13,7 @@ import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.model.CertificateResponse;
 import com.example.retrofitrxjava.model.HandleLearning;
 import com.example.retrofitrxjava.pre.PrefUtils;
+import com.example.retrofitrxjava.utils.AppUtils;
 
 import java.util.ArrayList;
 
@@ -41,14 +42,14 @@ public class DialogFullScreenXLHV extends BDialogFragment<DialogCcBinding> {
     @Override
     protected void initLayout() {
         userModel = PrefUtils.loadData(getActivity());
-        myAPI.getCertificate(userModel.getToken()).subscribeOn(Schedulers.io())
+        myAPI.getCertificate(AppUtils.entryData("mssv="+userModel.getUserName())).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(response -> response.getErrorCode().equals(SUCCESS))
                 .subscribe(response -> retrieveSuccess(response),
                         throwable -> Toast.makeText(getActivity(), "Hệ thống đang bận ! Vui lòng thử lại sau !",
                                 Toast.LENGTH_SHORT).show());
 
-        myAPI.getHandleLearning(userModel.getToken()).subscribeOn(Schedulers.io())
+        myAPI.getHandleLearning(AppUtils.entryData("mssv="+userModel.getUserName())).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(response -> response.getErrorCode().equals(SUCCESS))
                 .subscribe(response -> retrieveHandleLearningSuccess(response),

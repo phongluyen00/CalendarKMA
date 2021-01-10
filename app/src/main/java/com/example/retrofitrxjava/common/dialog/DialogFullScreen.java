@@ -1,7 +1,6 @@
 package com.example.retrofitrxjava.common.dialog;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.util.Log;
 
 import com.example.retrofitrxjava.R;
@@ -10,6 +9,7 @@ import com.example.retrofitrxjava.b.BDialogFragment;
 import com.example.retrofitrxjava.databinding.LayoutDialogFullscreenBinding;
 import com.example.retrofitrxjava.model.PaymentModel;
 import com.example.retrofitrxjava.pre.PrefUtils;
+import com.example.retrofitrxjava.utils.AppUtils;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,7 @@ public class DialogFullScreen extends BDialogFragment<LayoutDialogFullscreenBind
     protected void initLayout() {
         binding.tvId.setText(PrefUtils.loadData(getActivity()).getTen());
         binding.ivBack.setOnClickListener(view -> dismiss());
-        myAPI.getPayment(PrefUtils.loadData(getActivity()).getToken())
+        myAPI.getPayment(AppUtils.entryData(userModel.getUserEntry()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(paymentModel -> {
@@ -46,7 +46,7 @@ public class DialogFullScreen extends BDialogFragment<LayoutDialogFullscreenBind
                     Log.d("AAAAA", error.getMessage());
                 });
 
-        myAPI.getlephiHocphi(PrefUtils.loadData(getActivity()).getToken())
+        myAPI.getlephiHocphi(AppUtils.entryData(userModel.getUserEntry()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tuitionResponse -> {

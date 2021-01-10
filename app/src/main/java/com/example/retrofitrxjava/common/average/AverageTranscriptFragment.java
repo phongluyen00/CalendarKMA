@@ -14,8 +14,8 @@ import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 import com.example.retrofitrxjava.model.DetailScoreModel;
 import com.example.retrofitrxjava.pre.PrefUtils;
-
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscriptBinding> implements AverageContract.View {
     private AveragePresenter presenter;
@@ -26,7 +26,7 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
 
     @Override
     protected void initLayout() {
-        userModel = PrefUtils.loadData(getActivity());
+        userModel = PrefUtils.loadData(Objects.requireNonNull(getActivity()));
         DetailScoreModel detailScoreModel = userModel.getDetailScoreModel();
         ScoreMediumResponse scoreResponse = userModel.getScoreMediumResponse();
         binding.progressLoadData.setVisibility(View.VISIBLE);
@@ -41,7 +41,7 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
                     fillDataScore(response);
                 }
             } else {
-                presenter.retrieveScore(compositeDisposable, myAPI, PrefUtils.loadData(getActivity()).getToken());
+                presenter.retrieveScore(compositeDisposable, myAPI, userModel.getUserEntry());
             }
         } else {
             if (!NetworkUtils.isConnect(getContext())) {
@@ -50,7 +50,7 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
                     fillData(data);
                 }
             } else {
-                presenter.retrieveDetailScore(myAPI, PrefUtils.loadData(getActivity()).getToken());
+                    presenter.retrieveDetailScore(myAPI,userModel.getUserEntry());
             }
         }
     }
@@ -74,7 +74,7 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
         userModel.setScoreMediumResponse(scoreMediumResponse);
         userModel.setMediumScore(scoreMediumResponse.getData().
                 get(scoreMediumResponse.getData().size() - 1).getH4N1());
-        PrefUtils.saveData(getActivity(), userModel);
+        PrefUtils.saveData(Objects.requireNonNull(getActivity()), userModel);
         fillDataScore(responses);
     }
 
@@ -104,11 +104,12 @@ public class AverageTranscriptFragment extends BFragment<LayoutAverageTranscript
     @Override
     public void retrieveDetailScoreSuccess(DetailScoreModel detailScoreModel) {
         if (detailScoreModel != null) {
-            LoginResponse.Data loadData = PrefUtils.loadData(getActivity());
+            LoginResponse.Data loadData = PrefUtils.loadData(Objects.requireNonNull(getActivity()));
             loadData.setDetailScoreModel(detailScoreModel);
             PrefUtils.saveData(getActivity(), loadData);
         }
 
+        assert detailScoreModel != null;
         ArrayList<DetailScoreModel.Data> data = (ArrayList<DetailScoreModel.Data>) detailScoreModel.getData();
         fillData(data);
     }

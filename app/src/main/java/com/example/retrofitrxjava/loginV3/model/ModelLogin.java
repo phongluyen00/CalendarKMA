@@ -1,6 +1,5 @@
 package com.example.retrofitrxjava.loginV3.model;
 
-import com.example.retrofitrxjava.model.ModelResponse;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +12,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ModelLogin extends ModelResponse {
+public class ModelLogin {
+    @SerializedName("errorCode")
+    @Expose
+    private int errorCode;
     @SerializedName("data")
     @Expose
     private String data;

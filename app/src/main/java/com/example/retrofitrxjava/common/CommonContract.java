@@ -11,11 +11,11 @@ public interface CommonContract {
     }
 
     interface Presenter {
-        void retrieveSchedule(String token, MyAPI myAPI);
-        void updateSchedule(String token, String password, MyAPI myAPI);
-        void updateScore(String token, String password, MyAPI myAPI);
-        void updateMoney(String token, String password, MyAPI myAPI);
-        void syncCertificate(String token, String password, MyAPI myAPI);
-        void syncHandlingService(String token, String password, MyAPI myAPI);
+        void retrieveSchedule(String entryData, MyAPI myAPI);
+        void updateSchedule(String entryData, MyAPI myAPI);
+        void updateScore(String entryData, MyAPI myAPI);
+        void updateMoney( String entryData, MyAPI myAPI);
+        void syncCertificate( String entryData, MyAPI myAPI);
+        void syncHandlingService(String entryData, MyAPI myAPI);
     }
 }

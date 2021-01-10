@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 
 import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 import com.example.retrofitrxjava.retrofit.MyAPI;
+import com.example.retrofitrxjava.security.AESHelper;
+import com.example.retrofitrxjava.utils.AppUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +29,19 @@ public class AveragePresenter implements AverageContract.Presenter {
     public void retrieveScore(CompositeDisposable compositeDisposable, MyAPI myAPI, String token) {
         myAPI.getScoreMedium(token).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(scoreMediumResponse -> {
-                    if (scoreMediumResponse.getData() != null) {
+                .subscribe(response -> {
+                    String decryptText = new AESHelper().decrypt(response.getData(), AppUtils.privateKey);
+                    ScoreMediumResponse scoreMediumResponse1 = new ScoreMediumResponse();
+                    scoreMediumResponse1.setData((ArrayList<ScoreMediumResponse.Datum>) AppUtils.getScoreMediumResponse(decryptText));
+
+                    if (scoreMediumResponse1.getData() != null) {
                         ArrayList<ScoreMediumResponse.Datum> datumArrayList = new ArrayList<>();
-                        for (int i = 1; i < scoreMediumResponse.getData().size(); i++) {
-                            datumArrayList.add(scoreMediumResponse.getData().get(i));
+                        for (int i = 1; i < scoreMediumResponse1.getData().size(); i++) {
+                            datumArrayList.add(scoreMediumResponse1.getData().get(i));
                         }
                         responses.clear();
                         responses.addAll(datumArrayList);
-                        view.retrieveScoreSuccess(scoreMediumResponse, (ArrayList<ScoreMediumResponse.Datum>) responses);
+                        view.retrieveScoreSuccess(scoreMediumResponse1, (ArrayList<ScoreMediumResponse.Datum>) responses);
                     }
                 }, throwable -> view.retrieveScoreFailed());
     }
