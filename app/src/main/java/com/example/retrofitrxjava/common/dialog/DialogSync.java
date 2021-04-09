@@ -3,7 +3,7 @@ package com.example.retrofitrxjava.common.dialog;
 import android.view.View;
 
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.b.BDialogFragment;
+import com.example.retrofitrxjava.base.BDialogFragment;
 import com.example.retrofitrxjava.databinding.DialogSyncBinding;
 
 public class DialogSync extends BDialogFragment<DialogSyncBinding> {

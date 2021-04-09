@@ -8,9 +8,9 @@ import android.widget.Toast;
 
 import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.b.BAdapter;
-import com.example.retrofitrxjava.b.BFragment;
-import com.example.retrofitrxjava.b.ItemOnclickListener;
+import com.example.retrofitrxjava.base.BAdapter;
+import com.example.retrofitrxjava.base.BFragment;
+import com.example.retrofitrxjava.base.ItemOnclickListener;
 import com.example.retrofitrxjava.home.adapter.BannerAdapter;
 import com.example.retrofitrxjava.databinding.LayoutHomeBindingImpl;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;

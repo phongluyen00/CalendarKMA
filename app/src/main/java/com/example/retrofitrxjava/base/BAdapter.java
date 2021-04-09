@@ -1,4 +1,4 @@
-package com.example.retrofitrxjava.b;
+package com.example.retrofitrxjava.base;
 
 import android.content.Context;
 import android.view.LayoutInflater;

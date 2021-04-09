@@ -9,9 +9,9 @@ import android.webkit.WebViewClient;
 
 import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.b.BAdapter;
-import com.example.retrofitrxjava.b.BFragment;
-import com.example.retrofitrxjava.b.ItemOnclickListener;
+import com.example.retrofitrxjava.base.BAdapter;
+import com.example.retrofitrxjava.base.BFragment;
+import com.example.retrofitrxjava.base.ItemOnclickListener;
 import com.example.retrofitrxjava.databinding.LayoutRecruitmentBinding;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.model.Article;

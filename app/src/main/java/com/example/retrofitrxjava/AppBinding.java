@@ -95,8 +95,7 @@ public class AppBinding {
 
     @BindingAdapter("name")
     public static void setName(TextView tv, String name) {
-        String nameAccount = "Xin chào, " + "<b>" + name + "</b>";
-        tv.setText(Html.fromHtml(nameAccount));
+        tv.setText(Html.fromHtml(name));
     }
 
     @BindingAdapter("hide")

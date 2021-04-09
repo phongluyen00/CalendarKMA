@@ -8,29 +8,43 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.b.BFragment;
+import com.example.retrofitrxjava.base.BFragment;
+import com.example.retrofitrxjava.common.adapter.TabLayOut;
 import com.example.retrofitrxjava.common.dialog.DialogFullScreen;
 import com.example.retrofitrxjava.common.dialog.DialogFullScreenXLHV;
-import com.example.retrofitrxjava.databinding.LayoutPersonalBinding;
-import com.example.retrofitrxjava.common.adapter.TabLayOut;
 import com.example.retrofitrxjava.common.dialog.DialogSync;
 import com.example.retrofitrxjava.common.model.ScheduleModelResponse;
+import com.example.retrofitrxjava.databinding.LayoutPersonalBinding;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.main.dialog.DialogConfirmShowCalendar;
 import com.example.retrofitrxjava.pre.PrefUtils;
 import com.example.retrofitrxjava.utils.AppUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.retrofitrxjava.utils.AppUtils.DATNC;
 import static com.example.retrofitrxjava.utils.AppUtils.DATNS;
@@ -60,7 +74,7 @@ import static com.example.retrofitrxjava.utils.Constant.IS_FACE_ID;
  */
 public class CommonFragment extends BFragment<LayoutPersonalBinding> implements CommonContract.View {
 
-    private static final int CAMERA_PIC_REQUEST = 100 ;
+    private static final int CAMERA_PIC_REQUEST = 100;
     private TabLayOut tabLayOut;
     private boolean isType;
     private boolean isMenu;
@@ -71,7 +85,21 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
     private LoginResponse.Data userModel;
     private DialogConfirmShowCalendar confirmShowCalendar;
     public static final String SHARED_PREFERENCE_NAME = "SettingGame";
+    public static final String SHARED_OTP = "SETTING_OTP";
     private SharedPreferences sharedPreferences;
+    private boolean isPutCalendar = false;
+
+    // otp
+    // [START declare_auth]
+    private FirebaseAuth mAuth;
+    // [END declare_auth]
+
+    private boolean mVerificationInProgress = false;
+    private String mVerificationId;
+    private PhoneAuthProvider.ForceResendingToken mResendToken;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+
+    //
 
     public void setType(boolean type) {
         isType = type;
@@ -84,6 +112,8 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
     @Override
     protected void initLayout() {
         presenter = new CommonPresenter(this);
+        mAuth = FirebaseAuth.getInstance();
+
         userModel = PrefUtils.loadData(Objects.requireNonNull(getActivity()));
         if (!isShowView) {
             binding.floatingButton.setVisibility(View.VISIBLE);
@@ -95,7 +125,10 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
             binding.myCalendar.setVisibility(View.VISIBLE);
             binding.myCalendar.showWeekView();
         }
+        initCallBackOTP();
         if (isMenu) {
+            sharedPreferences = Objects.requireNonNull(getActivity()).
+                    getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
             binding.floatingButton.setVisibility(View.GONE);
             binding.groupMenuLayout.setVisibility(View.VISIBLE);
             binding.myCalendar.setVisibility(View.GONE);
@@ -112,14 +145,30 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                     }
             );
 
+            boolean isPrivate = sharedPreferences.getBoolean(SHARED_OTP, false);
+            binding.tv2lop.setTextColor(isPrivate ? Color.parseColor("#0CEBF3"): Color.parseColor("#929697"));
+            binding.car7.setOnClickListener(v -> {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                if (PrefUtils.isSettingOTP(getContext())) {
+                    editor.putBoolean(SHARED_OTP, false);
+                    Toast.makeText(getActivity(), "Tắt bảo mật 2 lớp", Toast.LENGTH_SHORT).show();
+                } else {
+                    editor.putBoolean(SHARED_OTP, true);
+                    Toast.makeText(getActivity(), "Bật bảo mật 2 lớp", Toast.LENGTH_SHORT).show();
+                }
+
+                editor.apply();
+                binding.tv2lop.setText(PrefUtils.isSettingOTP(getContext()) ? "Bật bảo mật 2 lớp" : "Tắt bảo mật 2 lớp");
+                binding.tv2lop.setTextColor(PrefUtils.isSettingOTP(getContext()) ? Color.parseColor("#0CEBF3"): Color.parseColor("#929697"));
+            });
+
             binding.openCamera.setOnClickListener(v -> {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                     startActivityForResult(takePictureIntent, CAMERA_PIC_REQUEST);
                 }
             });
-            sharedPreferences = Objects.requireNonNull(getActivity()).
-                    getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
+
             boolean isVolume = sharedPreferences.getBoolean(IS_FACE_ID, false);
             binding.switchCompat.setChecked(isVolume);
             binding.switchCompat.setTrackTintList(binding.switchCompat.isChecked() ?
@@ -237,7 +286,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                     binding.myCalendar.setVisibility(View.VISIBLE);
                 }
                 return;
-            }else {
+            } else {
                 presenter.retrieveSchedule(userModel.getUserEntry(getActivity()), myAPI);
                 binding.groupTabLayout.setVisibility(View.GONE);
                 binding.myCalendar.setVisibility(View.VISIBLE);
@@ -256,6 +305,68 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
             }
         }).attach();
     }
+
+    private void initCallBackOTP() {
+        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential credential) {
+                mVerificationInProgress = false;
+                signInWithPhoneAuthCredential(credential);
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                Log.i("hadtt", "onVerificationFailed", e);
+                mVerificationInProgress = false;
+                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+
+                } else if (e instanceof FirebaseTooManyRequestsException) {
+//                    Snackbar.make(findViewById(android.R.id.content), "Quota exceeded.",
+//                            Snackbar.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCodeSent(@NonNull String verificationId,
+                                   @NonNull PhoneAuthProvider.ForceResendingToken token) {
+
+                Log.i("hadtt", "onCodeSent:" + verificationId);
+                mVerificationId = verificationId;
+                mResendToken = token;
+            }
+        };
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = task.getResult().getUser();
+                        } else {
+                            // Sign in failed, display a message and update the UI
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            }
+                        }
+                    }
+                });
+    }
+
+
+    private void startPhoneNumberVerification() {
+        PhoneAuthOptions options =
+                PhoneAuthOptions.newBuilder(mAuth)
+                        .setPhoneNumber("+84" + userModel.getSdt())       // Phone number to verify
+                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                        .setActivity(getActivity())                 // Activity (for callback binding)
+                        .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+                        .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+        mVerificationInProgress = true;
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -298,7 +409,7 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
     @Override
     public void retrieveSuccess(ScheduleModelResponse data) {
         if (data != null && data.getData().size() > 0) {
-            if (userModel.getModelResponse() == null){
+            if (userModel.getModelResponse() == null) {
                 userModel.setModelResponse(data);
                 PrefUtils.saveData(Objects.requireNonNull(getActivity()), userModel);
             }
@@ -335,9 +446,9 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                 AppUtils.putData(binding.myCalendar, date, START_HOURS4, END_HOURS4, name);
             } else if (HOURS5.contains(time)) {
                 AppUtils.putData(binding.myCalendar, date, START_HOURS5, END_HOURS5, name);
-            }else if (DATNS.contains(time)){
+            } else if (DATNS.contains(time)) {
                 AppUtils.putData(binding.myCalendar, date, START_DATNS, END_DATNS, name);
-            }else if (DATNC.contains(time)){
+            } else if (DATNC.contains(time)) {
                 AppUtils.putData(binding.myCalendar, date, START_DATNC, END_DATNC, name);
             }
         } else {
@@ -351,9 +462,9 @@ public class CommonFragment extends BFragment<LayoutPersonalBinding> implements 
                 AppUtils.putDataMyCalendars(binding.myCalendars, date, START_HOURS4, END_HOURS4, name);
             } else if (HOURS5.contains(time)) {
                 AppUtils.putDataMyCalendars(binding.myCalendars, date, START_HOURS5, END_HOURS5, name);
-            }else if (DATNS.contains(time)){
+            } else if (DATNS.contains(time)) {
                 AppUtils.putData(binding.myCalendar, date, START_DATNS, END_DATNS, name);
-            }else if (DATNC.contains(time)){
+            } else if (DATNC.contains(time)) {
                 AppUtils.putData(binding.myCalendar, date, START_DATNC, END_DATNC, name);
             }
         }

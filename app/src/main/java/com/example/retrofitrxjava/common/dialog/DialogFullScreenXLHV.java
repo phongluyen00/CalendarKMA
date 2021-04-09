@@ -1,13 +1,11 @@
 package com.example.retrofitrxjava.common.dialog;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.b.BAdapter;
-import com.example.retrofitrxjava.b.BDialogFragment;
+import com.example.retrofitrxjava.base.BAdapter;
+import com.example.retrofitrxjava.base.BDialogFragment;
 import com.example.retrofitrxjava.databinding.DialogCcBinding;
 import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.model.CertificateResponse;

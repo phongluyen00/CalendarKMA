@@ -1,4 +1,4 @@
-package com.example.retrofitrxjava.b;
+package com.example.retrofitrxjava.base;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -13,8 +13,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
-import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
-import com.example.retrofitrxjava.model.ModelResponse;
 import com.example.retrofitrxjava.retrofit.MyAPI;
 import com.example.retrofitrxjava.retrofit.RetrofitClient;
 

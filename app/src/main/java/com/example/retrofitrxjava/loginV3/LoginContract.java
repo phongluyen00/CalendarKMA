@@ -12,5 +12,12 @@ public interface LoginContract {
 
     interface Presenter {
         void verifyAccount(String userAccount);
+
+        // syn data ngam
+        void updateSchedule(String entryData, MyAPI myAPI);
+        void updateScore(String entryData, MyAPI myAPI);
+        void updateMoney( String entryData, MyAPI myAPI);
+        void syncCertificate( String entryData, MyAPI myAPI);
+        void syncHandlingService(String entryData, MyAPI myAPI);
     }
 }

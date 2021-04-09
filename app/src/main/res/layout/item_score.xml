@@ -10,7 +10,7 @@
 
         <variable
             name="listener"
-            type="com.example.retrofitrxjava.b.ItemOnclickListener" />
+            type="com.example.retrofitrxjava.base.ItemOnclickListener" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -33,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:background="#EE0DB5A7"
+                android:background="#D312E4D2"
                 android:gravity="center_horizontal"
                 android:padding="5dp"
                 android:text="@{`H.Ky ` + item.hocKy}"

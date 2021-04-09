@@ -2,13 +2,11 @@ package com.example.retrofitrxjava.loginV3;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.retrofit.MyAPI;
 import com.example.retrofitrxjava.retrofit.RetrofitClient;
-import com.example.retrofitrxjava.security.AESHelper;
-import com.example.retrofitrxjava.utils.AppUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -41,6 +39,65 @@ public class LoginPresenter implements LoginContract.Presenter {
                 }, error -> {
                     view.verifyAccountFailed(((Context) view).getString(R.string.error_default));
                 });
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void updateSchedule(String password, MyAPI myAPI) {
+        myAPI.synSchedule( password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> Log.d("AAAAA", "SUCCESS ---- dongBoLicHoc"),
+                        throwable -> Log.d("AAAAA", "FAILED ---- dongBoLicHoc"));
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void updateScore(String password, MyAPI myAPI) {
+        myAPI.synScoreDetail(password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> Log.d("AAAAA", "SUCCESS ---- dongBoBangDiemChiTiet"),
+                        throwable -> Log.d("AAAAA", "FAILED ---- dongBoBangDiemChiTiet"));
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void updateMoney( String password, MyAPI myAPI) {
+        myAPI.synMoney( password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> Log.d("AAAAA", "SUCCESS ---- DongBolephihocphi"),
+                        throwable -> Log.d("AAAAA", "FAILED ---- DongBolephihocphi"));
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void syncCertificate(String password, MyAPI myAPI) {
+        myAPI.syncCertificate( password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> Log.d("AAAAA", "SUCCESS ---- dongBoChungChi"),
+                        throwable -> Log.d("AAAAA", "FAILED ---- dongBoChungChi"));
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void syncHandlingService(String entryData, MyAPI myAPI) {
+        myAPI.syncHandlingService(entryData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> Log.d("AAAAA", "SUCCESS ---- dongBoXuLyHocVu"),
+                        throwable -> Log.d("AAAAA", "FAILED ---- dongBoXuLyHocVu"));
+    }
+
+    @SuppressLint("CheckResult")
+    public void syncDTB(String entryData, MyAPI myAPI) {
+        myAPI.synchronization(entryData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> Log.d("AAAAA", "SUCCESS ---- DB DIEM TB"),
+                        throwable -> Log.d("AAAAA", "FAILED ---- DB DIEM TB"));
     }
 
 }

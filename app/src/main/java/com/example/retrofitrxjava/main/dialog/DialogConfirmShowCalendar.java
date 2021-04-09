@@ -1,9 +1,7 @@
 package com.example.retrofitrxjava.main.dialog;
 
-import android.view.View;
-
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.b.BDialogFragment;
+import com.example.retrofitrxjava.base.BDialogFragment;
 import com.example.retrofitrxjava.databinding.DialogConfirmBinding;
 
 /**

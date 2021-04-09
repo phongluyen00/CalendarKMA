@@ -32,26 +32,26 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
-                        android:background="#0DB5A7"
                         android:orientation="horizontal" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
-                        android:background="@drawable/custom_botron" />
+                        android:background="@drawable/ic_oval_top_new_red" />
 
                 </RelativeLayout>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="35dp"
+                    android:layout_marginTop="15dp"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="HỌC VIỆN MẬT MÃ"
-                    android:textColor="@android:color/white"
-                    android:textSize="25sp"
+                    android:fontFamily="@font/pf_beausanspro_bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -75,6 +75,7 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_title_id"
+                        android:fontFamily="@font/pf_beausanspro_bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Mã sinh viên"
@@ -84,28 +85,26 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <com.example.retrofitrxjava.customview.UIEditTextCustomNew
                         android:id="@+id/edt_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="16dp"
-                        android:background="@drawable/oval_edittext"
                         android:ellipsize="end"
-                        android:hint="Tên đăng nhập"
-                        android:maxLines="1"
-                        android:padding="15dp"
+                        android:hint="User name"
                         android:text="CT010233"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="@android:color/white"
-                        android:textSize="16sp"
+                        android:maxLines="1"
+                        android:paddingLeft="15dp"
+                        android:textColor="@android:color/black"
+                        android:textColorHint="@android:color/tertiary_text_dark"
+                        android:textSize="15sp"
                         app:layout_constraintTop_toBottomOf="@+id/tv_title_id" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_clear_username"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:backgroundTint="@color/black"
+                        android:padding="10dp"
                         android:src="@drawable/ic_baseline_clear_24"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@id/edt_user"
@@ -118,6 +117,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Mật Khẩu"
+                        android:fontFamily="@font/pf_beausanspro_bold"
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -125,31 +125,25 @@
                         app:layout_constraintTop_toBottomOf="@+id/edt_user" />
 
 
-                    <EditText
+                    <com.example.retrofitrxjava.customview.UIEditTextCustomNew
                         android:id="@+id/edt_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginRight="16dp"
-                        android:background="@drawable/oval_edittext"
                         android:ellipsize="end"
-                        android:hint="Mật khẩu"
                         android:inputType="textPassword"
                         android:maxLines="1"
-                        android:padding="15dp"
-                        android:text="Luyenphong1997a@"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="@android:color/white"
-                        android:textSize="16sp"
+                        android:paddingLeft="15dp"
+                        android:hint="Pass word"
+                        android:textColorHint="@android:color/tertiary_text_dark"
+                        android:textSize="15sp"
                         app:layout_constraintTop_toBottomOf="@id/tv_title_password" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_clear_password"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_marginRight="5dp"
                         android:padding="10dp"
                         android:src="@drawable/ic_baseline_clear_24"
                         android:visibility="gone"
@@ -161,7 +155,6 @@
                         android:id="@+id/show_pass"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_marginRight="16dp"
                         android:padding="10dp"
                         android:src="@drawable/ic_baseline_remove_red_eye"
                         android:visibility="gone"
@@ -170,32 +163,21 @@
                         app:layout_constraintLeft_toRightOf="@id/iv_clear_password"
                         app:layout_constraintTop_toTopOf="@id/edt_password" />
 
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/carview"
-                        android:layout_width="200dp"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_marginTop="20dp"
+                        android:id="@+id/btn_submit"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="45dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginRight="45dp"
-                        app:cardCornerRadius="8dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/edt_password">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#ED0DB5A7"
-                            android:gravity="center_horizontal"
-                            android:onClick="@{(v)->listener.onClick()}"
-                            android:padding="15dp"
-                            android:text="Đăng nhập"
-                            android:textColor="@android:color/white"
-                            android:textSize="16dp"
-                            android:textStyle="bold" />
-                    </androidx.cardview.widget.CardView>
+                        android:background="@drawable/boder_button_new"
+                        android:fontFamily="@font/pf_beausanspro_bold"
+                        android:gravity="center_horizontal"
+                        android:onClick="@{(v)->listener.onClick()}"
+                        android:padding="10dp"
+                        android:text="Đăng nhập"
+                        android:textColor="@android:color/black"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toBottomOf="@+id/edt_password" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/img_fingerprint"
@@ -208,7 +190,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/carview" />
+                        app:layout_constraintTop_toBottomOf="@+id/btn_submit" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
@@ -217,6 +199,7 @@
                         android:text="Đăng nhập bằng vân tay ?"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
+                        android:fontFamily="@font/pf_beausanspro_bold"
                         app:layout_constraintTop_toBottomOf="@+id/img_fingerprint" />
 
 
@@ -244,53 +227,42 @@
             <ImageView
                 android:id="@+id/icon_phone"
                 android:layout_width="92dp"
+                android:layout_marginTop="50dp"
                 android:layout_height="92dp"
                 android:src="@drawable/ic_phone"
-                app:layout_constraintBottom_toTopOf="@id/tv_content1"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed" />
 
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_content1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="Vertication"
-                android:textColor="@android:color/black"
-                android:textSize="28sp"
-                app:layout_constraintBottom_toTopOf="@id/tv_content2"
-                app:layout_constraintTop_toBottomOf="@id/icon_phone" />
-
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_content2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                app:fontFamily="@font/pf_beausanspro_bold"
                 android:gravity="center"
-                android:layout_marginHorizontal="14dp"
-                android:maxLines="1"
+                android:maxLines="2"
+                app:layout_constraintTop_toBottomOf="@+id/icon_phone"
                 android:text="@string/content_verification_otp"
                 android:textColor="@android:color/tab_indicator_text"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@id/fieldVerificationCode"
-                app:layout_constraintTop_toBottomOf="@id/tv_content1" />
+                app:layout_constraintBottom_toTopOf="@id/fieldVerificationCode" />
 
             <EditText
                 android:id="@+id/fieldVerificationCode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:layout_marginHorizontal="14dp"
-                android:layout_marginTop="60dp"
+                android:gravity="center"
                 android:layout_weight="1.0"
                 android:hint="Verification Code"
-                android:inputType="number"
-                app:layout_constraintBottom_toTopOf="@id/tv_ok"
+                android:textSize="20sp"
+                android:background="@drawable/bg_boder_defaut_new"
+                android:inputType="number|numberPassword"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_content2" />
@@ -300,31 +272,45 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="14dp"
-                android:layout_marginTop="34dp"
-                android:background="@drawable/selector_green_r30"
+                android:layout_marginTop="20sp"
+                android:background="@drawable/boder_button_new"
                 android:gravity="center"
-                android:paddingVertical="12dp"
-                android:text="Ok"
+                android:text="Đồng ý"
                 android:textColor="@color/white"
+                android:fontFamily="@font/pf_beausanspro_bold"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@id/tv_re_send"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fieldVerificationCode" />
+                app:layout_constraintTop_toBottomOf="@id/tv_re_send" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_re_send"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_width="0dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:gravity="center"
+                android:layout_marginRight="16dp"
+                android:gravity="right"
+                app:fontFamily="@font/pf_beausanspro_bold"
                 android:maxLines="1"
-                android:text="Resend"
-                android:textColor="@android:color/tab_indicator_text"
+                android:textStyle="bold"
+                android:text="@string/tv"
+                android:textColor="#D212E4D2"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_ok" />
+                app:layout_constraintTop_toBottomOf="@id/fieldVerificationCode" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="16sp"
+                android:id="@+id/tv_finish"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:fontFamily="@font/pf_beausanspro_bold"
+                android:layout_marginLeft="16dp"
+                android:layout_width="wrap_content"
+                android:text=" Quay lại"
+                android:layout_height="wrap_content"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

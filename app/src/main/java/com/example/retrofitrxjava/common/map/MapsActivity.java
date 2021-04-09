@@ -1,7 +1,7 @@
 package com.example.retrofitrxjava.common.map;
 
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.b.BActivity;
+import com.example.retrofitrxjava.base.BActivity;
 import com.example.retrofitrxjava.databinding.ActivityMapsBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

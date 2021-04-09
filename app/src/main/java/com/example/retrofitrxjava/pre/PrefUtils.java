@@ -7,8 +7,10 @@ import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.google.gson.Gson;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.example.retrofitrxjava.common.CommonFragment.SHARED_OTP;
 import static com.example.retrofitrxjava.common.CommonFragment.SHARED_PREFERENCE_NAME;
 import static com.example.retrofitrxjava.utils.Constant.IS_FACE_ID;
+import static com.example.retrofitrxjava.utils.Constant.IS_OTP;
 import static com.example.retrofitrxjava.utils.Constant.KEY_ACCOUNT;
 
 public class PrefUtils {
@@ -56,6 +58,13 @@ public class PrefUtils {
                 getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
         boolean isVolume = sharedPreferences.getBoolean(IS_FACE_ID, false);
         return isVolume;
+    }
+
+    public static boolean isSettingOTP(Context context){
+        SharedPreferences sharedPreferences  = context.
+                getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        boolean isOTP = sharedPreferences.getBoolean(SHARED_OTP, false);
+        return isOTP;
     }
 
 }

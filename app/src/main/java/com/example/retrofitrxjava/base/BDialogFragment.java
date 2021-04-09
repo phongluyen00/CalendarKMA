@@ -1,4 +1,4 @@
-package com.example.retrofitrxjava.b;
+package com.example.retrofitrxjava.base;
 
 import android.app.Dialog;
 import android.graphics.Color;

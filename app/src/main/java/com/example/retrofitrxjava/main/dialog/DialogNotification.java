@@ -1,26 +1,16 @@
 package com.example.retrofitrxjava.main.dialog;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.b.BAdapter;
-import com.example.retrofitrxjava.b.BDialogFragment;
+import com.example.retrofitrxjava.base.BAdapter;
+import com.example.retrofitrxjava.base.BDialogFragment;
 import com.example.retrofitrxjava.databinding.DialogNotificationBinding;
 import com.example.retrofitrxjava.main.model.Notification;
-import com.example.retrofitrxjava.model.HandleLearning;
 import com.example.retrofitrxjava.pre.PrefUtils;
 import com.example.retrofitrxjava.utils.AppUtils;
-import com.google.gson.Gson;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;

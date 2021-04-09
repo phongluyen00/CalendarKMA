@@ -28,7 +28,7 @@ import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
 import com.example.retrofitrxjava.common.CommonFragment;
 import com.example.retrofitrxjava.parser.event.EventUpdateTitle;
 import com.example.retrofitrxjava.pre.PrefUtils;
-import com.example.retrofitrxjava.b.BActivity;
+import com.example.retrofitrxjava.base.BActivity;
 import com.example.retrofitrxjava.databinding.LayoutMainBinding;
 import com.example.retrofitrxjava.home.HomeFrg;
 import com.example.retrofitrxjava.utils.AppUtils;

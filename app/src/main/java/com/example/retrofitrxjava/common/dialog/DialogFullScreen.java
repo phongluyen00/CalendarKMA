@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.b.BAdapter;
-import com.example.retrofitrxjava.b.BDialogFragment;
+import com.example.retrofitrxjava.base.BAdapter;
+import com.example.retrofitrxjava.base.BDialogFragment;
 import com.example.retrofitrxjava.databinding.LayoutDialogFullscreenBinding;
 import com.example.retrofitrxjava.model.PaymentModel;
 import com.example.retrofitrxjava.pre.PrefUtils;
