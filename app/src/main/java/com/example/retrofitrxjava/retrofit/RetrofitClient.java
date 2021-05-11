@@ -16,16 +16,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitClient {
 
-    static {
-        System.loadLibrary("security");
-    }
-
-    private static native String getStringHello();
-
     private static Retrofit ourInstance;
 
-    public static String BASE_MOCK = "https://mockapi.superoffice.vn/api/3pi69i/";
-    public static String BASE_MOCK_API = getStringHello();
+    public static String BASE_MOCK = "http://192.168.44.10:8087/";
+    public static String BASE_MOCK_API = "";
+
+    // ip 192.168.43.193 MOBILE
+    // ip home 192.168.44.10
 
 
     public static  OkHttpClient okHttpClient(long time) {
@@ -35,6 +32,7 @@ public class RetrofitClient {
                 .addNetworkInterceptor(new StethoInterceptor())
                 .readTimeout(time, TimeUnit.SECONDS)
                 .writeTimeout(time, TimeUnit.SECONDS)
+
                 .build();
         return okHttpClient;
     }
@@ -43,7 +41,7 @@ public class RetrofitClient {
         if (ourInstance == null)
             ourInstance = new Retrofit.Builder()
                     .client(okHttpClient(30))
-                    .baseUrl(BASE_MOCK_API)
+                    .baseUrl("http://192.168.43.193:8087/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();

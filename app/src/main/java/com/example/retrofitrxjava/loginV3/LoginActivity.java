@@ -19,11 +19,12 @@ import androidx.core.content.ContextCompat;
 
 import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.b.BActivity;
+import com.example.retrofitrxjava.base.BaseActivity;
+import com.example.retrofitrxjava.base.BaseObserver;
 import com.example.retrofitrxjava.databinding.LayoutLoginBinding;
-import com.example.retrofitrxjava.loginV3.model.LoginResponse;
+import com.example.retrofitrxjava.loginV3.model.DataResponse;
 import com.example.retrofitrxjava.main.MainActivity;
-import com.example.retrofitrxjava.pre.PrefUtils;
+import com.example.retrofitrxjava.utils.PrefUtils;
 import com.example.retrofitrxjava.utils.AppUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,7 +36,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.io.IOException;
@@ -48,29 +48,19 @@ import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
-public class LoginActivity extends BActivity<LayoutLoginBinding> implements LoginListener, LoginContract.View {
+public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements LoginListener {
 
     private static final String KEY_NAME = "key_name";
-    private LoginPresenter presenter;
     private boolean isShowPass;
     private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
-    private static final String KEY_VERIFY_IN_PROGRESS = "key_verify_in_progress";
-
-    private static final int STATE_INITIALIZED = 1;
-    private static final int STATE_CODE_SENT = 2;
-    private static final int STATE_VERIFY_FAILED = 3;
-    private static final int STATE_VERIFY_SUCCESS = 4;
-    private static final int STATE_SIGNIN_FAILED = 5;
-    private static final int STATE_SIGNIN_SUCCESS = 6;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -85,7 +75,6 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
     @Override
     protected void initLayout() {
         binding.setListener(this);
-        presenter = new LoginPresenter(this);
         mAuth = FirebaseAuth.getInstance();
         checkShowView(binding.edtUser.getText().toString(), binding.edtPassword.getText().toString());
         binding.ivClearUsername.setOnClickListener(view -> binding.edtUser.setText(""));
@@ -138,12 +127,6 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
             }
 
             verifyPhoneNumberWithCode(mVerificationId, code);
-        });
-
-        binding.tvReSend.setOnClickListener(v -> {
-            if (!TextUtils.isEmpty(data.phone)) {
-                resendVerificationCode(data.phone, mResendToken);
-            }
         });
 
         initCallBackOTP();
@@ -199,9 +182,9 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = task.getResult().getUser();
-                            if (data != null) {
-                                loginSuccess(data);
-                            }
+//                            if (data != null) {
+//                                loginSuccess(data);
+//                            }
 
                         } else {
                             // Sign in failed, display a message and update the UI
@@ -264,11 +247,7 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
                         .setInvalidatedByBiometricEnrollment(true)
                         .build());
             }
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (NoSuchProviderException | InvalidAlgorithmParameterException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
@@ -277,23 +256,13 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
             Cipher cipher = null;
             try {
                 cipher = getCipher();
-            } catch (NoSuchPaddingException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
+            } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
             SecretKey secretKey = null;
             try {
                 secretKey = getSecretKey();
-            } catch (KeyStoreException e) {
-                e.printStackTrace();
-            } catch (CertificateException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (UnrecoverableKeyException e) {
+            } catch (KeyStoreException | UnrecoverableKeyException | IOException | NoSuchAlgorithmException | CertificateException e) {
                 e.printStackTrace();
             }
             try {
@@ -303,14 +272,14 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
             }
             biometricPrompt.authenticate(promptInfo,
                     new BiometricPrompt.CryptoObject(cipher));
-//            if (PrefUtils.getSetting(getApplicationContext())) {
-//                if (PrefUtils.loadData(getApplicationContext()) != null) {
-//                    biometricPrompt.authenticate(promptInfo);
-//                }
-//            } else {
-//                Toast.makeText(this,
-//                        getString(R.string.ban_can_bat_face_id), Toast.LENGTH_SHORT).show();
-//            }
+            if (PrefUtils.getSetting(this)) {
+                if (PrefUtils.loadCacheData(this) != null) {
+                    biometricPrompt.authenticate(promptInfo);
+                }
+            } else {
+                Toast.makeText(this,
+                        getString(R.string.ban_can_bat_face_id), Toast.LENGTH_SHORT).show();
+            }
 
         });
     }
@@ -363,74 +332,53 @@ public class LoginActivity extends BActivity<LayoutLoginBinding> implements Logi
             verifyAccountFailed(getResources().getString(R.string.error_internet));
             return;
         }
-        presenter.verifyAccount(myAPI, userName, password);
+        veryFyAccount(userName, password);
         AppUtils.hideKeyboard(this);
+    }
+
+    private void veryFyAccount(String username, String password){
+        AppUtils.HandlerRXJava(requestAPI.loginWebSite(username, password), new BaseObserver<DataResponse>() {
+            @Override
+            public void onSuccess(DataResponse dataResponse) {
+                if (dataResponse.getSuccessFull()){
+                    pushView(dataResponse);
+                }else {
+                    verifyAccountFailed(dataResponse.getMessage());
+                    binding.progressbar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailed(String message) {
+                verifyAccountFailed(getResources().getString(R.string.error_default));
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
     }
 
-    private LoginResponse.Data data;
-
-    @Override
-    public void pushView(LoginResponse.Data phone) {
+    public void pushView(DataResponse dataResponse) {
         binding.progressbar.setVisibility(View.GONE);
-        if (!TextUtils.isEmpty(phone.phone)) {
-//nhap otp
-            data = phone;
-            binding.layoutLogin.setVisibility(View.GONE);
-            binding.layoutOtp.setVisibility(View.VISIBLE);
-            int phone1 = Integer.parseInt(phone.phone);
-            binding.tvContent2.setText(getString(R.string.content_verification_otp, "+84" + phone1));
-            startPhoneNumberVerification(phone1);
-        } else {
-            loginSuccess(phone);
-        }
+        loginSuccess(dataResponse);
     }
 
-    private void startPhoneNumberVerification(int phone) {
-
-        PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber("+84" + phone)       // Phone number to verify
-                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                        .setActivity(this)                 // Activity (for callback binding)
-                        .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
-                        .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
-        mVerificationInProgress = true;
-    }
-
-    private void loginSuccess(LoginResponse.Data data) {
-        Log.i("hadtt", "loginSuccess");
-        PrefUtils.saveData(this, data);
-        Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
+    private void loginSuccess(DataResponse dataResponse) {
+        PrefUtils.cacheData(this, dataResponse);
+        Toast.makeText(this, dataResponse.getMessage(), Toast.LENGTH_SHORT).show();
         startActivity();
     }
 
     public void startActivity() {
-        Log.i("hadtt", "startActivity");
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
 
-    @Override
     public void verifyAccountFailed(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         binding.progressbar.setVisibility(View.GONE);
     }
 
-    private void resendVerificationCode(String phoneNumber, PhoneAuthProvider.ForceResendingToken token) {
-        PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber(phoneNumber)       // Phone number to verify
-                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                        .setActivity(this)                 // Activity (for callback binding)
-                        .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
-                        .setForceResendingToken(token)     // ForceResendingToken from callbacks
-                        .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
-    }
 }

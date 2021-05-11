@@ -1,7 +1,7 @@
 package com.example.retrofitrxjava.home;
 
 import android.os.AsyncTask;
-import com.example.retrofitrxjava.loginV3.model.LoginResponse;
+
 import com.example.retrofitrxjava.home.model.Advertisement;
 import com.example.retrofitrxjava.model.Article;
 
@@ -23,7 +23,7 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     @Override
-    public void retrieveDataHome(String userName) {
+    public void retrieveDataHome() {
         ArrayList<Advertisement> advertisements = new ArrayList<>();
         advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/imgp0877.jpg"));
         advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/slide1.jpg"));
@@ -32,13 +32,8 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     @Override
-    public void setData(LoginResponse.Data data) {
-
-    }
-
-    @Override
     public void retrieveDataEnglish() {
-//        new DownloadTask().execute(MY_URL);
+        new DownloadTask().execute(MY_URL);
     }
 
     //Download HTML bằng AsynTask

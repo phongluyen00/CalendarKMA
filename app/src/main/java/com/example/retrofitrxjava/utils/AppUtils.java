@@ -1,7 +1,6 @@
 package com.example.retrofitrxjava.utils;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,6 +8,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -18,8 +18,13 @@ import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.custom.MyDynamicCalendar;
 
 import java.io.ByteArrayOutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Create by Luyenphong
@@ -43,15 +48,32 @@ public class AppUtils {
         }
     }
 
-    public static String formatDate(String input) {
-        SimpleDateFormat fromUser = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat myFormat = new SimpleDateFormat("dd-MM-yyyy");
-        try {
-            input = myFormat.format(fromUser.parse(input));
-        } catch (ParseException e) {
-            e.printStackTrace();
+    // check object null or empty
+    public static boolean isNullOrEmpty(Object input) {
+        if (input == null) {
+            return true;
         }
-        return input;
+        if (input instanceof String) {
+            return input.toString().trim().isEmpty();
+        }
+        if (input instanceof EditText) {
+            return ((EditText) input).getText().toString().trim().isEmpty();
+        }
+        if (input instanceof List) {
+            return ((List) input).isEmpty();
+        }
+
+        if (input instanceof HashMap) {
+            return ((HashMap) input).isEmpty();
+        }
+
+        return false;
+    }
+
+    public static <T> void HandlerRXJava(Observable<T> observable, Observer<T> observer) {
+        observable.observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
     }
 
     // HOURS 1:
@@ -71,9 +93,18 @@ public class AppUtils {
     public static final String START_HOURS4 = "15:00";
     public static final String END_HOURS4 = "17:00";
     // HOURS 5:
-    public static final String HOURS5= "13,14,15,16";
+    public static final String HOURS5 = "13,14,15,16";
     public static final String START_HOURS5 = "18:00";
     public static final String END_HOURS5 = "20:30";
+    // HOURS 6: DO AN TOT NGHIEP SANG
+    public static final String DO_AN_TN_S = "1,2,3,4";
+    public static final String START_DA_TN = "7:00";
+    public static final String END_DN_TN = "10:45";
+
+    // HOURS 7: DO AN TOT NGHIEP CHIEU
+    public static final String DO_AN_C = "9,10,11,12";
+    public static final String START_DA_C = "13:45";
+    public static final String END_DN_C = "17:00";
 
     public static void putData(MyDynamicCalendar myCalendar, String date, String startTime, String endTime, String name) {
         myCalendar.setWeekDayLayoutTextColor(R.color.red);
@@ -110,16 +141,6 @@ public class AppUtils {
             }
         }
         return path;
-    }
-
-    public static boolean isMyServiceRunning(Context context, Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

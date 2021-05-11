@@ -18,19 +18,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
-        debug {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
     }
-
-    //  để có thể build được app qua NDK
-    externalNativeBuild {
-        ndkBuild {
-            path 'src/main/jni/Android.mk'
-        }
-    }
-    ndkVersion '21.3.6528147'
 
     dataBinding {
         enabled = true
@@ -70,6 +58,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.facebook.stetho:stetho:1.5.1'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
+    implementation "android.arch.lifecycle:livedata:1.1.1"
+    implementation 'com.android.support:multidex:1.0.3'
 
     //Recyclerview
     implementation 'androidx.recyclerview:recyclerview:1.1.0-beta03'

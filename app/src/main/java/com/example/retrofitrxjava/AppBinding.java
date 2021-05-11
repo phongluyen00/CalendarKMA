@@ -13,6 +13,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
+import com.example.retrofitrxjava.utils.AppUtils;
 
 import java.io.File;
 
@@ -45,7 +46,7 @@ public class AppBinding {
     @BindingAdapter("score")
     public static void setScore(AppCompatTextView tv, String score) {
         score = score.trim();
-        if (!score.equals("")) {
+        if (!AppUtils.isNullOrEmpty(score)) {
             Float scoreAccount = Float.parseFloat(score);
             if (scoreAccount >= 2.5 && scoreAccount <= 3.20) {
                 tv.setBackgroundResource(R.drawable.custom_botron_kha);
@@ -61,7 +62,7 @@ public class AppBinding {
         } else {
             tv.setBackground(null);
             tv.setTextColor(Color.BLACK);
-            tv.setText(R.string.chua_co);
+            tv.setText("0");
         }
     }
 
@@ -76,9 +77,10 @@ public class AppBinding {
         tv.setText(status.trim());
     }
 
+    @SuppressLint("SetTextI18n")
     @BindingAdapter("status")
     public static void setStatus(TextView tv, String score) {
-        if (score != null){
+        if (!AppUtils.isNullOrEmpty(score)){
             float scoreAccount = Float.parseFloat(score);
             if (scoreAccount >= 2.5 && scoreAccount < 3.2) {
                 tv.setTextColor(Color.parseColor("#FD05B0F4"));
@@ -88,12 +90,14 @@ public class AppBinding {
                 tv.setTextColor(Color.parseColor("#BAFA0133"));
             }
             tv.setText(score+"");
+        }else {
+            tv.setText("0");
         }
     }
 
     @BindingAdapter("name")
     public static void setName(TextView tv, String name) {
-        String nameAccount = "Xin chào, " + "<b>" + name + "</b>";
+        String nameAccount = "Hi, " + "<b>" + name + "</b>";
         tv.setText(Html.fromHtml(nameAccount));
     }
 

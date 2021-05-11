@@ -4,12 +4,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.retrofitrxjava.common.average.AverageTranscriptFragment;
+import com.example.retrofitrxjava.common.view.ScoreUserFragment;
+
+import static com.example.retrofitrxjava.common.view.ScoreUserFragment.BANG_DIEM_CT;
+import static com.example.retrofitrxjava.common.view.ScoreUserFragment.BANG_DIEM_TB;
 
 public class TabLayOut extends FragmentStateAdapter {
     private static final int NUM_PAGES = 2;
 
-    private AverageTranscriptFragment fragment;
+    private ScoreUserFragment fragment;
 
     public TabLayOut(FragmentActivity fa) {
         super(fa);
@@ -20,12 +23,12 @@ public class TabLayOut extends FragmentStateAdapter {
 
         switch (position) {
             case 1:
-                fragment = new AverageTranscriptFragment();
-                fragment.checkStatus(false);
+                fragment = new ScoreUserFragment();
+                fragment.setIsView(BANG_DIEM_CT);
                 return fragment;
             default:
-                fragment = new AverageTranscriptFragment();
-                fragment.checkStatus(true);
+                fragment = new ScoreUserFragment();
+                fragment.setIsView(BANG_DIEM_TB);
                 return fragment;
         }
     }

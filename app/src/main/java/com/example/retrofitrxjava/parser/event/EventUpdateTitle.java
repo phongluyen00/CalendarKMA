@@ -1,9 +1,5 @@
 package com.example.retrofitrxjava.parser.event;
 
-import com.example.retrofitrxjava.main.model.Notification;
-
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

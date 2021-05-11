@@ -1,5 +1,6 @@
 package com.example.retrofitrxjava.parser;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.View;
@@ -7,16 +8,13 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.b.BAdapter;
-import com.example.retrofitrxjava.b.BFragment;
-import com.example.retrofitrxjava.b.ItemOnclickListener;
+import com.example.retrofitrxjava.base.BaseAdapter;
+import com.example.retrofitrxjava.base.BaseFragment;
+import com.example.retrofitrxjava.base.ItemOnclickListener;
 import com.example.retrofitrxjava.databinding.LayoutRecruitmentBinding;
-import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.model.Article;
 import com.example.retrofitrxjava.parser.event.EventUpdateTitle;
-import com.example.retrofitrxjava.pre.PrefUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jsoup.Jsoup;
@@ -27,8 +25,8 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implements ItemOnclickListener<Article> {
-    private BAdapter<Article> adapter;
+public class RecruitmentFrg extends BaseFragment<LayoutRecruitmentBinding> implements ItemOnclickListener<Article> {
+    private BaseAdapter<Article> adapter;
 
     private boolean isCheck = false;
 
@@ -40,27 +38,14 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
         return new RecruitmentFrg();
     }
 
-    private LoginResponse.Data userModel;
 
     @Override
     protected void initLayout() {
-        userModel = PrefUtils.loadData(getActivity());
-        if (!NetworkUtils.isConnect(getContext())) {
-            if (isCheck) {
-
-            } else {
-                if (userModel.getArticleListTD() != null && userModel.getArticleListTD().size() > 0) {
-                    setData(userModel.getArticleListTD());
-                }
-            }
-            return;
+        if (isCheck) {
+            new DownloadStudy().execute(getString(R.string.link_study));
+        } else {
+            new DownloadTask().execute(getString(R.string.link_recruitment));
         }
-
-//        if (isCheck) {
-//            new DownloadStudy().execute(getString(R.string.link_study));
-//        } else {
-//            new DownloadTask().execute(getString(R.string.link_recruitment));
-//        }
     }
 
     @Override
@@ -82,13 +67,14 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class DownloadTask extends AsyncTask<String, Void, ArrayList<Article>> {
         @Override
         protected ArrayList<Article> doInBackground(String... strings) {
-            Document document = null;
+            Document document;
             ArrayList<Article> listArticle = new ArrayList<>();
             try {
-                document = (Document) Jsoup.connect(strings[0]).get();
+                document = Jsoup.connect(strings[0]).get();
                 if (document != null) {
                     //Lấy  html có thẻ như sau: div#latest-news > div.row > div.col-md-6 hoặc chỉ cần dùng  div.col-md-6
                     Elements sub = document.select("div.job-item");
@@ -121,9 +107,6 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
         @Override
         protected void onPostExecute(ArrayList<Article> articles) {
             super.onPostExecute(articles);
-            //Setup data recyclerView
-            userModel.setArticleListTD(articles);
-            PrefUtils.saveData(getActivity(), userModel);
             setData(articles);
         }
     }
@@ -150,14 +133,15 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
         });
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class DownloadStudy extends AsyncTask<String, Void, ArrayList<Article>> implements ItemOnclickListener<Article> {
 
         @Override
         protected ArrayList<Article> doInBackground(String... strings) {
-            Document document = null;
+            Document document;
             ArrayList<Article> listArticle = new ArrayList<>();
             try {
-                document = (Document) Jsoup.connect(strings[0]).get();
+                document = Jsoup.connect(strings[0]).get();
                 if (document != null) {
                     //Lấy  html có thẻ như sau: div#latest-news > div.row > div.col-md-6 hoặc chỉ cần dùng  div.col-md-6
                     Elements sub = document.select("div.wrap-course-item");
@@ -192,7 +176,7 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
         protected void onPostExecute(ArrayList<Article> articles) {
             super.onPostExecute(articles);
             //Setup data recyclerView
-            adapter = new BAdapter<>(getActivity(), R.layout.item_study);
+            adapter = new BaseAdapter<>(getActivity(), R.layout.item_study);
             binding.rvRecruitment.setAdapter(adapter);
             adapter.setData(articles);
             binding.progressLoadData.setVisibility(View.GONE);
@@ -210,7 +194,7 @@ public class RecruitmentFrg extends BFragment<LayoutRecruitmentBinding> implemen
     }
 
     private void setData(ArrayList<Article> articles) {
-        adapter = new BAdapter<>(getActivity(), R.layout.item_recruitment);
+        adapter = new BaseAdapter<>(getActivity(), R.layout.item_recruitment);
         binding.rvRecruitment.setAdapter(adapter);
         adapter.setData(articles);
         binding.progressLoadData.setVisibility(View.GONE);

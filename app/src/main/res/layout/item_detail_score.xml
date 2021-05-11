@@ -5,7 +5,7 @@
 
         <variable
             name="item"
-            type="com.example.retrofitrxjava.model.DetailScoreModel.Data" />
+            type="com.example.retrofitrxjava.main.model.ResponseBDCT.BangDiemCT" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,30 +23,32 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/label1"
+                android:text="@{item.id}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginRight="2dp"
+                android:layout_marginEnd="2dp"
                 android:maxLines="2"
-                android:text="@{item.maHocPhan}"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/label2"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/label2"
                 android:layout_width="0dp"
-                android:layout_marginLeft="2dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginStart="2dp"
                 android:gravity="center"
                 android:maxLines="3"
-                android:text="@{item.tenHocPhan}"
+                android:text="@{item.name}"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@id/label3"
+                app:layout_constraintHorizontal_weight="2"
                 app:layout_constraintStart_toEndOf="@+id/label1"
                 app:layout_constraintTop_toTopOf="@id/label1" />
 
@@ -57,28 +59,30 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:ellipsize="end"
-                android:gravity="right"
+                android:gravity="center"
                 android:maxLines="2"
-                android:text="@{item.tkhp2}"
+                android:text="@{item.point}"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@id/label4"
+                app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@id/label2"
                 app:layout_constraintTop_toTopOf="@id/label1" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/label4"
-                study="@{item.danhGia}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="2dp"
+                android:layout_marginStart="2dp"
                 android:gravity="right"
                 android:maxLines="2"
+                android:text="@{item.evaluate}"
                 android:textColor="#00BCD4"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@id/label3"
                 app:layout_constraintTop_toTopOf="@id/label1" />
         </androidx.constraintlayout.widget.ConstraintLayout>

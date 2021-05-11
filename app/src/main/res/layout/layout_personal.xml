@@ -6,7 +6,7 @@
 
         <variable
             name="data"
-            type="com.example.retrofitrxjava.loginV3.model.LoginResponse.Data" />
+            type="com.example.retrofitrxjava.loginV3.model.DataResponse" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,11 +45,11 @@
 
         <com.desai.vatsal.mydynamiccalendar.MyDynamicCalendar
             android:id="@+id/my_calendars"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:backgroundTint="#75FF5722"
-            android:backgroundTintMode="screen" />
+            android:backgroundTintMode="screen"
+            android:visibility="gone" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floating_button"
@@ -75,7 +75,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="300dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="8dp">
@@ -84,13 +84,13 @@
                     android:id="@+id/img_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true">
+                    android:layout_centerHorizontal="true">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/img_account"
-                        avatar="@{data.avata}"
-                        android:layout_width="65dp"
-                        android:layout_height="65dp"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/ebba92202bbad4e48dab"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -115,13 +115,15 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/view_point"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/labeled"
@@ -136,7 +138,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        status="@{data.mediumScore}"
+                        status="@{data.point}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
@@ -151,129 +153,53 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/img_user"
+                    android:layout_below="@id/img_user"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:text="@{data.token}"
+                        android:gravity="center_horizontal"
+                        android:text="@{data.name}"
                         android:textColor="#EE0DB5A7"
-                        android:textSize="14sp" />
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_toRightOf="@id/img_user"
-                        android:text="@{data.name}"
-                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:text="@{data.id}"
+                        android:textColor="#97000000"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <LinearLayout
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:text="@{data.faculty}"
+                        android:textColor="#FF9800"
+                        android:textSize="14sp" />
 
-                        <ImageView
-                            imgType="@{data.mediumScore}"
-                            android:layout_width="10dp"
-                            android:layout_height="10dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/custom_botron" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginBottom="5dp"
-                            android:text="@{`Tình trạng : ` +data.status }"
-                            android:textColor="#FF9800"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:text="@{data.point}"
+                        android:textColor="#FF9800"
+                        android:textSize="18sp" />
                 </LinearLayout>
 
-
             </RelativeLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/car2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:translationZ="3dp"
-            app:cardCornerRadius="8dp"
-            app:layout_constraintTop_toBottomOf="@id/car1">
-
-            <LinearLayout
-                android:id="@+id/ll_tuition"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:orientation="horizontal"
-                android:padding="20dp">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_baseline_attach_money_24" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="16dp"
-                    android:text="Xem lệ phí, Học phí"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/car3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:translationZ="3dp"
-            android:visibility="gone"
-            app:cardCornerRadius="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/car2">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="20dp">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="16dp"
-                    android:text="Tra cứu điểm "
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
@@ -286,7 +212,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:translationZ="3dp"
             app:cardCornerRadius="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/car3">
+            app:layout_constraintTop_toBottomOf="@+id/car1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -324,45 +250,6 @@
             app:cardCornerRadius="8dp"
             app:layout_constraintTop_toBottomOf="@+id/car4">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/update_data"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="20dp">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/iv_update"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_baseline_trending_up_24"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ProgressBar
-                    android:id="@+id/progress_update"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:text="Cập nhật dữ liệu"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/iv_update"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
@@ -371,8 +258,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            app:cardCornerRadius="6dp"
             android:layout_marginRight="8dp"
+            app:cardCornerRadius="6dp"
             app:layout_constraintEnd_toEndOf="@+id/car5"
             app:layout_constraintStart_toStartOf="@+id/car5"
             app:layout_constraintTop_toBottomOf="@+id/car5">
@@ -393,23 +280,23 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="0dp"
-                    app:layout_constraintEnd_toStartOf="@+id/switchCompat"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:textColor="@android:color/black"
                     android:layout_marginRight="5dp"
-                    app:layout_constraintTop_toTopOf="@id/img_fingerprint"
-                    app:layout_constraintBottom_toBottomOf="@id/img_fingerprint"
-                    app:layout_constraintStart_toEndOf="@+id/img_fingerprint"
                     android:text="Đăng nhập bằng Touch ID/Face ID"
-                    android:layout_height="wrap_content"/>
+                    android:textColor="@android:color/black"
+                    app:layout_constraintBottom_toBottomOf="@id/img_fingerprint"
+                    app:layout_constraintEnd_toStartOf="@+id/switchCompat"
+                    app:layout_constraintStart_toEndOf="@+id/img_fingerprint"
+                    app:layout_constraintTop_toTopOf="@id/img_fingerprint" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchCompat"
-                    app:layout_constraintBottom_toBottomOf="@id/img_fingerprint"
-                    app:layout_constraintTop_toTopOf="@id/img_fingerprint"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@id/img_fingerprint"
                     app:layout_constraintRight_toRightOf="parent"
-                    android:layout_height="wrap_content"/>
+                    app:layout_constraintTop_toTopOf="@id/img_fingerprint" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
@@ -419,6 +306,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:constraint_referenced_ids="car1,car2,car4,car5,car6" />
+            app:constraint_referenced_ids="car1,car4,car5,car6" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

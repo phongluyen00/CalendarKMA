@@ -5,31 +5,23 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 
 import com.example.retrofitrxjava.AppBinding;
-import com.example.retrofitrxjava.NetworkUtils;
-import com.example.retrofitrxjava.common.map.MapsActivity;
-import com.example.retrofitrxjava.main.dialog.DialogContactUs;
-import com.example.retrofitrxjava.main.dialog.DialogNotification;
-import com.example.retrofitrxjava.main.model.Notification;
-import com.example.retrofitrxjava.notification.NotificationBackground;
-import com.example.retrofitrxjava.notification.event.EventUpdateNotification;
+import com.example.retrofitrxjava.common.view.MapsActivity;
+import com.example.retrofitrxjava.loginV3.model.DataResponse;
+import com.example.retrofitrxjava.main.model.ResponseBDCT;
+import com.example.retrofitrxjava.main.model.ResponseSchedule;
 import com.example.retrofitrxjava.parser.RecruitmentFrg;
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.loginV3.model.LoginResponse;
 import com.example.retrofitrxjava.main.dialog.DialogLogout;
-import com.example.retrofitrxjava.main.model.ScoreMediumResponse;
-import com.example.retrofitrxjava.common.CommonFragment;
+import com.example.retrofitrxjava.common.view.CommonFragment;
 import com.example.retrofitrxjava.parser.event.EventUpdateTitle;
-import com.example.retrofitrxjava.pre.PrefUtils;
-import com.example.retrofitrxjava.b.BActivity;
+import com.example.retrofitrxjava.utils.PrefUtils;
+import com.example.retrofitrxjava.base.BaseActivity;
 import com.example.retrofitrxjava.databinding.LayoutMainBinding;
 import com.example.retrofitrxjava.home.HomeFrg;
 import com.example.retrofitrxjava.utils.AppUtils;
@@ -41,52 +33,44 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.example.retrofitrxjava.common.view.CommonFragment.MAN_HINH_THONG_TIN;
+import static com.example.retrofitrxjava.common.view.CommonFragment.MAN_HINH_XEM_DIEM;
 
-public class MainActivity extends BActivity<LayoutMainBinding>
-        implements MainListener, MainContract.View,
+public class MainActivity extends BaseActivity<LayoutMainBinding> implements
         NavigationView.OnNavigationItemSelectedListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private MainPresenter presenter;
     private CommonFragment personalFragment;
-    private RecruitmentFrg recruitmentFrg;
     private HomeFrg homeFrg = new HomeFrg();
-    private LoginResponse.Data userModel;
+    private DataResponse userModel;
     private DialogLogout logoutDialog;
     RxPermissions rxPermissions;
-    private static List<Notification.Data> notificationList = new ArrayList<>();
+    private MainViewModel mainViewModel;
+    private ResponseSchedule schedule;
+    private ResponseBDCT responseBDCTLst;
 
     @SuppressLint("CheckResult")
     @Override
     protected void initLayout() {
-//        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.READ_PHONE_STATE).subscribe(granted -> {
         });
-        userModel = PrefUtils.loadData(this);
-        presenter = new MainPresenter(this);
-        if (!(userModel.getScoreMediumResponse() != null)) {
-            binding.progressMain.setVisibility(View.VISIBLE);
-            presenter.retrieveScore(myAPI);
-        }
+        userModel = PrefUtils.loadCacheData(this);
+        mainViewModel = getViewModel(MainViewModel.class);
+        // load api
+        initCallAPI();
+        initLiveData();
+        // end load
 
-//        startServices();
-
-        binding.ivNotification.setOnClickListener(v -> {
-            openDialogNotification();
-        });
-        boolean isNotification = getIntent().getBooleanExtra(NotificationBackground.EXTRA_NOTIFICATION, false);
-        if (isNotification) binding.ivNotification.performClick();
-
-        binding.setListener(this);
+        binding.navView.setOnClickListener(view -> binding.drawerLayout.openDrawer(GravityCompat.START));
         binding.leftMenu.setItemIconTintList(null);
-        binding.setAccount(userModel);
-        AppUtils.loadView(this, HomeFrg.getInstance());
+        binding.setData(userModel);
         binding.leftMenu.setNavigationItemSelectedListener(this);
         binding.navView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
@@ -96,23 +80,27 @@ public class MainActivity extends BActivity<LayoutMainBinding>
                     AppUtils.loadView(MainActivity.this, homeFrg);
                     return true;
                 case R.id.manager:
-                    personalFragment = new CommonFragment();
-                    binding.rlToolbar.setVisibility(View.GONE);
-                    personalFragment.setType(false);
-                    AppUtils.loadView(MainActivity.this, personalFragment);
+                    if (!AppUtils.isNullOrEmpty(schedule)) {
+                        personalFragment = new CommonFragment();
+                        binding.rlToolbar.setVisibility(View.GONE);
+                        personalFragment.setSetView(CommonFragment.MAN_HINH_LICH_HOC);
+                        AppUtils.loadView(MainActivity.this, personalFragment);
+                    } else {
+                        Toast.makeText(activity, "Chưa có dữ liệu lịch học", Toast.LENGTH_SHORT).show();
+                    }
                     return true;
                 case R.id.personal:
                     personalFragment = new CommonFragment();
                     binding.tvTitle.setText(R.string.average_transcript);
+                    personalFragment.setSetView(MAN_HINH_XEM_DIEM);
                     binding.rlToolbar.setVisibility(View.VISIBLE);
-                    personalFragment.setType(true);
                     AppUtils.loadView(MainActivity.this, personalFragment);
                     return true;
                 case R.id.menu:
                     personalFragment = new CommonFragment();
                     binding.rlToolbar.setVisibility(View.VISIBLE);
                     binding.tvTitle.setText(R.string.info_account);
-                    personalFragment.setMenu(true);
+                    personalFragment.setSetView(MAN_HINH_THONG_TIN);
                     AppUtils.loadView(MainActivity.this, personalFragment);
                     return true;
             }
@@ -120,23 +108,47 @@ public class MainActivity extends BActivity<LayoutMainBinding>
         });
     }
 
-    private void openDialogNotification() {
-        DialogNotification dialogNotification = new DialogNotification();
-        dialogNotification.show(getSupportFragmentManager(), dialogNotification.getTag());
+    private void initLiveData() {
+        mainViewModel.getScheduleMutableLiveData().observe(this, responseSchedule -> {
+            if (!AppUtils.isNullOrEmpty(responseSchedule) && responseSchedule.isSuccess()) {
+                this.schedule = responseSchedule;
+                userModel.setSchedule(schedule);
+                PrefUtils.cacheData(this, userModel);
+                Toast.makeText(activity, "call schedule success", Toast.LENGTH_SHORT).show();
+            } else {
+                mainViewModel.retrieveSchedule();
+            }
+            checkData();
+        });
+
+        mainViewModel.getDetailScoreLiveData().observe(this, responseBDCT -> {
+            if (!AppUtils.isNullOrEmpty(responseBDCT) && responseBDCT.isSuccess()) {
+                responseBDCTLst = responseBDCT;
+                userModel.setResponseBDCT(responseBDCT);
+                Toast.makeText(activity, "call responseBDCT success", Toast.LENGTH_SHORT).show();
+                PrefUtils.cacheData(this, userModel);
+            } else {
+                mainViewModel.retrieveBDCT();
+            }
+            checkData();
+        });
     }
 
-    private void startServices() {
-        if (!NetworkUtils.isConnect(this)) {
-            return;
+    private void checkData(){
+        binding.progressMain.setVisibility(!AppUtils.isNullOrEmpty(responseBDCTLst)
+                && !AppUtils.isNullOrEmpty(this.schedule) ? View.GONE : View.VISIBLE);
+        binding.dongBoData.setVisibility(!AppUtils.isNullOrEmpty(responseBDCTLst)
+                && !AppUtils.isNullOrEmpty(this.schedule) ? View.GONE : View.VISIBLE);
+        if (!AppUtils.isNullOrEmpty(responseBDCTLst) && !AppUtils.isNullOrEmpty(this.schedule)){
+            AppUtils.loadView(this, HomeFrg.getInstance());
         }
-        Intent serviceIntent = new Intent(MainActivity.this, NotificationBackground.class);
-        ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
     }
 
-//    public void stopService() {
-//        Intent serviceIntent = new Intent(this, NotificationBackground.class);
-//        stopService(serviceIntent);
-//    }
+    private void initCallAPI() {
+        mainViewModel.setActivity(this);
+        mainViewModel.retrieveSchedule();
+        mainViewModel.retrieveBDCT();
+    }
 
     @Override
     protected int getLayoutId() {
@@ -158,17 +170,6 @@ public class MainActivity extends BActivity<LayoutMainBinding>
         }
     }
 
-//    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-//    public void onEvent(EventUpdateNotification noteEvent) {
-//        if (noteEvent != null) {
-//            if (noteEvent.getNotifications().size() > 0){
-//                Animation shake;
-//                shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
-//                binding.ivNotification.startAnimation(shake); // st
-//            }
-//        }
-//    }
-
     /**
      * Cập nhật title
      *
@@ -179,11 +180,6 @@ public class MainActivity extends BActivity<LayoutMainBinding>
         if (noteEvent != null) {
             binding.tvTitle.setText(noteEvent.getTitle());
         }
-    }
-
-    @Override
-    public void openLeftMenu() {
-        binding.drawerLayout.openDrawer(GravityCompat.START);
     }
 
     @Override
@@ -209,8 +205,6 @@ public class MainActivity extends BActivity<LayoutMainBinding>
                     public void onClickAccept(View view) {
                         logoutDialog.dismiss();
                         Toast.makeText(MainActivity.this, R.string.log_out_success, Toast.LENGTH_SHORT).show();
-//                        stopService();
-//                        PrefUtils.saveData(MainActivity.this, null);
                         finish();
                     }
 
@@ -230,25 +224,23 @@ public class MainActivity extends BActivity<LayoutMainBinding>
                 dialogContactUs.show(getSupportFragmentManager(), "");
                 return true;
             case R.id.study:
-                binding.tvTitle.setText("Học Lập trình Căn Bản");
-                recruitmentFrg = new RecruitmentFrg();
+                binding.tvTitle.setText(R.string.hoc);
+                RecruitmentFrg recruitmentFrg = new RecruitmentFrg();
                 recruitmentFrg.setCheck(true);
                 AppUtils.loadView(this, recruitmentFrg);
                 return true;
             case R.id.map:
                 startActivity(new Intent(this, MapsActivity.class));
-
                 return true;
         }
         return false;
     }
 
-    @Override
-    public void retrieveScoreSuccess(ScoreMediumResponse response) {
-        binding.progressMain.setVisibility(View.GONE);
-    }
-
     public void setTitle(String title) {
         binding.tvTitle.setText(title);
+    }
+
+    public interface MainListener {
+        void openLeftMenu();
     }
 }

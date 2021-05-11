@@ -5,12 +5,12 @@
     <data>
 
         <variable
-            name="account"
-            type="com.example.retrofitrxjava.loginV3.model.LoginResponse.Data" />
+            name="data"
+            type="com.example.retrofitrxjava.loginV3.model.DataResponse" />
 
         <variable
             name="listener"
-            type="com.example.retrofitrxjava.main.MainListener" />
+            type="com.example.retrofitrxjava.main.MainActivity.MainListener" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -25,15 +25,6 @@
             android:layout_height="match_parent"
             android:background="@android:color/white">
 
-            <ProgressBar
-                android:id="@+id/progress_main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,7 +34,7 @@
                     android:id="@+id/rl_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="#EE0DB5A7"
+                    android:background="@color/colorPrimary"
                     tools:ignore="MissingConstraints">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -61,26 +52,19 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_title"
-                        name="@{account.name}"
-                        android:lines="2"
-                        android:gravity="center"
-                        app:layout_constraintEnd_toStartOf="@id/iv_notification"
-                        app:layout_constraintStart_toEndOf="@id/btn_lef_menu"
+                        name="@{data.name}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:lines="2"
                         android:textColor="@android:color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/iv_notification"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:padding="10dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_baseline_notifications" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/btn_lef_menu"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -107,7 +91,7 @@
                         android:layout_weight="0.1"
                         android:background="?android:attr/windowBackground"
                         android:foreground="?attr/selectableItemBackground"
-                        app:itemIconTint="#EE0DB5A7"
+                        app:itemIconTint="@color/colorPrimary"
                         app:itemTextColor="@android:color/secondary_text_light"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
@@ -117,6 +101,26 @@
                 </LinearLayout>
             </RelativeLayout>
 
+            <ProgressBar
+                android:id="@+id/progress_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dong_bo_data"
+                android:layout_width="0dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_height="wrap_content"
+                android:text="Đang đồng bộ dữ liệu ! Vui lòng đợi trong giây lát !"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/progress_main" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -126,7 +130,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="@android:color/white"
-            android:visibility="visible"
+            android:visibility="gone"
             app:headerLayout="@layout/nav_header_main"
             app:menu="@menu/menu_navigation" />
 
