@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.PagerAdapter;
 
-import com.example.retrofitrxjava.BR;
 import com.example.retrofitrxjava.databinding.ItemBannerBinding;
 import com.example.retrofitrxjava.model.ModelResponse;
 
@@ -44,7 +43,7 @@ public class BannerAdapter<T extends ModelResponse> extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, final int position) {
         ItemBannerBinding binding = DataBindingUtil.inflate(mLayoutInflater,resId, container, false);
         T t = data.get(position);
-        binding.setVariable(BR.item, t);
+//        binding.setVariable(BR.item, t);
         container.addView(binding.getRoot());
         return binding.getRoot();
     }

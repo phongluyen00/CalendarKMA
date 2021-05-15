@@ -11,6 +11,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -90,23 +91,24 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="16dp"
-                        android:background="@drawable/oval_edittext"
+                        android:background="@drawable/border_edt"
                         android:ellipsize="end"
                         android:hint="Tên đăng nhập"
                         android:maxLines="1"
                         android:padding="15dp"
                         android:text="CT010233"
-                        android:textColor="@android:color/white"
+                        android:textColor="@android:color/black"
                         android:textColorHint="@android:color/white"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         app:layout_constraintTop_toBottomOf="@+id/tv_title_id" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_clear_username"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_baseline_clear_24"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="12dp"
+                        android:padding="10dp"
+                        android:src="@drawable/done"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@id/edt_user"
                         app:layout_constraintEnd_toEndOf="@id/edt_user"
@@ -124,7 +126,6 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/edt_user" />
 
-
                     <EditText
                         android:id="@+id/edt_password"
                         android:layout_width="match_parent"
@@ -133,25 +134,24 @@
                         android:layout_centerVertical="true"
                         android:layout_marginTop="16dp"
                         android:layout_marginRight="16dp"
-                        android:background="@drawable/oval_edittext"
+                        android:background="@drawable/border_edt"
                         android:ellipsize="end"
                         android:hint="Mật khẩu"
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:padding="15dp"
-                        android:text="Luyenphong1997a@"
-                        android:textColor="@android:color/white"
+                        android:text="0358844343"
+                        android:textColor="@android:color/background_dark"
                         android:textColorHint="@android:color/white"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         app:layout_constraintTop_toBottomOf="@id/tv_title_password" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_clear_password"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_marginRight="5dp"
                         android:padding="10dp"
-                        android:src="@drawable/ic_baseline_clear_24"
+                        android:src="@drawable/done"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@id/edt_password"
                         app:layout_constraintRight_toLeftOf="@id/show_pass"
@@ -161,41 +161,33 @@
                         android:id="@+id/show_pass"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginRight="12dp"
                         android:padding="10dp"
                         android:src="@drawable/ic_baseline_remove_red_eye"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="@id/edt_password"
                         app:layout_constraintEnd_toEndOf="@id/edt_password"
                         app:layout_constraintLeft_toRightOf="@id/iv_clear_password"
                         app:layout_constraintTop_toTopOf="@id/edt_password" />
 
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/carview"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/btn_login"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
                         android:layout_marginLeft="45dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginRight="45dp"
-                        app:cardCornerRadius="8dp"
+                        android:background="@drawable/ic_rectangle_4"
+                        android:gravity="center_horizontal"
+                        android:onClick="@{(v)->listener.onClick()}"
+                        android:padding="15dp"
+                        android:text="Đăng nhập"
+                        android:textColor="@android:color/white"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/edt_password">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/colorPrimary"
-                            android:gravity="center_horizontal"
-                            android:onClick="@{(v)->listener.onClick()}"
-                            android:padding="15dp"
-                            android:text="Đăng nhập"
-                            android:textColor="@android:color/white"
-                            android:textSize="16dp"
-                            android:textStyle="bold" />
-                    </androidx.cardview.widget.CardView>
+                        app:layout_constraintTop_toBottomOf="@id/edt_password" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/img_fingerprint"
@@ -208,7 +200,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/carview" />
+                        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
@@ -271,9 +263,9 @@
                 android:id="@+id/tv_content2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="14dp"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:layout_marginHorizontal="14dp"
                 android:maxLines="1"
                 android:text="@string/content_verification_otp"
                 android:textColor="@android:color/tab_indicator_text"

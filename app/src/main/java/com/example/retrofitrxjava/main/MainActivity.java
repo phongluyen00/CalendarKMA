@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
         initLiveData();
         // end load
 
-        binding.navView.setOnClickListener(view -> binding.drawerLayout.openDrawer(GravityCompat.START));
+        binding.btnLefMenu.setOnClickListener(view -> binding.drawerLayout.openDrawer(GravityCompat.START));
         binding.leftMenu.setItemIconTintList(null);
         binding.setData(userModel);
         binding.leftMenu.setNavigationItemSelectedListener(this);
@@ -172,7 +172,6 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
 
     /**
      * Cập nhật title
-     *
      * @param noteEvent
      */
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -220,8 +219,8 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
                 AppUtils.loadView(this, RecruitmentFrg.getInstance());
                 return true;
             case R.id.contact:
-                DialogContactUs dialogContactUs = new DialogContactUs();
-                dialogContactUs.show(getSupportFragmentManager(), "");
+//                DialogContactUs dialogContactUs = new DialogContactUs();
+//                dialogContactUs.show(getSupportFragmentManager(), "");
                 return true;
             case R.id.study:
                 binding.tvTitle.setText(R.string.hoc);
@@ -240,7 +239,4 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
         binding.tvTitle.setText(title);
     }
 
-    public interface MainListener {
-        void openLeftMenu();
-    }
 }

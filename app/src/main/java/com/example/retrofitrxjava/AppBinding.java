@@ -89,7 +89,7 @@ public class AppBinding {
             } else {
                 tv.setTextColor(Color.parseColor("#BAFA0133"));
             }
-            tv.setText(score+"");
+            tv.setText("Điểm của bạn : "  + score+"");
         }else {
             tv.setText("0");
         }

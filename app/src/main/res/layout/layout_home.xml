@@ -2,14 +2,14 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
+<!--    <data>-->
 
-        <variable
-            name="listener"
-            type="com.example.retrofitrxjava.home.HomeListener" />
+<!--        <variable-->
+<!--            name="listener"-->
+<!--            type="com.example.retrofitrxjava.home.HomeListener" />-->
 
-        <import type="android.text.Html" />
-    </data>
+<!--        <import type="android.text.Html" />-->
+<!--    </data>-->
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

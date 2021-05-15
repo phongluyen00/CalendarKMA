@@ -8,10 +8,7 @@
             name="data"
             type="com.example.retrofitrxjava.loginV3.model.DataResponse" />
 
-        <variable
-            name="listener"
-            type="com.example.retrofitrxjava.main.MainActivity.MainListener" />
-    </data>
+   </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -43,7 +40,6 @@
                         android:layout_height="50dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:onClick="@{()->listener.openLeftMenu()}"
                         android:padding="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
@@ -130,7 +126,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="@android:color/white"
-            android:visibility="gone"
+            android:visibility="visible"
             app:headerLayout="@layout/nav_header_main"
             app:menu="@menu/menu_navigation" />
 

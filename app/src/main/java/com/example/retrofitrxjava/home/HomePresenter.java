@@ -25,9 +25,9 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void retrieveDataHome() {
         ArrayList<Advertisement> advertisements = new ArrayList<>();
-        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/imgp0877.jpg"));
-        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/slide1.jpg"));
-        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/news/tt1.jpg"));
+        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/mco2022.jpg"));
+        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/mco2022.jpg"));
+        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/mco2022.jpg"));
         view.retrieveDataSuccess(advertisements);
     }
 

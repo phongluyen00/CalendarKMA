@@ -18,6 +18,7 @@ import com.example.retrofitrxjava.base.BaseFragment;
 import com.example.retrofitrxjava.databinding.LayoutPersonalBinding;
 import com.example.retrofitrxjava.common.adapter.TabLayOut;
 import com.example.retrofitrxjava.loginV3.model.DataResponse;
+import com.example.retrofitrxjava.main.MainActivity;
 import com.example.retrofitrxjava.main.model.ResponseSchedule;
 import com.example.retrofitrxjava.utils.PrefUtils;
 import com.example.retrofitrxjava.utils.AppUtils;
@@ -104,10 +105,8 @@ public class CommonFragment extends BaseFragment<LayoutPersonalBinding>  {
         if (!AppUtils.isNullOrEmpty(userModel)
                 && !AppUtils.isNullOrEmpty(userModel.getSchedule())
                 && !AppUtils.isNullOrEmpty(userModel.getSchedule().getSchedules())) {
-            for (ResponseSchedule.Schedule objSchedule : userModel.getSchedule().getSchedules()) {
-                for (ResponseSchedule.LstDetailSchedule objDetail : objSchedule.getLstDetailSchedule()) {
-                    putData(objDetail.getSchoolShift(), objDetail.getDay(), objSchedule.getName());
-                }
+            for (ResponseSchedule.Schedule schedule : userModel.getSchedule().getSchedules()) {
+                putData(schedule.getSchoolShift(), schedule.getCalendarDays(), schedule.getSubjectName());
             }
             binding.floatingButton.setVisibility(View.VISIBLE);
             binding.myCalendars.setVisibility(View.GONE);
@@ -123,6 +122,12 @@ public class CommonFragment extends BaseFragment<LayoutPersonalBinding>  {
         binding.groupTabLayout.setVisibility(View.GONE);
         binding.setData(userModel);
 
+        binding.viewLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Objects.requireNonNull(getActivity()).finish();
+            }
+        });
         binding.openCamera.setOnClickListener(v -> {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {

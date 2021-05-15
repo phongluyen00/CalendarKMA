@@ -1,5 +1,7 @@
 package com.example.retrofitrxjava.loginV3;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
@@ -10,6 +12,10 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,17 +27,15 @@ import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.base.BaseActivity;
 import com.example.retrofitrxjava.base.BaseObserver;
+import com.example.retrofitrxjava.database.AppDatabase;
 import com.example.retrofitrxjava.databinding.LayoutLoginBinding;
 import com.example.retrofitrxjava.loginV3.model.DataResponse;
 import com.example.retrofitrxjava.main.MainActivity;
 import com.example.retrofitrxjava.utils.PrefUtils;
 import com.example.retrofitrxjava.utils.AppUtils;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
@@ -61,6 +65,7 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
     private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
+    private AppDatabase appDatabase;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -75,10 +80,18 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
     @Override
     protected void initLayout() {
         binding.setListener(this);
+        setupUI(findViewById(R.id.parent));
         mAuth = FirebaseAuth.getInstance();
         checkShowView(binding.edtUser.getText().toString(), binding.edtPassword.getText().toString());
         binding.ivClearUsername.setOnClickListener(view -> binding.edtUser.setText(""));
         binding.ivClearPassword.setOnClickListener(view -> binding.edtPassword.setText(""));
+        binding.edtPassword.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                binding.btnLogin.performClick();
+                return true;
+            }
+            return false;
+        });
         binding.edtUser.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -130,10 +143,50 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
         });
 
         initCallBackOTP();
+        appDatabase = AppDatabase.getInMemoryDatabase(this);
 
+        binding.edtUser.setOnFocusChangeListener((view, focus) -> {
+            if (focus){
+                binding.edtUser.setBackgroundResource(R.drawable.border_edt_focus);
+            }else {
+                binding.edtUser.setBackgroundResource(R.drawable.border_edt);
+            }
+        });
+
+        binding.edtPassword.setOnFocusChangeListener((view, focus) -> {
+            if (focus){
+                binding.edtPassword.setBackgroundResource(R.drawable.border_edt_focus);
+            }else {
+                binding.edtPassword.setBackgroundResource(R.drawable.border_edt);
+            }
+        });
 //        if (PrefUtils.loadData(getApplicationContext()) != null && PrefUtils.loadData(this).getToken() != null) {
 //            startActivity();
 //        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void setupUI(View view) {
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof EditText)) {
+            view.setOnTouchListener((v, event) -> {
+                hideSoftKeyboard(LoginActivity.this);
+                return false;
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
+            }
+        }
+    }
+
+    public static void hideSoftKeyboard (Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     private void initCallBackOTP() {
@@ -177,20 +230,17 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = task.getResult().getUser();
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = task.getResult().getUser();
 //                            if (data != null) {
 //                                loginSuccess(data);
 //                            }
 
-                        } else {
-                            // Sign in failed, display a message and update the UI
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                binding.fieldVerificationCode.setError("Invalid code.");
-                            }
+                    } else {
+                        // Sign in failed, display a message and update the UI
+                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            binding.fieldVerificationCode.setError("Invalid code.");
                         }
                     }
                 });
@@ -337,22 +387,27 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
     }
 
     private void veryFyAccount(String username, String password){
-        AppUtils.HandlerRXJava(requestAPI.loginWebSite(username, password), new BaseObserver<DataResponse>() {
-            @Override
-            public void onSuccess(DataResponse dataResponse) {
-                if (dataResponse.getSuccessFull()){
-                    pushView(dataResponse);
-                }else {
-                    verifyAccountFailed(dataResponse.getMessage());
-                    binding.progressbar.setVisibility(View.GONE);
+        if (!AppUtils.isNullOrEmpty(binding.edtUser.getText().toString())
+                && !AppUtils.isNullOrEmpty(binding.edtPassword.getText().toString())){
+            AppUtils.HandlerRXJava(requestAPI.loginWebSite(username, password), new BaseObserver<DataResponse>() {
+                @Override
+                public void onSuccess(DataResponse dataResponse) {
+                    if (dataResponse.getSuccessFull()){
+                        pushView(dataResponse);
+                    }else {
+                        verifyAccountFailed(dataResponse.getMessage());
+                        binding.progressbar.setVisibility(View.GONE);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailed(String message) {
-                verifyAccountFailed(getResources().getString(R.string.error_default));
-            }
-        });
+                @Override
+                public void onFailed(String message) {
+                    verifyAccountFailed(getResources().getString(R.string.error_default));
+                }
+            });
+        }else {
+            Toast.makeText(activity, "Nhập đủ thông tin", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -364,8 +419,20 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
         loginSuccess(dataResponse);
     }
 
+    @SuppressLint("CheckResult")
     private void loginSuccess(DataResponse dataResponse) {
         PrefUtils.cacheData(this, dataResponse);
+//        User user = new User(dataResponse.getPassword(),
+//                dataResponse.getPoint(),
+//                dataResponse.getName(),
+//                dataResponse.getClassRoom(),
+//                dataResponse.getFaculty());
+//        appDatabase.studentDao().insert(user);
+//        appDatabase.studentDao().findStudent().subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(response -> {
+//                    System.out.println(response.size()  + "   CCC");
+//                });
         Toast.makeText(this, dataResponse.getMessage(), Toast.LENGTH_SHORT).show();
         startActivity();
     }

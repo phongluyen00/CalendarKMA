@@ -1,5 +1,7 @@
 package com.example.retrofitrxjava.main.model;
 
+import androidx.room.Entity;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,6 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity(tableName = "responseSchedule")
 public class ResponseSchedule {
     @SerializedName("schedules")
     @Expose
@@ -22,35 +25,30 @@ public class ResponseSchedule {
     @Expose
     private boolean success;
 
-    @AllArgsConstructor
     @Getter
-    @Setter
     @NoArgsConstructor
-    public class Schedule {
-        @SerializedName("name")
-        @Expose
-        private String name;
-        @SerializedName("term")
-        @Expose
-        private String term;
-        @SerializedName("teacher")
-        @Expose
-        private String teacher;
-        @SerializedName("lstDetailSchedule")
-        @Expose
-        private List<LstDetailSchedule> lstDetailSchedule = null;
-    }
-
     @AllArgsConstructor
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public class LstDetailSchedule {
+    public static class Schedule {
+        @SerializedName("id")
+        @Expose
+        private Object id;
+        @SerializedName("courseCode")
+        @Expose
+        private String courseCode;
+        @SerializedName("code")
+        @Expose
+        private String code;
+        @SerializedName("subjectName")
+        @Expose
+        private String subjectName;
+        @SerializedName("address")
+        @Expose
+        private String address;
         @SerializedName("schoolShift")
         @Expose
         private String schoolShift;
-        @SerializedName("day")
+        @SerializedName("calendarDays")
         @Expose
-        private String day;
+        private String calendarDays;
     }
 }

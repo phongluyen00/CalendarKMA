@@ -44,7 +44,7 @@ public class HomeFrg extends BaseFragment<LayoutHomeBindingImpl> implements Home
             return;
         }
         presenter.retrieveDataEnglish();
-        binding.setListener(this);
+//        binding.setListener(this);
     }
 
     @Override

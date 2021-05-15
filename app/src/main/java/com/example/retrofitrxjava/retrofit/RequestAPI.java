@@ -6,10 +6,11 @@ import com.example.retrofitrxjava.main.model.ResponseSchedule;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface RequestAPI {
-    @GET("api")
+    @POST("api")
     Observable<DataResponse> loginWebSite(@Query("userName") String token,
                                           @Query("passWord") String passWord);
 
