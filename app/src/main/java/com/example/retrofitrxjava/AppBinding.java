@@ -25,7 +25,7 @@ public class AppBinding {
     public static void setThumb(ImageView im, String img) {
         Glide.with(im)
                 .load(img)
-                .error(R.drawable.ic_baseline_warning_24)
+                .error(R.drawable.load_viewpager)
                 .into(im);
     }
 
@@ -91,7 +91,7 @@ public class AppBinding {
             }
             tv.setText("Điểm của bạn : "  + score+"");
         }else {
-            tv.setText("0");
+            tv.setText("Điểm : 0");
         }
     }
 

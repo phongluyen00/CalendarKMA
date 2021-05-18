@@ -3,15 +3,21 @@ package com.example.retrofitrxjava.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.view.GravityCompat;
+import androidx.databinding.DataBindingUtil;
 
 import com.example.retrofitrxjava.AppBinding;
+import com.example.retrofitrxjava.admin.AccountFragment;
 import com.example.retrofitrxjava.common.view.MapsActivity;
+import com.example.retrofitrxjava.databinding.NavHeaderMainBinding;
 import com.example.retrofitrxjava.loginV3.model.DataResponse;
 import com.example.retrofitrxjava.main.model.ResponseBDCT;
 import com.example.retrofitrxjava.main.model.ResponseSchedule;
@@ -43,7 +49,6 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
     private CommonFragment personalFragment;
     private HomeFrg homeFrg = new HomeFrg();
     private DataResponse userModel;
-    private DialogLogout logoutDialog;
     RxPermissions rxPermissions;
     private MainViewModel mainViewModel;
     private ResponseSchedule schedule;
@@ -55,23 +60,40 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+
         rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.READ_PHONE_STATE).subscribe(granted -> {
         });
+
         userModel = PrefUtils.loadCacheData(this);
+        binding.setData(userModel);
+        binding.btnLefMenu.setOnClickListener(view -> binding.drawerLayout.openDrawer(GravityCompat.START));
+        binding.leftMenu.setNavigationItemSelectedListener(this);
+        binding.leftMenu.setItemIconTintList(null);
+
+        NavHeaderMainBinding _bind = DataBindingUtil.inflate(getLayoutInflater(), R.layout.nav_header_main, binding
+                .leftMenu, false);
+        binding.leftMenu.addHeaderView(_bind.getRoot());
+        _bind.setItem(userModel);
+
+
+        // check admin
+        if (userModel.getPermission() != 0){
+            binding.navView.setVisibility(View.GONE);
+            binding.groupAdmin.setVisibility(View.GONE);
+            AppUtils.loadView(this,new AccountFragment());
+            return;
+        }
+
         mainViewModel = getViewModel(MainViewModel.class);
         // load api
         initCallAPI();
         initLiveData();
         // end load
 
-        binding.btnLefMenu.setOnClickListener(view -> binding.drawerLayout.openDrawer(GravityCompat.START));
-        binding.leftMenu.setItemIconTintList(null);
-        binding.setData(userModel);
-        binding.leftMenu.setNavigationItemSelectedListener(this);
         binding.navView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.nav_home:
@@ -135,9 +157,7 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
     }
 
     private void checkData(){
-        binding.progressMain.setVisibility(!AppUtils.isNullOrEmpty(responseBDCTLst)
-                && !AppUtils.isNullOrEmpty(this.schedule) ? View.GONE : View.VISIBLE);
-        binding.dongBoData.setVisibility(!AppUtils.isNullOrEmpty(responseBDCTLst)
+        binding.groupAdmin.setVisibility(!AppUtils.isNullOrEmpty(responseBDCTLst)
                 && !AppUtils.isNullOrEmpty(this.schedule) ? View.GONE : View.VISIBLE);
         if (!AppUtils.isNullOrEmpty(responseBDCTLst) && !AppUtils.isNullOrEmpty(this.schedule)){
             AppUtils.loadView(this, HomeFrg.getInstance());
@@ -199,28 +219,16 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
         }
         switch (item.getItemId()) {
             case R.id.log_out:
-                logoutDialog = new DialogLogout(new DialogLogout.onItemClick() {
-                    @Override
-                    public void onClickAccept(View view) {
-                        logoutDialog.dismiss();
-                        Toast.makeText(MainActivity.this, R.string.log_out_success, Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-
-                    @Override
-                    public void onClickCancel(View view) {
-                        logoutDialog.dismiss();
-                    }
-                });
-                logoutDialog.show(getSupportFragmentManager(), "Dialog logout");
+                finish();
+                Toast.makeText(MainActivity.this, R.string.log_out_success, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.it:
                 binding.tvTitle.setText(R.string.recruitment);
                 AppUtils.loadView(this, RecruitmentFrg.getInstance());
                 return true;
             case R.id.contact:
-//                DialogContactUs dialogContactUs = new DialogContactUs();
-//                dialogContactUs.show(getSupportFragmentManager(), "");
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/phong.luyen.96/"));
+                startActivity(browserIntent);
                 return true;
             case R.id.study:
                 binding.tvTitle.setText(R.string.hoc);

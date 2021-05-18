@@ -2,6 +2,7 @@ package com.example.retrofitrxjava.home;
 
 import android.os.AsyncTask;
 
+import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.home.model.Advertisement;
 import com.example.retrofitrxjava.model.Article;
 
@@ -25,9 +26,9 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void retrieveDataHome() {
         ArrayList<Advertisement> advertisements = new ArrayList<>();
-        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/mco2022.jpg"));
-        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/mco2022.jpg"));
-        advertisements.add(new Advertisement("http://home.actvn.edu.vn/Upload/svda/mco2022.jpg"));
+        advertisements.add(new Advertisement("https://emsc.vn/wp-content/uploads/2020/07/nhu-cau-tuyen-dung-quy3-2020.jpg"));
+        advertisements.add(new Advertisement("https://emsc.vn/wp-content/uploads/2020/07/nhu-cau-tuyen-dung-quy3-2020.jpg"));
+        advertisements.add(new Advertisement("https://emsc.vn/wp-content/uploads/2020/07/nhu-cau-tuyen-dung-quy3-2020.jpg"));
         view.retrieveDataSuccess(advertisements);
     }
 

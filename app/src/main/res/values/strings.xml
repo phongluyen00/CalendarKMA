@@ -36,5 +36,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="content_verification_otp">We sent a verification code to %s</string>
     <string name="hoc">Học Lập trình Căn Bản</string>
+    <string name="tknd">Tài khoản người dùng</string>
 
 </resources>

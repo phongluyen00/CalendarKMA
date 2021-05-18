@@ -106,7 +106,9 @@ public class CommonFragment extends BaseFragment<LayoutPersonalBinding>  {
                 && !AppUtils.isNullOrEmpty(userModel.getSchedule())
                 && !AppUtils.isNullOrEmpty(userModel.getSchedule().getSchedules())) {
             for (ResponseSchedule.Schedule schedule : userModel.getSchedule().getSchedules()) {
-                putData(schedule.getSchoolShift(), schedule.getCalendarDays(), schedule.getSubjectName());
+                String addressAndTeacher = AppUtils.isNullOrEmpty(schedule.getTeacher())
+                        ? schedule.getAddress() : schedule.getAddress() + "_" + schedule.getTeacher();
+                putData(schedule.getSchoolShift(), schedule.getCalendarDays(), schedule.getSubjectName(), addressAndTeacher);
             }
             binding.floatingButton.setVisibility(View.VISIBLE);
             binding.myCalendars.setVisibility(View.GONE);
@@ -194,22 +196,22 @@ public class CommonFragment extends BaseFragment<LayoutPersonalBinding>  {
         super.onStart();
     }
 
-    private void putData(String time, String date, String name) {
+    private void putData(String time, String date, String name, String address) {
         if (MAN_HINH_LICH_HOC == isView) {
             if (HOURS1.equals(time)) {
-                AppUtils.putData(binding.myCalendar, date, START_HOURS1, END_HOURS1, name);
+                AppUtils.putData(binding.myCalendar, date, START_HOURS1, END_HOURS1, name, address);
             } else if (HOURS2.equals(time)) {
-                AppUtils.putData(binding.myCalendar, date, START_HOURS2, END_HOURS2, name);
+                AppUtils.putData(binding.myCalendar, date, START_HOURS2, END_HOURS2, name, address);
             } else if (HOURS3.equals(time)) {
-                AppUtils.putData(binding.myCalendar, date, AppUtils.START_HOURS3, END_HOURS3, name);
+                AppUtils.putData(binding.myCalendar, date, AppUtils.START_HOURS3, END_HOURS3, name, address);
             } else if (HOURS4.equals(time)) {
-                AppUtils.putData(binding.myCalendar, date, START_HOURS4, END_HOURS4, name);
+                AppUtils.putData(binding.myCalendar, date, START_HOURS4, END_HOURS4, name, address);
             } else if (HOURS5.equals(time)) {
-                AppUtils.putData(binding.myCalendar, date, START_HOURS5, END_HOURS5, name);
+                AppUtils.putData(binding.myCalendar, date, START_HOURS5, END_HOURS5, name, address);
             } else if (DO_AN_TN_S.equals(time)) {
-                AppUtils.putData(binding.myCalendar, date, START_DA_TN, END_DN_TN, name);
+                AppUtils.putData(binding.myCalendar, date, START_DA_TN, END_DN_TN, name, address);
             } else {
-                AppUtils.putData(binding.myCalendar, date, START_DA_C, END_DN_C, name);
+                AppUtils.putData(binding.myCalendar, date, START_DA_C, END_DN_C, name, address);
             }
         } else {
             if (HOURS1.equals(time)) {

@@ -226,6 +226,11 @@ public class DateListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     if (AppConstants.currentDateBackgroundColor != -1) {
                         ll_sub_parrent.setBackgroundResource(R.drawable.custom_botron);
+                        Date date = java.util.Calendar.getInstance().getTime();
+                        onDateClickListener.onClick(date);
+                        if (AppConstants.isShowMonthWithBellowEvents || AppConstants.isAgenda) {
+                            onMonthBellowEventsDateClickListener.onClick(model.getDates());
+                        }
                     }
 
                     if (!AppConstants.strCurrentDateBackgroundColor.equals("null")) {

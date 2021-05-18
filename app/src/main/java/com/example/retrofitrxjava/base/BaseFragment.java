@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
+import com.example.retrofitrxjava.retrofit.RequestAPI;
 import com.example.retrofitrxjava.retrofit.RetrofitClient;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -21,6 +22,7 @@ import retrofit2.Retrofit;
 public abstract class BaseFragment<BD extends ViewDataBinding> extends Fragment {
     protected BD binding;
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
+    protected RequestAPI requestAPI;
 
     @Nullable
     @Override
@@ -33,6 +35,7 @@ public abstract class BaseFragment<BD extends ViewDataBinding> extends Fragment 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Retrofit retrofit = RetrofitClient.getInstance();
+        requestAPI = retrofit.create(RequestAPI.class);
         initLayout();
     }
 

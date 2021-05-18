@@ -30,6 +30,7 @@ public class EventListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         LinearLayout ll_month_events;
         TextView tv_event_name, tv_event_date, tv_event_time, tv_event_simbol;
+        TextView tvClass;
         TextView tvStart, tvEnd;
         View v_divider;
 
@@ -43,6 +44,7 @@ public class EventListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             v_divider = (View) itemView.findViewById(R.id.v_divider);
             tvStart=  itemView.findViewById(R.id.tv_start);
             tvEnd=  itemView.findViewById(R.id.tv_end);
+            tvClass = itemView.findViewById(R.id.tv_class);
         }
 
         public void setEvent(EventModel model) {
@@ -56,6 +58,7 @@ public class EventListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     tv_event_simbol.setBackgroundResource(R.drawable.event_view);
                 }
 
+                tvClass.setText(model.getAddress());
                 tv_event_name.setText(model.getStrName());
                 tv_event_date.setText(model.getStrDate());
                 tvStart.setText(model.getStrStartTime());

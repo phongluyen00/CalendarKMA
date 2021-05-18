@@ -375,12 +375,12 @@ public class MyDynamicCalendar extends LinearLayout {
         }
     }
 
-    public void addEvent(String date, String startTime, String endTime, String name) {
+    public void addEvent(String date, String startTime, String endTime, String name, String address) {
         if (!TextUtils.isEmpty(date) && !TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime) && !TextUtils.isEmpty(name)) {
             String tmpDate = GlobalMethods.convertDate(date, AppConstants.sdfDate, AppConstants.sdfDate);
             String tmpStartTime = GlobalMethods.convertDate(startTime, AppConstants.sdfHourMinute, AppConstants.sdfHourMinute);
             String tmpEndTime = GlobalMethods.convertDate(endTime, AppConstants.sdfHourMinute, AppConstants.sdfHourMinute);
-            AppConstants.eventList.add(new EventModel(tmpDate, tmpStartTime, tmpEndTime, name));
+            AppConstants.eventList.add(new EventModel(tmpDate, tmpStartTime, tmpEndTime, name,address));
         }
     }
 
@@ -646,7 +646,12 @@ public class MyDynamicCalendar extends LinearLayout {
 
                 for (int i = 0; i < AppConstants.eventList.size(); i++) {
                     if (AppConstants.eventList.get(i).getStrDate().equals(AppConstants.sdfDate.format(date))) {
-                        eventModelList.add(new EventModel(AppConstants.eventList.get(i).getStrDate(), AppConstants.eventList.get(i).getStrStartTime(), AppConstants.eventList.get(i).getStrEndTime(), AppConstants.eventList.get(i).getStrName()));
+                        eventModelList.add(new
+                                EventModel(AppConstants.eventList.get(i).getStrDate(),
+                                AppConstants.eventList.get(i).getStrStartTime(),
+                                AppConstants.eventList.get(i).getStrEndTime(),
+                                AppConstants.eventList.get(i).getStrName(),
+                                AppConstants.eventList.get(i).getAddress()));
                     }
                 }
 
@@ -969,7 +974,12 @@ public class MyDynamicCalendar extends LinearLayout {
 
                 for (int i = 0; i < AppConstants.eventList.size(); i++) {
                     if (AppConstants.eventList.get(i).getStrDate().equals(AppConstants.sdfDate.format(date))) {
-                        eventModelList.add(new EventModel(AppConstants.eventList.get(i).getStrDate(), AppConstants.eventList.get(i).getStrStartTime(), AppConstants.eventList.get(i).getStrEndTime(), AppConstants.eventList.get(i).getStrName()));
+                        eventModelList.add(new EventModel(
+                                AppConstants.eventList.get(i).getStrDate(),
+                                AppConstants.eventList.get(i).getStrStartTime(),
+                                AppConstants.eventList.get(i).getStrEndTime(),
+                                AppConstants.eventList.get(i).getStrName(),
+                                AppConstants.eventList.get(i).getAddress()));
                     }
                 }
 

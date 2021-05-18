@@ -39,6 +39,9 @@ public class DataResponse extends ModelResponse {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("permission")
+    @Expose
+    private int permission;
     @SerializedName("averageTranscript")
     @Expose
     private List<ResponseBDTB> responseBDTBS = null;

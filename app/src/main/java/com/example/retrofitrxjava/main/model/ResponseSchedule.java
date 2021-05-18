@@ -32,7 +32,7 @@ public class ResponseSchedule {
         @SerializedName("id")
         @Expose
         private Object id;
-        @SerializedName("courseCode")
+        @SerializedName("termCode")
         @Expose
         private String courseCode;
         @SerializedName("code")
@@ -50,5 +50,8 @@ public class ResponseSchedule {
         @SerializedName("calendarDays")
         @Expose
         private String calendarDays;
+        @SerializedName("teacher")
+        @Expose
+        private String teacher;
     }
 }

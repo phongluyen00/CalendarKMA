@@ -23,6 +23,7 @@ public class RetrofitClient {
 
     // ip 192.168.43.193 MOBILE
     // ip home 192.168.44.10
+    // ip cong ty 192.168.30.136
 
 
     public static  OkHttpClient okHttpClient(long time) {
@@ -32,7 +33,6 @@ public class RetrofitClient {
                 .addNetworkInterceptor(new StethoInterceptor())
                 .readTimeout(time, TimeUnit.SECONDS)
                 .writeTimeout(time, TimeUnit.SECONDS)
-
                 .build();
         return okHttpClient;
     }
@@ -41,7 +41,7 @@ public class RetrofitClient {
         if (ourInstance == null)
             ourInstance = new Retrofit.Builder()
                     .client(okHttpClient(30))
-                    .baseUrl("http://192.168.44.10:8086/")
+                    .baseUrl("http://192.168.44.10:8087/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();

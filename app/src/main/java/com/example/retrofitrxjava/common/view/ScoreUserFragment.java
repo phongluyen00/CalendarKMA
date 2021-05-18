@@ -31,17 +31,19 @@ public class ScoreUserFragment extends BaseFragment<LayoutAverageTranscriptBindi
         DataResponse userModel = PrefUtils.loadCacheData(Objects.requireNonNull(getContext()));
         binding.progressLoadData.setVisibility(View.VISIBLE);
         if (BANG_DIEM_TB == isView) {
-            if (!AppUtils.isNullOrEmpty(userModel)
-                    && !AppUtils.isNullOrEmpty(userModel.getResponseBDCT())
-                    && userModel.getResponseBDCT().getBangDiemCTS().size() > 0) {
-                fillDataScore((ArrayList<DataResponse.ResponseBDTB>) userModel.getResponseBDTBS());
-            }
+//            if (!AppUtils.isNullOrEmpty(userModel)
+//                    && !AppUtils.isNullOrEmpty(userModel.getResponseBDCT())
+//                    && userModel.getResponseBDCT().getBangDiemCTS().size() > 0) {
+//            }
+            fillDataScore((ArrayList<DataResponse.ResponseBDTB>) userModel.getResponseBDTBS());
+
         } else {
-            if (!AppUtils.isNullOrEmpty(userModel)
-                    && !AppUtils.isNullOrEmpty(userModel.getResponseBDCT())
-            && !AppUtils.isNullOrEmpty(userModel.getResponseBDCT().getBangDiemCTS())){
-                fillData((ArrayList<ResponseBDCT.BangDiemCT>) userModel.getResponseBDCT().getBangDiemCTS());
-            }
+//            if (!AppUtils.isNullOrEmpty(userModel)
+//                    && !AppUtils.isNullOrEmpty(userModel.getResponseBDCT())
+//            && !AppUtils.isNullOrEmpty(userModel.getResponseBDCT().getBangDiemCTS())){
+//            }
+            fillData((ArrayList<ResponseBDCT.BangDiemCT>) userModel.getResponseBDCT().getBangDiemCTS());
+
         }
     }
 

@@ -106,10 +106,10 @@ public class AppUtils {
     public static final String START_DA_C = "13:45";
     public static final String END_DN_C = "17:00";
 
-    public static void putData(MyDynamicCalendar myCalendar, String date, String startTime, String endTime, String name) {
+    public static void putData(MyDynamicCalendar myCalendar, String date, String startTime, String endTime, String name, String address) {
         myCalendar.setWeekDayLayoutTextColor(R.color.red);
         myCalendar.setCurrentDateBackgroundColor(R.color.black);
-        myCalendar.addEvent(date, startTime, endTime, name);
+        myCalendar.addEvent(date, startTime, endTime, name,address);
         myCalendar.isSaturdayOff(true, "#ffffff", "#ff0000");
         myCalendar.isSundayOff(true, "#ffffff", "#ff0000");
     }

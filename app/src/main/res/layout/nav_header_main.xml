@@ -1,12 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.example.retrofitrxjava.loginV3.model.DataResponse" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/layout_login"
-        android:background="@drawable/meoxinh"
+        android:id="@+id/nav_header"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/tv_name"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="@{item.name}"
+            tools:text="Luyện Thanh Phong"
+            app:fontFamily="@font/dorcla__"
+            android:textColor="#035CF4"
+            android:textSize="25sp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_point"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textColor="#0073FF"
+            android:textSize="20sp"
+            status="@{item.point}"
+            app:fontFamily="@font/dorcla__"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_name"
+            tools:text="2.89" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

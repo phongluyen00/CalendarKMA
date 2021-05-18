@@ -3,6 +3,10 @@ package com.example.retrofitrxjava.loginV3;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
@@ -13,6 +17,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -51,12 +56,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+
+import static com.example.retrofitrxjava.utils.Constant.IS_FACE_ID;
 
 public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements LoginListener {
 
@@ -92,6 +100,8 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
             }
             return false;
         });
+        binding.edtUser.setFocusable(true);
+        binding.edtUser.requestFocus();
         binding.edtUser.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -146,32 +156,48 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
         appDatabase = AppDatabase.getInMemoryDatabase(this);
 
         binding.edtUser.setOnFocusChangeListener((view, focus) -> {
-            if (focus){
+            if (focus) {
                 binding.edtUser.setBackgroundResource(R.drawable.border_edt_focus);
-            }else {
+            } else {
                 binding.edtUser.setBackgroundResource(R.drawable.border_edt);
             }
         });
 
         binding.edtPassword.setOnFocusChangeListener((view, focus) -> {
-            if (focus){
+            if (focus) {
                 binding.edtPassword.setBackgroundResource(R.drawable.border_edt_focus);
-            }else {
+            } else {
                 binding.edtPassword.setBackgroundResource(R.drawable.border_edt);
             }
         });
-//        if (PrefUtils.loadData(getApplicationContext()) != null && PrefUtils.loadData(this).getToken() != null) {
+
+//        if (PrefUtils.loadCacheData(this) != null
+//                && PrefUtils.loadCacheData(this).getId() != null) {
 //            startActivity();
 //        }
+
+        binding.switchCompat.setOnCheckedChangeListener(
+                (compoundButton, b) -> {
+                    if (binding.switchCompat.isChecked()) {
+                        binding.switchCompat.setTrackTintList
+                                (ColorStateList.valueOf(Color.parseColor("#0CEBF3")));
+                    } else {
+                        binding.switchCompat.setTrackTintList
+                                (ColorStateList.valueOf(Color.parseColor("#929697")));
+                    }
+                    binding.tvName.setText(binding.switchCompat.isChecked() ? "Sinh Viên" : "Tài khoản khác");
+                });
     }
 
     @SuppressLint("ClickableViewAccessibility")
     public void setupUI(View view) {
         // Set up touch listener for non-text box views to hide keyboard.
         if (!(view instanceof EditText)) {
-            view.setOnTouchListener((v, event) -> {
-                hideSoftKeyboard(LoginActivity.this);
-                return false;
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hideSoftKeyboard();
+                }
             });
         }
 
@@ -184,9 +210,9 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
         }
     }
 
-    public static void hideSoftKeyboard (Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    public void hideSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
     }
 
     private void initCallBackOTP() {
@@ -320,8 +346,6 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
             } catch (InvalidKeyException e) {
                 e.printStackTrace();
             }
-            biometricPrompt.authenticate(promptInfo,
-                    new BiometricPrompt.CryptoObject(cipher));
             if (PrefUtils.getSetting(this)) {
                 if (PrefUtils.loadCacheData(this) != null) {
                     biometricPrompt.authenticate(promptInfo);
@@ -386,15 +410,16 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
         AppUtils.hideKeyboard(this);
     }
 
-    private void veryFyAccount(String username, String password){
+    private void veryFyAccount(String username, String password) {
         if (!AppUtils.isNullOrEmpty(binding.edtUser.getText().toString())
-                && !AppUtils.isNullOrEmpty(binding.edtPassword.getText().toString())){
-            AppUtils.HandlerRXJava(requestAPI.loginWebSite(username, password), new BaseObserver<DataResponse>() {
+                && !AppUtils.isNullOrEmpty(binding.edtPassword.getText().toString())) {
+            int permission = !binding.switchCompat.isChecked() ? 1 : 0;
+            AppUtils.HandlerRXJava(requestAPI.loginWebSite(username, password, permission), new BaseObserver<DataResponse>() {
                 @Override
                 public void onSuccess(DataResponse dataResponse) {
-                    if (dataResponse.getSuccessFull()){
+                    if (dataResponse.getSuccessFull()) {
                         pushView(dataResponse);
-                    }else {
+                    } else {
                         verifyAccountFailed(dataResponse.getMessage());
                         binding.progressbar.setVisibility(View.GONE);
                     }
@@ -405,7 +430,7 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
                     verifyAccountFailed(getResources().getString(R.string.error_default));
                 }
             });
-        }else {
+        } else {
             Toast.makeText(activity, "Nhập đủ thông tin", Toast.LENGTH_SHORT).show();
         }
     }
