@@ -24,6 +24,7 @@ public class BaseAdapter<T>
     private LayoutInflater inflater;
     private ArrayList<T> data;
     private ListItemListener listener;
+    private ItemDeleteListener itemDeleteListener;
 
     public BaseAdapter(Context context, @LayoutRes int resId) {
         this.resId = resId;
@@ -41,6 +42,10 @@ public class BaseAdapter<T>
 
     public void setListener(ListItemListener listener) {
         this.listener = listener;
+    }
+
+    public void setItemDeleteListener(ItemDeleteListener itemDeleteListener) {
+        this.itemDeleteListener = itemDeleteListener;
     }
 
     @NonNull
@@ -61,6 +66,7 @@ public class BaseAdapter<T>
         T t = data.get(i);
         viewHolder.binding.setVariable(BR.item, t);
         viewHolder.binding.setVariable(BR.listener, listener);
+        viewHolder.binding.setVariable(BR.onListener,itemDeleteListener);
         viewHolder.binding.executePendingBindings();
     }
 

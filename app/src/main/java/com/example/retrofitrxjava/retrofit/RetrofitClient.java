@@ -24,6 +24,8 @@ public class RetrofitClient {
     // ip 192.168.43.193 MOBILE
     // ip home 192.168.44.10
     // ip cong ty 192.168.30.136
+    // ip LB 192.168.1.49
+    // 192.168.31.184
 
 
     public static  OkHttpClient okHttpClient(long time) {
@@ -41,7 +43,7 @@ public class RetrofitClient {
         if (ourInstance == null)
             ourInstance = new Retrofit.Builder()
                     .client(okHttpClient(30))
-                    .baseUrl("http://192.168.44.10:8087/")
+                    .baseUrl("http://192.168.31.184:5000/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();

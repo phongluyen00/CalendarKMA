@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -105,10 +106,10 @@
                         android:id="@+id/iv_clear_username"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_marginRight="12dp"
-                        android:padding="10dp"
-                        android:src="@drawable/done"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_check"
                         android:visibility="gone"
+                        tools:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="@id/edt_user"
                         app:layout_constraintEnd_toEndOf="@id/edt_user"
                         app:layout_constraintTop_toTopOf="@id/edt_user" />
@@ -150,17 +151,18 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:padding="10dp"
-                        android:src="@drawable/done"
+                        android:src="@drawable/ic_check"
                         android:visibility="gone"
+                        tools:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="@id/edt_password"
                         app:layout_constraintRight_toLeftOf="@id/show_pass"
                         app:layout_constraintTop_toTopOf="@id/edt_password" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/show_pass"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:padding="10dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
                         android:src="@drawable/ic_baseline_remove_red_eye"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="@id/edt_password"

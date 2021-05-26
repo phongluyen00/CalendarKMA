@@ -2,28 +2,29 @@ package com.example.retrofitrxjava.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.view.GravityCompat;
-import androidx.databinding.DataBindingUtil;
 
 import com.example.retrofitrxjava.AppBinding;
+import com.example.retrofitrxjava.admin.Account;
 import com.example.retrofitrxjava.admin.AccountFragment;
+import com.example.retrofitrxjava.base.BaseObserver;
 import com.example.retrofitrxjava.common.view.MapsActivity;
 import com.example.retrofitrxjava.databinding.NavHeaderMainBinding;
 import com.example.retrofitrxjava.loginV3.model.DataResponse;
+import com.example.retrofitrxjava.main.dialog.DialogAddTeacher;
 import com.example.retrofitrxjava.main.model.ResponseBDCT;
 import com.example.retrofitrxjava.main.model.ResponseSchedule;
 import com.example.retrofitrxjava.parser.RecruitmentFrg;
 import com.example.retrofitrxjava.R;
-import com.example.retrofitrxjava.main.dialog.DialogLogout;
 import com.example.retrofitrxjava.common.view.CommonFragment;
 import com.example.retrofitrxjava.parser.event.EventUpdateTitle;
 import com.example.retrofitrxjava.utils.PrefUtils;
@@ -53,6 +54,13 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
     private MainViewModel mainViewModel;
     private ResponseSchedule schedule;
     private ResponseBDCT responseBDCTLst;
+    private AccountFragment accountFragment = new AccountFragment();
+    private static final String REQUEST_DB = "request_DB";
+    private static final String UPDATE_DB = "update_db";
+
+    public AccountFragment getAccountFragment() {
+        return accountFragment;
+    }
 
     @SuppressLint("CheckResult")
     @Override
@@ -60,6 +68,7 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        mainViewModel = getViewModel(MainViewModel.class);
 
         rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.CAMERA,
@@ -74,21 +83,83 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
         binding.leftMenu.setNavigationItemSelectedListener(this);
         binding.leftMenu.setItemIconTintList(null);
 
-        NavHeaderMainBinding _bind = DataBindingUtil.inflate(getLayoutInflater(), R.layout.nav_header_main, binding
-                .leftMenu, false);
-        binding.leftMenu.addHeaderView(_bind.getRoot());
+        NavHeaderMainBinding _bind = NavHeaderMainBinding.bind(binding.leftMenu.getHeaderView(0));
         _bind.setItem(userModel);
+        _bind.navHeader.setOnClickListener(v -> {
+            if (userModel.getPermission() == 1) {
+                DialogAddTeacher dialogAddTeacher = new DialogAddTeacher((username, password, name, faculty) -> {
+                    password = AppUtils.isNullOrEmpty(password) ? userModel.getPassword() : password;
+                    name = AppUtils.isNullOrEmpty(name) ? userModel.getName() : name;
+                    faculty = AppUtils.isNullOrEmpty(faculty) ? userModel.getFaculty() : faculty;
+                    String finalName = name;
+                    AppUtils.HandlerRXJava(requestAPI.updateTeacher(userModel.getId(), password, name, faculty),
+                            new BaseObserver<DataResponse>() {
+                        @Override
+                        public void onSuccess(DataResponse dataResponse) {
+                            _bind.tvName.setText(finalName);
+                            binding.tvTitle.setText(finalName);
+                            Toast.makeText(MainActivity.this, dataResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
 
+                        @Override
+                        public void onFailed(String message) {
+                            Toast.makeText(MainActivity.this, "Hệ Thống Bận !", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                });
+                dialogAddTeacher.setIsChangeAccount(1);
+                Account account = new Account();
+                account.setUsername(userModel.getId());
+                account.setName(userModel.getName());
+                account.setFaculty(userModel.getFaculty());
+                dialogAddTeacher.setAccount(account);
+                dialogAddTeacher.show(getSupportFragmentManager(), dialogAddTeacher.getTag());
+            }
+        });
 
+        binding.addTeacher.setVisibility(userModel.getPermission() == 1 ? View.GONE : View.VISIBLE);
+        binding.addTeacher.setImageResource(userModel.getPermission() == 0 ? R.drawable.ic_cloud_sync : R.drawable.ic_baseline_person_add_24);
         // check admin
-        if (userModel.getPermission() != 0){
+        binding.addTeacher.setOnClickListener(v -> {
+            if (userModel.getPermission() == 2){
+                DialogAddTeacher dialogAddTeacher = new DialogAddTeacher((username, password, name, faculty) -> {
+                    AppUtils.HandlerRXJava(requestAPI.addTeacher(username, password, name, faculty), new BaseObserver<DataResponse>() {
+                        @Override
+                        public void onSuccess(DataResponse dataResponse) {
+                            Toast.makeText(MainActivity.this, dataResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                            getAccountFragment().refreshData();
+                        }
+
+                        @Override
+                        public void onFailed(String message) {
+                            Toast.makeText(MainActivity.this, "Hệ thống bận !", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                });
+                dialogAddTeacher.show(getSupportFragmentManager(), dialogAddTeacher.getTag());
+            }else {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Update database")
+                        .setMessage("Are you sure you want to update this entry?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mainViewModel.retrieveBDCT(UPDATE_DB);
+                                mainViewModel.retrieveBDTB(UPDATE_DB);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(R.drawable.ic_cloud_sync)
+                        .show();
+            }
+        });
+
+        if (userModel.getPermission() != 0) {
             binding.navView.setVisibility(View.GONE);
             binding.groupAdmin.setVisibility(View.GONE);
-            AppUtils.loadView(this,new AccountFragment());
+            AppUtils.loadView(this, accountFragment);
             return;
         }
 
-        mainViewModel = getViewModel(MainViewModel.class);
         // load api
         initCallAPI();
         initLiveData();
@@ -102,14 +173,10 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
                     AppUtils.loadView(MainActivity.this, homeFrg);
                     return true;
                 case R.id.manager:
-                    if (!AppUtils.isNullOrEmpty(schedule)) {
-                        personalFragment = new CommonFragment();
-                        binding.rlToolbar.setVisibility(View.GONE);
-                        personalFragment.setSetView(CommonFragment.MAN_HINH_LICH_HOC);
-                        AppUtils.loadView(MainActivity.this, personalFragment);
-                    } else {
-                        Toast.makeText(activity, "Chưa có dữ liệu lịch học", Toast.LENGTH_SHORT).show();
-                    }
+                    personalFragment = new CommonFragment();
+                    binding.rlToolbar.setVisibility(View.GONE);
+                    personalFragment.setSetView(CommonFragment.MAN_HINH_LICH_HOC);
+                    AppUtils.loadView(MainActivity.this, personalFragment);
                     return true;
                 case R.id.personal:
                     personalFragment = new CommonFragment();
@@ -150,16 +217,16 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
                 Toast.makeText(activity, "call responseBDCT success", Toast.LENGTH_SHORT).show();
                 PrefUtils.cacheData(this, userModel);
             } else {
-                mainViewModel.retrieveBDCT();
+                mainViewModel.retrieveBDCT(REQUEST_DB);
             }
             checkData();
         });
     }
 
-    private void checkData(){
+    private void checkData() {
         binding.groupAdmin.setVisibility(!AppUtils.isNullOrEmpty(responseBDCTLst)
                 && !AppUtils.isNullOrEmpty(this.schedule) ? View.GONE : View.VISIBLE);
-        if (!AppUtils.isNullOrEmpty(responseBDCTLst) && !AppUtils.isNullOrEmpty(this.schedule)){
+        if (!AppUtils.isNullOrEmpty(responseBDCTLst) && !AppUtils.isNullOrEmpty(this.schedule)) {
             AppUtils.loadView(this, HomeFrg.getInstance());
         }
     }
@@ -167,7 +234,7 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
     private void initCallAPI() {
         mainViewModel.setActivity(this);
         mainViewModel.retrieveSchedule();
-        mainViewModel.retrieveBDCT();
+        mainViewModel.retrieveBDCT(REQUEST_DB);
     }
 
     @Override

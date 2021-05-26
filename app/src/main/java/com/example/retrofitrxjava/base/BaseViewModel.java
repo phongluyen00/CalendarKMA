@@ -20,7 +20,7 @@ public class BaseViewModel extends ViewModel {
     public BaseViewModel setActivity(Activity activity) {
         this.activity = activity;
         this.dataResponse = PrefUtils.loadCacheData(activity);
-        username = dataResponse.getId();
+        username = dataResponse.getId().toUpperCase();
         password = dataResponse.getPassword();
         Retrofit retrofit = RetrofitClient.getInstance();
         requestAPI = retrofit.create(RequestAPI.class);
