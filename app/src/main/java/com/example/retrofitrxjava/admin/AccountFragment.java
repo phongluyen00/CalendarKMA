@@ -225,11 +225,12 @@ public class AccountFragment extends BaseFragment<FragmentAccountBinding> implem
                         @Override
                         public void onSuccess(DataResponse dataResponse) {
                             refreshData();
-                            Toast.makeText(getContext(), "Cập nhật dữ liệu thành công", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Cập nhật dữ liệu thành công !", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onFailed(String message) {
+                            Toast.makeText(getContext(), "Cập nhật dữ liệu thất bại !", Toast.LENGTH_SHORT).show();
                         }
                     });
         });

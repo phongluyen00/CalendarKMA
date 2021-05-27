@@ -23,8 +23,7 @@ public abstract class BaseObserver<T> implements Observer<T> {
     }
 
     @Override
-    public void onError(Throwable e) {
-        onFailed(e.getMessage());
+    public void onError(Throwable e) {onFailed(e.getMessage());
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.example.retrofitrxjava.common.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -9,6 +11,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
@@ -52,7 +55,7 @@ import static com.example.retrofitrxjava.utils.Constant.IS_FACE_ID;
  * Create by Luyenphong
  * luyenphong00@gmail.com
  */
-public class CommonFragment extends BaseFragment<LayoutPersonalBinding>  {
+public class CommonFragment extends BaseFragment<LayoutPersonalBinding> {
 
     private static final int CAMERA_PIC_REQUEST = 100;
     public static final int MAN_HINH_LICH_HOC = 10;
@@ -64,6 +67,8 @@ public class CommonFragment extends BaseFragment<LayoutPersonalBinding>  {
     public static final String SHARED_PREFERENCE_NAME = "SettingGame";
     private SharedPreferences sharedPreferences;
     private int isView;
+    private final int LICH_THANG = 0;
+    private final int LICH_TUAN = 1;
 
     public void setSetView(int isView) {
         this.isView = isView;
@@ -77,7 +82,7 @@ public class CommonFragment extends BaseFragment<LayoutPersonalBinding>  {
             initCalendar();
         } else if (MAN_HINH_THONG_TIN == isView) {
             initInformation();
-        }else if (MAN_HINH_XEM_DIEM == isView){
+        } else if (MAN_HINH_XEM_DIEM == isView) {
             initScoreAccount();
         }
     }
@@ -108,35 +113,85 @@ public class CommonFragment extends BaseFragment<LayoutPersonalBinding>  {
             for (ResponseSchedule.Schedule schedule : userModel.getSchedule().getSchedules()) {
                 String addressAndTeacher = AppUtils.isNullOrEmpty(schedule.getTeacher())
                         ? schedule.getAddress() : schedule.getAddress() + "_" + schedule.getTeacher();
-                putData(schedule.getSchoolShift(), schedule.getCalendarDays(), schedule.getSubjectName(), addressAndTeacher);
+                putData(LICH_THANG, schedule.getSchoolShift(), schedule.getCalendarDays(), schedule.getSubjectName(), addressAndTeacher);
             }
             binding.floatingButton.setVisibility(View.VISIBLE);
             binding.myCalendars.setVisibility(View.GONE);
             binding.myCalendar.setVisibility(View.VISIBLE);
             binding.myCalendar.showMonthViewWithBelowEvents();
         }
+        binding.floatingButton.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Chọn chế độ xem lịch học");
+            builder.setItems(new CharSequence[]
+                            {"Lịch theo tháng", "Lịch theo tuần", "Lịch theo ngày", "Đóng"},
+                    (dialog, which) -> {
+                        switch (which) {
+                            case 0:
+                                deleteEvenCalendar();
+                                for (ResponseSchedule.Schedule schedule : userModel.getSchedule().getSchedules()) {
+                                    String addressAndTeacher = AppUtils.isNullOrEmpty(schedule.getTeacher())
+                                            ? schedule.getAddress() : schedule.getAddress() + "_" + schedule.getTeacher();
+                                    putData(LICH_THANG, schedule.getSchoolShift(), schedule.getCalendarDays(), schedule.getSubjectName(), addressAndTeacher);
+                                }
+                                binding.myCalendars.setVisibility(View.GONE);
+                                binding.myCalendar.setVisibility(View.VISIBLE);
+                                binding.myCalendar.showMonthViewWithBelowEvents();
+                                Toast.makeText(getContext(), "clicked 1", Toast.LENGTH_LONG).show();
+                                break;
+                            case 1:
+                                deleteEvenCalendar();
+                                for (ResponseSchedule.Schedule schedule : userModel.getSchedule().getSchedules()) {
+                                    String addressAndTeacher = AppUtils.isNullOrEmpty(schedule.getTeacher())
+                                            ? schedule.getAddress() : schedule.getAddress() + "_" + schedule.getTeacher();
+                                    putData(LICH_TUAN, schedule.getSchoolShift(), schedule.getCalendarDays(), schedule.getSubjectName(), addressAndTeacher);
+                                }
+                                binding.myCalendars.setVisibility(View.VISIBLE);
+                                binding.myCalendar.setVisibility(View.GONE);
+                                binding.myCalendars.showWeekView();
+                                Toast.makeText(getContext(), "clicked 2", Toast.LENGTH_LONG).show();
+                                break;
+                            case 2:
+                                deleteEvenCalendar();
+                                for (ResponseSchedule.Schedule schedule : userModel.getSchedule().getSchedules()) {
+                                    String addressAndTeacher = AppUtils.isNullOrEmpty(schedule.getTeacher())
+                                            ? schedule.getAddress() : schedule.getAddress() + "_" + schedule.getTeacher();
+                                    putData(LICH_TUAN, schedule.getSchoolShift(), schedule.getCalendarDays(), schedule.getSubjectName(), addressAndTeacher);
+                                }
+                                binding.myCalendars.setVisibility(View.VISIBLE);
+                                binding.myCalendar.setVisibility(View.GONE);
+                                binding.myCalendars.showDayView();
+                                Toast.makeText(getContext(), "clicked 3", Toast.LENGTH_LONG).show();
+                                break;
+                            case 3:
+                                Toast.makeText(getContext(), "clicked 4", Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                    });
+            builder.create().show();
+        });
     }
 
-    private void initInformation(){
+    private void deleteEvenCalendar() {
+        binding.myCalendar.deleteAllEvent();
+        binding.myCalendars.deleteAllEvent();
+    }
+
+    private void initInformation() {
         binding.floatingButton.setVisibility(View.GONE);
         binding.groupMenuLayout.setVisibility(View.VISIBLE);
         binding.myCalendar.setVisibility(View.GONE);
         binding.groupTabLayout.setVisibility(View.GONE);
         binding.setData(userModel);
 
-        binding.viewLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Objects.requireNonNull(getActivity()).finish();
-            }
-        });
+        binding.viewLogout.setOnClickListener(view -> Objects.requireNonNull(getActivity()).finish());
         binding.openCamera.setOnClickListener(v -> {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            if (takePictureIntent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, CAMERA_PIC_REQUEST);
             }
         });
-        sharedPreferences = getActivity().
+        sharedPreferences = Objects.requireNonNull(getActivity()).
                 getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
         boolean isVolume = sharedPreferences.getBoolean(IS_FACE_ID, false);
         binding.switchCompat.setChecked(isVolume);
@@ -196,8 +251,8 @@ public class CommonFragment extends BaseFragment<LayoutPersonalBinding>  {
         super.onStart();
     }
 
-    private void putData(String time, String date, String name, String address) {
-        if (MAN_HINH_LICH_HOC == isView) {
+    private void putData(int show, String time, String date, String name, String address) {
+        if (show == LICH_THANG) {
             if (HOURS1.equals(time)) {
                 AppUtils.putData(binding.myCalendar, date, START_HOURS1, END_HOURS1, name, address);
             } else if (HOURS2.equals(time)) {
