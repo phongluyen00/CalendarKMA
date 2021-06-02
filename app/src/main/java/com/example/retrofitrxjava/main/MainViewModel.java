@@ -21,8 +21,9 @@ public class MainViewModel extends BaseViewModel {
     private MutableLiveData<ResponseBDCT> detailScoreLiveData = new MutableLiveData<>();
     private MutableLiveData<ResponseBDTB> liveData = new MutableLiveData<>();
 
-    public void retrieveSchedule() {
-        AppUtils.HandlerRXJava(requestAPI.retrieveSchedule(username, password), new BaseObserver<ResponseSchedule>() {
+    public void retrieveSchedule(String status) {
+        AppUtils.HandlerRXJava(requestAPI.retrieveSchedule(username, password, status),
+                new BaseObserver<ResponseSchedule>() {
             @Override
             public void onSuccess(ResponseSchedule responseSchedule) {
                 scheduleMutableLiveData.postValue(responseSchedule);
@@ -41,7 +42,6 @@ public class MainViewModel extends BaseViewModel {
             public void onSuccess(ResponseBDCT responseBDCT) {
                 if (!AppUtils.isNullOrEmpty(responseBDCT) && responseBDCT.isSuccess()) {
                     detailScoreLiveData.postValue(responseBDCT);
-                    Toast.makeText(activity, "Cập nhật dữ liệu thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(activity, "Cập nhật dữ liệu thất bại", Toast.LENGTH_SHORT).show();
                 }
@@ -77,5 +77,9 @@ public class MainViewModel extends BaseViewModel {
 
     public MutableLiveData<ResponseBDCT> getDetailScoreLiveData() {
         return detailScoreLiveData;
+    }
+
+    public MutableLiveData<ResponseBDTB> getLiveData() {
+        return liveData;
     }
 }

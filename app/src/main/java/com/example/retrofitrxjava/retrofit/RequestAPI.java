@@ -36,7 +36,8 @@ public interface RequestAPI {
 
     @GET("api/retrieveSchedule")
     Observable<ResponseSchedule> retrieveSchedule(@Query("username") String username,
-                                                  @Query("password") String passWord);
+                                                  @Query("password") String passWord,
+                                                  @Query("status") String status);
 
     @GET("api/retrieveBDCT")
     Observable<ResponseBDCT> retrieveBDCT(@Query("username") String username,

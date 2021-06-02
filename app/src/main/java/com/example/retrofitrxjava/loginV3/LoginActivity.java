@@ -2,6 +2,7 @@ package com.example.retrofitrxjava.loginV3;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -26,13 +27,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.biometric.BiometricPrompt;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.retrofitrxjava.NetworkUtils;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.base.BaseActivity;
 import com.example.retrofitrxjava.base.BaseObserver;
-import com.example.retrofitrxjava.database.AppDatabase;
 import com.example.retrofitrxjava.databinding.LayoutLoginBinding;
 import com.example.retrofitrxjava.loginV3.model.DataResponse;
 import com.example.retrofitrxjava.main.MainActivity;
@@ -73,7 +75,6 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
     private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
-    private AppDatabase appDatabase;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -153,7 +154,6 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
         });
 
         initCallBackOTP();
-        appDatabase = AppDatabase.getInMemoryDatabase(this);
 
         binding.edtUser.setOnFocusChangeListener((view, focus) -> {
             if (focus) {
@@ -397,6 +397,8 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
         return R.layout.layout_login;
     }
 
+    private NotificationManagerCompat notificationManagerCompat;
+
     @Override
     public void onClick() {
         String userName = binding.edtUser.getText().toString();
@@ -447,17 +449,6 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
     @SuppressLint("CheckResult")
     private void loginSuccess(DataResponse dataResponse) {
         PrefUtils.cacheData(this, dataResponse);
-//        User user = new User(dataResponse.getPassword(),
-//                dataResponse.getPoint(),
-//                dataResponse.getName(),
-//                dataResponse.getClassRoom(),
-//                dataResponse.getFaculty());
-//        appDatabase.studentDao().insert(user);
-//        appDatabase.studentDao().findStudent().subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(response -> {
-//                    System.out.println(response.size()  + "   CCC");
-//                });
         Toast.makeText(this, dataResponse.getMessage(), Toast.LENGTH_SHORT).show();
         startActivity();
     }

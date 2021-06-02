@@ -3,6 +3,7 @@ package com.example.retrofitrxjava.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,7 +12,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
+import androidx.lifecycle.Observer;
 
 import com.example.retrofitrxjava.AppBinding;
 import com.example.retrofitrxjava.admin.Account;
@@ -22,7 +26,9 @@ import com.example.retrofitrxjava.databinding.NavHeaderMainBinding;
 import com.example.retrofitrxjava.loginV3.model.DataResponse;
 import com.example.retrofitrxjava.main.dialog.DialogAddTeacher;
 import com.example.retrofitrxjava.main.model.ResponseBDCT;
+import com.example.retrofitrxjava.main.model.ResponseBDTB;
 import com.example.retrofitrxjava.main.model.ResponseSchedule;
+import com.example.retrofitrxjava.notification.NotificationApp;
 import com.example.retrofitrxjava.parser.RecruitmentFrg;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.common.view.CommonFragment;
@@ -145,6 +151,7 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
                             public void onClick(DialogInterface dialog, int which) {
                                 mainViewModel.retrieveBDCT(UPDATE_DB);
                                 mainViewModel.retrieveBDTB(UPDATE_DB);
+                                mainViewModel.retrieveSchedule(UPDATE_DB);
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)
@@ -197,15 +204,28 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
         });
     }
 
+    private NotificationManagerCompat notificationManagerCompat;
+    private void showNotification(String title, String message){
+        Notification notification = new NotificationCompat.Builder(this, NotificationApp.CHANNEL_2_ID)
+                .setSmallIcon(R.drawable.ic_baseline_notifications_none_24)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setCategory(NotificationCompat.CATEGORY_PROMO) // Promotion.
+                .build();
+
+        int notificationId = 2;
+        this.notificationManagerCompat = NotificationManagerCompat.from(this);
+        this.notificationManagerCompat.notify(notificationId, notification);
+    }
+
     private void initLiveData() {
         mainViewModel.getScheduleMutableLiveData().observe(this, responseSchedule -> {
             if (!AppUtils.isNullOrEmpty(responseSchedule) && responseSchedule.isSuccess()) {
                 this.schedule = responseSchedule;
                 userModel.setSchedule(schedule);
                 PrefUtils.cacheData(this, userModel);
-                Toast.makeText(activity, "call schedule success", Toast.LENGTH_SHORT).show();
-            } else {
-                mainViewModel.retrieveSchedule();
+                showNotification("Thông Báo", "Cập nhật dữ liệu lịch học thành công !");
             }
             checkData();
         });
@@ -214,12 +234,18 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
             if (!AppUtils.isNullOrEmpty(responseBDCT) && responseBDCT.isSuccess()) {
                 responseBDCTLst = responseBDCT;
                 userModel.setResponseBDCT(responseBDCT);
-                Toast.makeText(activity, "call responseBDCT success", Toast.LENGTH_SHORT).show();
                 PrefUtils.cacheData(this, userModel);
-            } else {
-                mainViewModel.retrieveBDCT(REQUEST_DB);
+                showNotification("Thông Báo", "Cập nhật Điểm chi tiết thành công !");
             }
             checkData();
+        });
+
+        mainViewModel.getLiveData().observe(this, responseBDTB -> {
+            if (!AppUtils.isNullOrEmpty(responseBDTB) && responseBDTB.isSuccess()) {
+                userModel.setResponseBDTBS(responseBDTB.getBangDiemTB());
+                PrefUtils.cacheData(MainActivity.this, userModel);
+                showNotification("Thông Báo", "Cập nhật Điểm chi tiết thành công !");
+            }
         });
     }
 
@@ -233,7 +259,7 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
 
     private void initCallAPI() {
         mainViewModel.setActivity(this);
-        mainViewModel.retrieveSchedule();
+        mainViewModel.retrieveSchedule(REQUEST_DB);
         mainViewModel.retrieveBDCT(REQUEST_DB);
     }
 

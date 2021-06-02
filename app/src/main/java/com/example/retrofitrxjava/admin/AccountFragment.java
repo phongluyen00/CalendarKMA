@@ -137,7 +137,7 @@ public class AccountFragment extends BaseFragment<FragmentAccountBinding> implem
         if (account.getPermission() == 1) {
             callApiSchedule(username);
         } else {
-            AppUtils.HandlerRXJava(requestAPI.retrieveSchedule(username, account.getPassword()),
+            AppUtils.HandlerRXJava(requestAPI.retrieveSchedule(username, account.getPassword(),"request_DB"),
                     new BaseObserver<ResponseSchedule>() {
                         @Override
                         public void onSuccess(ResponseSchedule responseSchedule) {

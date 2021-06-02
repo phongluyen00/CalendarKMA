@@ -15,5 +15,5 @@ import java.util.List;
 @NoArgsConstructor
 public class ResponseBDTB {
     private boolean isSuccess;
-    private List<DataResponse.ResponseBDTB> bangDiemCTS;
+    private List<DataResponse.ResponseBDTB> bangDiemTB;
 }
