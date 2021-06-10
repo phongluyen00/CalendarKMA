@@ -101,6 +101,7 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
             }
             return false;
         });
+        binding.edtUser.setBackgroundResource(R.drawable.border_edt_focus);
         binding.edtUser.setFocusable(true);
         binding.edtUser.requestFocus();
         binding.edtUser.addTextChangedListener(new TextWatcher() {
@@ -157,16 +158,20 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
 
         binding.edtUser.setOnFocusChangeListener((view, focus) -> {
             if (focus) {
+                binding.edtUser.requestFocus();
                 binding.edtUser.setBackgroundResource(R.drawable.border_edt_focus);
             } else {
                 binding.edtUser.setBackgroundResource(R.drawable.border_edt);
+                binding.edtUser.clearFocus();
             }
         });
 
         binding.edtPassword.setOnFocusChangeListener((view, focus) -> {
             if (focus) {
+                binding.edtPassword.requestFocus();
                 binding.edtPassword.setBackgroundResource(R.drawable.border_edt_focus);
             } else {
+                binding.edtPassword.clearFocus();
                 binding.edtPassword.setBackgroundResource(R.drawable.border_edt);
             }
         });
@@ -197,6 +202,8 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
                 @Override
                 public void onClick(View v) {
                     hideSoftKeyboard();
+                    binding.edtPassword.clearFocus();
+                    binding.edtUser.clearFocus();
                 }
             });
         }
@@ -211,8 +218,12 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
     }
 
     public void hideSoftKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+        }catch (Exception ignored){
+
+        }
     }
 
     private void initCallBackOTP() {

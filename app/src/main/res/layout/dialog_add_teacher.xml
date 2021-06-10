@@ -90,7 +90,7 @@
                 android:background="@drawable/border_edt"
                 android:hint="Chuyên ngành"
                 android:padding="10dp"
-                android:text="@{account.faculty}" />
+                android:text="@{account.classRoom}" />
 
             <LinearLayout
                 android:layout_width="match_parent"

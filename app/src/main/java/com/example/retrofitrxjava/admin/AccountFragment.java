@@ -219,7 +219,7 @@ public class AccountFragment extends BaseFragment<FragmentAccountBinding> implem
         DialogAddTeacher dialogAddTeacher = new DialogAddTeacher((username, password, name, faculty) -> {
             password = AppUtils.isNullOrEmpty(password) ? account.getPassword() : password;
             name = AppUtils.isNullOrEmpty(name) ? account.getName() : name;
-            faculty = AppUtils.isNullOrEmpty(faculty) ? account.getFaculty() : faculty;
+            faculty = AppUtils.isNullOrEmpty(faculty) ? account.getClassRoom() : faculty;
             AppUtils.HandlerRXJava(requestAPI.updateTeacher(account.getUsername(), password, name, faculty),
                     new BaseObserver<DataResponse>() {
                         @Override
