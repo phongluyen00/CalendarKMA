@@ -1,7 +1,5 @@
 package com.example.retrofitrxjava.parser;
 
-import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -15,36 +13,34 @@ import com.example.retrofitrxjava.base.ItemOnclickListener;
 import com.example.retrofitrxjava.databinding.LayoutRecruitmentBinding;
 import com.example.retrofitrxjava.model.Article;
 import com.example.retrofitrxjava.parser.event.EventUpdateTitle;
+import com.example.retrofitrxjava.utils.AppUtils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecruitmentFrg extends BaseFragment<LayoutRecruitmentBinding> implements ItemOnclickListener<Article> {
     private BaseAdapter<Article> adapter;
 
-    private boolean isCheck = false;
+    private List<Article> listTask;
+    private List<Article> listStudy;
 
-    public void setCheck(boolean check) {
-        this.isCheck = check;
+    public RecruitmentFrg(List<Article> listTask, List<Article> listStudy) {
+        this.listTask = listTask;
+        this.listStudy = listStudy;
     }
-
-    public static RecruitmentFrg getInstance() {
-        return new RecruitmentFrg();
-    }
-
 
     @Override
     protected void initLayout() {
-        if (isCheck) {
-            new DownloadStudy().execute(getString(R.string.link_study));
+        if (!AppUtils.isNullOrEmpty(listStudy)) {
+            adapter = new BaseAdapter<>(getActivity(), R.layout.item_study);
+            binding.rvRecruitment.setAdapter(adapter);
+            adapter.setData((ArrayList<Article>) listStudy);
+            binding.progressLoadData.setVisibility(View.GONE);
+            adapter.setListener(this);
         } else {
-            new DownloadTask().execute(getString(R.string.link_recruitment));
+            setData((ArrayList<Article>) listTask);
         }
     }
 
@@ -64,50 +60,6 @@ public class RecruitmentFrg extends BaseFragment<LayoutRecruitmentBinding> imple
             defaultWedView(article.getLink());
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class DownloadTask extends AsyncTask<String, Void, ArrayList<Article>> {
-        @Override
-        protected ArrayList<Article> doInBackground(String... strings) {
-            Document document;
-            ArrayList<Article> listArticle = new ArrayList<>();
-            try {
-                document = Jsoup.connect(strings[0]).get();
-                if (document != null) {
-                    //Lấy  html có thẻ như sau: div#latest-news > div.row > div.col-md-6 hoặc chỉ cần dùng  div.col-md-6
-                    Elements sub = document.select("div.job-item");
-                    for (Element element : sub) {
-                        Article article = new Article();
-                        Element titleSubject = element.getElementsByTag("a").first();
-                        Element imgSubject = element.getElementsByTag("img").first();
-                        Elements linkSubject = element.getElementsByTag("a").after("job_link").get(1).getElementsByAttribute("title");
-                        Element descrip = element.getElementsByTag("p").first();
-                        Element linkHtml = element.getElementsByTag("a").first();
-                        Element locationHtml = element.getElementsByTag("ul").first();
-                        //Parse to model
-                        article.setDes(titleSubject == null ? "" : titleSubject.attr("title"));
-                        article.setThumb(imgSubject == null ? "" : imgSubject.attr("data-src"));
-                        article.setTitle(linkSubject.attr("title"));
-                        article.setIncome(descrip == null ? "" : descrip.text());
-                        article.setLink(linkHtml == null ? "" : linkHtml.attr("href"));
-                        article.setLocation(locationHtml != null ? locationHtml.text() : "");
-                        //Add to list
-                        listArticle.add(article);
-                    }
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return listArticle;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Article> articles) {
-            super.onPostExecute(articles);
-            setData(articles);
         }
     }
 
@@ -131,66 +83,6 @@ public class RecruitmentFrg extends BaseFragment<LayoutRecruitmentBinding> imple
                 }
             }
         });
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class DownloadStudy extends AsyncTask<String, Void, ArrayList<Article>> implements ItemOnclickListener<Article> {
-
-        @Override
-        protected ArrayList<Article> doInBackground(String... strings) {
-            Document document;
-            ArrayList<Article> listArticle = new ArrayList<>();
-            try {
-                document = Jsoup.connect(strings[0]).get();
-                if (document != null) {
-                    //Lấy  html có thẻ như sau: div#latest-news > div.row > div.col-md-6 hoặc chỉ cần dùng  div.col-md-6
-                    Elements sub = document.select("div.wrap-course-item");
-                    for (Element element : sub) {
-                        Article article = new Article();
-                        Element titleSubject = element.getElementsByTag("h3").first();
-                        Element imgSubject = element.getElementsByTag("img").first();
-                        Element linkSubject = element.getElementsByTag("a").first();
-                        Element descrip = element.getElementsByTag("p").first();
-                        //Parse to model
-                        article.setTitle(titleSubject == null ? "" : titleSubject.text());
-                        article.setThumb(imgSubject == null ? "" : "https://codelearn.io/" + imgSubject.attr("src"));
-                        if (linkSubject != null) {
-                            String link = linkSubject.attr("href");
-                            String title = linkSubject.attr("title");
-                            article.setLink("https://codelearn.io/" + link);
-                            article.setTitle(title);
-                        }
-                        article.setDes(descrip == null ? "" : descrip.text());
-                        //Add to list
-                        listArticle.add(article);
-                    }
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return listArticle;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Article> articles) {
-            super.onPostExecute(articles);
-            //Setup data recyclerView
-            adapter = new BaseAdapter<>(getActivity(), R.layout.item_study);
-            binding.rvRecruitment.setAdapter(adapter);
-            adapter.setData(articles);
-            binding.progressLoadData.setVisibility(View.GONE);
-            adapter.setListener(this);
-        }
-
-        @Override
-        public void onItemMediaClick(Article article) {
-            try {
-                defaultWedView(article.getLink());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void setData(ArrayList<Article> articles) {

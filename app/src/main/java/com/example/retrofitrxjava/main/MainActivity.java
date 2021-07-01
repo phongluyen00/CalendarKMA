@@ -7,6 +7,8 @@ import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ import com.example.retrofitrxjava.main.dialog.DialogAddTeacher;
 import com.example.retrofitrxjava.main.model.ResponseBDCT;
 import com.example.retrofitrxjava.main.model.ResponseBDTB;
 import com.example.retrofitrxjava.main.model.ResponseSchedule;
+import com.example.retrofitrxjava.model.Article;
 import com.example.retrofitrxjava.notification.NotificationApp;
 import com.example.retrofitrxjava.parser.RecruitmentFrg;
 import com.example.retrofitrxjava.R;
@@ -46,6 +49,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.retrofitrxjava.common.view.CommonFragment.MAN_HINH_THONG_TIN;
 import static com.example.retrofitrxjava.common.view.CommonFragment.MAN_HINH_XEM_DIEM;
 
@@ -54,7 +60,6 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
         BottomNavigationView.OnNavigationItemSelectedListener {
 
     private CommonFragment personalFragment;
-    private HomeFrg homeFrg = new HomeFrg();
     private DataResponse userModel;
     RxPermissions rxPermissions;
     private MainViewModel mainViewModel;
@@ -63,6 +68,9 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
     private AccountFragment accountFragment = new AccountFragment();
     private static final String REQUEST_DB = "request_DB";
     private static final String UPDATE_DB = "update_db";
+    private List<Article> articles = new ArrayList<>();
+    private List<Article> parserTask = new ArrayList<>();
+    private List<Article> parserStudy = new ArrayList<>();
 
     public AccountFragment getAccountFragment() {
         return accountFragment;
@@ -75,7 +83,9 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
             EventBus.getDefault().register(this);
         }
         mainViewModel = getViewModel(MainViewModel.class);
-
+        mainViewModel.retrieveArtist();
+        mainViewModel.downloadParser();
+        mainViewModel.downloadStudy();
         rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -150,8 +160,17 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 mainViewModel.retrieveBDCT(UPDATE_DB);
-                                mainViewModel.retrieveBDTB(UPDATE_DB);
-                                mainViewModel.retrieveSchedule(UPDATE_DB);
+                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mainViewModel.retrieveBDTB(UPDATE_DB);
+                                    }
+                                }, 500);
+
+                                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                                    //Do something after 100ms
+                                    mainViewModel.retrieveSchedule(UPDATE_DB);
+                                }, 500);
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)
@@ -177,7 +196,7 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
                 case R.id.nav_home:
                     AppBinding.setName(binding.tvTitle, userModel.getName());
                     binding.rlToolbar.setVisibility(View.VISIBLE);
-                    AppUtils.loadView(MainActivity.this, homeFrg);
+                    AppUtils.loadView(this,new HomeFrg(articles));
                     return true;
                 case R.id.manager:
                     personalFragment = new CommonFragment();
@@ -220,6 +239,21 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
     }
 
     private void initLiveData() {
+        mainViewModel.getLiveDataParser().observe(this, articles -> parserTask = articles);
+
+        mainViewModel.getArticleStudy().observe(this, articles -> {
+            parserStudy = articles;
+        });
+
+        mainViewModel.getArticleLiveData().observe(this, articles -> {
+            this.articles = articles;
+            if (!AppUtils.isNullOrEmpty(articles)){
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    AppUtils.loadView(MainActivity.this, new HomeFrg(articles));
+                    binding.groupAdmin.setVisibility(View.GONE);
+                }, 5000);
+            }
+        });
         mainViewModel.getScheduleMutableLiveData().observe(this, responseSchedule -> {
             if (!AppUtils.isNullOrEmpty(responseSchedule) && responseSchedule.isSuccess()) {
                 this.schedule = responseSchedule;
@@ -250,11 +284,9 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
     }
 
     private void checkData() {
-        binding.groupAdmin.setVisibility(!AppUtils.isNullOrEmpty(responseBDCTLst)
-                && !AppUtils.isNullOrEmpty(this.schedule) ? View.GONE : View.VISIBLE);
-        if (!AppUtils.isNullOrEmpty(responseBDCTLst) && !AppUtils.isNullOrEmpty(this.schedule)) {
-            AppUtils.loadView(this, HomeFrg.getInstance());
-        }
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            binding.groupAdmin.setVisibility(View.GONE);
+        }, 5000);
     }
 
     private void initCallAPI() {
@@ -317,7 +349,7 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
                 return true;
             case R.id.it:
                 binding.tvTitle.setText(R.string.recruitment);
-                AppUtils.loadView(this, RecruitmentFrg.getInstance());
+                AppUtils.loadView(this, new RecruitmentFrg(parserTask,null));
                 return true;
             case R.id.contact:
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/phong.luyen.96/"));
@@ -325,9 +357,11 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
                 return true;
             case R.id.study:
                 binding.tvTitle.setText(R.string.hoc);
-                RecruitmentFrg recruitmentFrg = new RecruitmentFrg();
-                recruitmentFrg.setCheck(true);
-                AppUtils.loadView(this, recruitmentFrg);
+                if (!AppUtils.isNullOrEmpty(parserStudy)){
+                    AppUtils.loadView(this, new RecruitmentFrg(null,parserStudy));
+                }else {
+                    AppUtils.loadView(this, new RecruitmentFrg(null,null));
+                }
                 return true;
             case R.id.map:
                 startActivity(new Intent(this, MapsActivity.class));

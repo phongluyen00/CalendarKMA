@@ -2,9 +2,11 @@ package com.example.retrofitrxjava.utils;
 
 import android.util.Base64;
 
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
@@ -33,6 +35,22 @@ public class AESHelper {
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(initializationVector.getBytes()));
         byte[] encrypted = cipher.doFinal(textToEncrypt.getBytes());
         return Base64.encodeToString(encrypted, Base64.DEFAULT);
+    }
+
+    public String decrypt(String strToDecrypt, String myKey) {
+        try {
+            MessageDigest sha = MessageDigest.getInstance("SHA-1");
+            byte[] key = myKey.getBytes("UTF-8");
+            key = sha.digest(key);
+            key = Arrays.copyOf(key, 16);
+            SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            return new String(cipher.doFinal(java.util.Base64.getDecoder().decode(strToDecrypt)));
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return null;
     }
 
     public static String decrypt(String textToDecrypt) throws Exception {

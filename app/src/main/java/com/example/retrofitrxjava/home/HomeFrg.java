@@ -11,24 +11,26 @@ import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.base.BaseAdapter;
 import com.example.retrofitrxjava.base.BaseFragment;
 import com.example.retrofitrxjava.base.ItemOnclickListener;
-import com.example.retrofitrxjava.home.adapter.BannerAdapter;
 import com.example.retrofitrxjava.databinding.LayoutHomeBindingImpl;
+import com.example.retrofitrxjava.home.adapter.BannerAdapter;
 import com.example.retrofitrxjava.home.model.Advertisement;
+import com.example.retrofitrxjava.main.MainViewModel;
 import com.example.retrofitrxjava.model.Article;
+import com.example.retrofitrxjava.utils.AppUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class HomeFrg extends BaseFragment<LayoutHomeBindingImpl> implements HomeListener,
-        HomeContract.View, ItemOnclickListener<Article> {
+public class HomeFrg extends BaseFragment<LayoutHomeBindingImpl> implements ItemOnclickListener<Article> {
 
     private android.os.Handler handler;
     private int currentItem;
     private Runnable runnable;
+    List<Article> articles;
 
-    public static HomeFrg getInstance() {
-        return new HomeFrg();
+    public HomeFrg(List<Article> articles) {
+        this.articles = articles;
     }
 
     @Override
@@ -37,14 +39,17 @@ public class HomeFrg extends BaseFragment<LayoutHomeBindingImpl> implements Home
 
     @Override
     protected void initLayout() {
-        HomePresenter presenter = new HomePresenter(this);
-        presenter.retrieveDataHome();
         if (!NetworkUtils.isConnect(getContext())) {
             retrieveDataEnglishFFailed(getResources().getString(R.string.error_internet));
-            return;
         }
-        presenter.retrieveDataEnglish();
-//        binding.setListener(this);
+        if (!AppUtils.isNullOrEmpty(articles)) {
+            retrieveDataEnglishSuccess(articles);
+        }
+        ArrayList<Advertisement> advertisements = new ArrayList<>();
+        advertisements.add(new Advertisement("https://emsc.vn/wp-content/uploads/2020/07/nhu-cau-tuyen-dung-quy3-2020.jpg"));
+        advertisements.add(new Advertisement("https://hearlifevietnam.com/wp-content/uploads/2021/05/56599827-633138617112437-1982170988137152512-o.png"));
+        advertisements.add(new Advertisement("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSK6gBqg6bP0F8f-YMDsZTN3Qs7WXCN0o_eZg&usqp=CAU"));
+        retrieveDataSuccess(advertisements);
     }
 
     @Override
@@ -57,11 +62,6 @@ public class HomeFrg extends BaseFragment<LayoutHomeBindingImpl> implements Home
         return R.string.home;
     }
 
-    @Override
-    public void onClick() {
-    }
-
-    @Override
     public void retrieveDataSuccess(List<Advertisement> data) {
         BannerAdapter adapter1 = new BannerAdapter(Objects.requireNonNull(getContext()), (ArrayList<Advertisement>) data, R.layout.item_banner);
         binding.viewpager.setAdapter(adapter1);
@@ -80,24 +80,22 @@ public class HomeFrg extends BaseFragment<LayoutHomeBindingImpl> implements Home
         handler.postDelayed(runnable, 4500);
     }
 
-    @Override
     public void retrieveDataEnglishSuccess(List<Article> articles) {
-        if (articles != null) {
+        if (!AppUtils.isNullOrEmpty(articles)) {
             BaseAdapter<Article> adapter = new BaseAdapter<>(getActivity(), R.layout.item_recruitment);
             binding.rcEnglish.setAdapter(adapter);
             ArrayList<Article> articles1 = new ArrayList<>();
-            if (articles.size() > 0){
-                for (int i = 0; i <= 5 ; i++) {
+            if (articles.size() > 0) {
+                for (int i = 0; i <= 5; i++) {
                     articles1.add(articles.get(i));
                 }
             }
             adapter.setData(articles1);
             adapter.setListener(this);
-            binding.progress.setVisibility((articles1.size()== 0) ? View.VISIBLE : View.GONE);
+            binding.progress.setVisibility((articles1.size() == 0) ? View.VISIBLE : View.GONE);
         }
     }
 
-    @Override
     public void retrieveDataEnglishFFailed(String message) {
         binding.progress.setVisibility(View.GONE);
         binding.label1.setVisibility(View.GONE);

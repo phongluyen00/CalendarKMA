@@ -6,10 +6,15 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -142,5 +147,17 @@ public class AppUtils {
         }
         return path;
     }
+
+//    public static void showToastCustom(Context context, String message){
+//        // Get your custom_toast.xml ayout
+//        View layout = LayoutInflater.from(context).inflate(R.layout.custom_toast,null);
+//        Toast toast = new Toast(context);
+//        AppCompatTextView text = layout.findViewById(R.id.text);
+//        text.setText(message);
+//        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 10, 40);
+//        toast.setDuration(Toast.LENGTH_LONG);
+//        toast.setView(layout);
+//        toast.show();
+//    }
 
 }

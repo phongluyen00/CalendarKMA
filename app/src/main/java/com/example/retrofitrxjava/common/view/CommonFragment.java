@@ -119,6 +119,10 @@ public class CommonFragment extends BaseFragment<LayoutPersonalBinding> {
             binding.myCalendars.setVisibility(View.GONE);
             binding.myCalendar.setVisibility(View.VISIBLE);
             binding.myCalendar.showMonthViewWithBelowEvents();
+        }else {
+            binding.myCalendar.setVisibility(View.VISIBLE);
+            binding.floatingButton.setVisibility(View.GONE);
+            binding.myCalendar.showMonthViewWithBelowEvents();
         }
         binding.floatingButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

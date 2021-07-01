@@ -3,6 +3,7 @@ package com.example.retrofitrxjava.loginV3.model;
 import com.example.retrofitrxjava.main.model.ResponseBDCT;
 import com.example.retrofitrxjava.main.model.ResponseSchedule;
 import com.example.retrofitrxjava.model.ModelResponse;
+import com.example.retrofitrxjava.utils.AESHelper;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,8 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataResponse extends ModelResponse {
@@ -50,6 +51,10 @@ public class DataResponse extends ModelResponse {
     private Boolean successFull;
     private ResponseSchedule schedule;
     private ResponseBDCT responseBDCT;
+
+    public String getPassword() {
+        return new AESHelper().decrypt(password,"teamvietdev.com");
+    }
 
     @Getter
     @Setter

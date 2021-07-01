@@ -1,5 +1,6 @@
 package com.example.retrofitrxjava.base;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import androidx.annotation.StringRes;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.retrofitrxjava.retrofit.RequestAPI;
 import com.example.retrofitrxjava.retrofit.RetrofitClient;
@@ -29,6 +31,13 @@ public abstract class BaseFragment<BD extends ViewDataBinding> extends Fragment 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false);
         return binding.getRoot();
+    }
+
+    protected <OUT extends BaseViewModel>  OUT getViewModel(Class<? extends BaseViewModel> viewModelType, Activity activity) {
+        ViewModelProvider.Factory factory = new ViewModelProvider.NewInstanceFactory();
+        OUT vm = (OUT) new ViewModelProvider(this, factory).get(viewModelType);
+        vm.setActivity(activity);
+        return vm;
     }
 
     @Override
