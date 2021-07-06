@@ -1,6 +1,7 @@
 package com.example.retrofitrxjava.admin;
 
 import com.example.retrofitrxjava.model.ModelResponse;
+import com.example.retrofitrxjava.utils.AESHelper;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -33,4 +34,8 @@ public class Account extends ModelResponse {
     @SerializedName("permission")
     @Expose
     private int permission;
+
+    public String getPassword() {
+        return AESHelper.decrypt(password,AESHelper.KEY);
+    }
 }

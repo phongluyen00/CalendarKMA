@@ -38,6 +38,7 @@ import com.example.retrofitrxjava.base.BaseObserver;
 import com.example.retrofitrxjava.databinding.LayoutLoginBinding;
 import com.example.retrofitrxjava.loginV3.model.DataResponse;
 import com.example.retrofitrxjava.main.MainActivity;
+import com.example.retrofitrxjava.utils.AESHelper;
 import com.example.retrofitrxjava.utils.PrefUtils;
 import com.example.retrofitrxjava.utils.AppUtils;
 import com.google.android.material.snackbar.Snackbar;
@@ -427,6 +428,7 @@ public class LoginActivity extends BaseActivity<LayoutLoginBinding> implements L
         if (!AppUtils.isNullOrEmpty(binding.edtUser.getText().toString())
                 && !AppUtils.isNullOrEmpty(binding.edtPassword.getText().toString())) {
             int permission = !binding.switchCompat.isChecked() ? 1 : 0;
+            password = AESHelper.encrypt(password,AESHelper.KEY);
             AppUtils.HandlerRXJava(requestAPI.loginWebSite(username, password, permission), new BaseObserver<DataResponse>() {
                 @Override
                 public void onSuccess(DataResponse dataResponse) {

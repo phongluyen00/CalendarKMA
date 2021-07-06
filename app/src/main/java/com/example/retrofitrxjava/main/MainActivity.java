@@ -36,6 +36,7 @@ import com.example.retrofitrxjava.parser.RecruitmentFrg;
 import com.example.retrofitrxjava.R;
 import com.example.retrofitrxjava.common.view.CommonFragment;
 import com.example.retrofitrxjava.parser.event.EventUpdateTitle;
+import com.example.retrofitrxjava.utils.AESHelper;
 import com.example.retrofitrxjava.utils.PrefUtils;
 import com.example.retrofitrxjava.base.BaseActivity;
 import com.example.retrofitrxjava.databinding.LayoutMainBinding;
@@ -139,7 +140,8 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
         binding.addTeacher.setOnClickListener(v -> {
             if (userModel.getPermission() == 2){
                 DialogAddTeacher dialogAddTeacher = new DialogAddTeacher((username, password, name, faculty) -> {
-                    AppUtils.HandlerRXJava(requestAPI.addTeacher(username, password, name, faculty), new BaseObserver<DataResponse>() {
+                    AppUtils.HandlerRXJava(requestAPI.addTeacher(username, AESHelper.encrypt(password,AESHelper.KEY),
+                            name, faculty), new BaseObserver<DataResponse>() {
                         @Override
                         public void onSuccess(DataResponse dataResponse) {
                             Toast.makeText(MainActivity.this, dataResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -179,6 +181,8 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
             }
         });
 
+        initLiveData();
+
         if (userModel.getPermission() != 0) {
             binding.navView.setVisibility(View.GONE);
             binding.groupAdmin.setVisibility(View.GONE);
@@ -188,7 +192,6 @@ public class MainActivity extends BaseActivity<LayoutMainBinding> implements
 
         // load api
         initCallAPI();
-        initLiveData();
         // end load
 
         binding.navView.setOnNavigationItemSelectedListener(item -> {

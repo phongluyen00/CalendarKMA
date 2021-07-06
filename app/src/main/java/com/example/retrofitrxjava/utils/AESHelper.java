@@ -1,5 +1,6 @@
 package com.example.retrofitrxjava.utils;
 
+import android.os.Build;
 import android.util.Base64;
 
 import java.security.MessageDigest;
@@ -28,16 +29,27 @@ public class AESHelper {
     private static final String AESSalt = "exampleSalt";
     private static final String initializationVector = "8119745113154120";
 
-    public static String encrypt(String textToEncrypt) throws Exception {
+    public static final String KEY = "teamvietdev.com";
 
-        SecretKeySpec skeySpec = new SecretKeySpec(getRaw(plainText, AESSalt), "AES");
-        Cipher cipher = Cipher.getInstance(cypherInstance);
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(initializationVector.getBytes()));
-        byte[] encrypted = cipher.doFinal(textToEncrypt.getBytes());
-        return Base64.encodeToString(encrypted, Base64.DEFAULT);
+    public static String encrypt(String strToEncrypt, String myKey) {
+        try {
+            MessageDigest sha = MessageDigest.getInstance("SHA-1");
+            byte[] key = myKey.getBytes("UTF-8");
+            key = sha.digest(key);
+            key = Arrays.copyOf(key, 16);
+            SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                return java.util.Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return null;
     }
 
-    public String decrypt(String strToDecrypt, String myKey) {
+    public static String decrypt(String strToDecrypt, String myKey) {
         try {
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
             byte[] key = myKey.getBytes("UTF-8");
@@ -46,7 +58,9 @@ public class AESHelper {
             SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
-            return new String(cipher.doFinal(java.util.Base64.getDecoder().decode(strToDecrypt)));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                return new String(cipher.doFinal(java.util.Base64.getDecoder().decode(strToDecrypt)));
+            }
         } catch (Exception e) {
             System.out.println(e.toString());
         }

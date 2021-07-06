@@ -53,7 +53,7 @@ public class DataResponse extends ModelResponse {
     private ResponseBDCT responseBDCT;
 
     public String getPassword() {
-        return new AESHelper().decrypt(password,"teamvietdev.com");
+        return AESHelper.decrypt(password,AESHelper.KEY);
     }
 
     @Getter
